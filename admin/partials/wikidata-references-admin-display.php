@@ -31,8 +31,41 @@
 		$references_footnote = $options['references_footnote'];	
 		
 		//Reference formats options
-		$ieee_format = $options['ieee_format'];
-		$harvard_format = $options['harvard_format'];
+		
+		$ieee_format;
+		$harvard_format;
+		$simple_format;
+		
+		
+		if(isset($options['ieee_format'])){
+			$ieee_format = $options['ieee_format'];
+		}
+		else{
+			$ieee_format = 0;
+		}
+		
+		if(isset($options['harvard_format'])){
+			$harvard_format = $options['harvard_format'];
+		}
+		else{
+			$harvard_format= 0;
+		}
+		
+		if(isset($options['simple_format'])){
+			$simple_format= $options['simple_format'];
+		}
+		else{
+			$simple_format= 0;
+		}
+		
+		if(!isset($options['ieee_format']) && !isset($options['harvard_format']) && !isset($options['simple_format'])){
+			$ieee_format = 1;
+			$options['ieee_format'] = 1;
+			$options['harvard_format'] = 0;
+			$options['simple_format'] = 0;
+		}
+		
+		
 	?>
 	
 	<?php 
@@ -73,7 +106,13 @@
     	<hr>
     	
     	
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- ///////////////////////////////////FORMATOS//////////////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	
     	<h2><?php echo __("Formatos")?></h2>
+    	
+    	
     	
     	<fieldset>
     		<h3><?php echo __("IEEE Referencing System")?></h3>
@@ -81,7 +120,7 @@
     			<span><?php echo __('Seleccionar formato de referencias IEEE')?></span>
     		</legend>
     		<input type="radio" id="<?php echo $this->plugin_name; ?>-ieee_format" 
-    					name="<?php echo $this->plugin_name; ?>[ieee_format]" value="0"
+    					name="<?php echo $this->plugin_name; ?>[ieee_format]"
     					<?php checked($ieee_format, 1)?> 
     					onclick="updateIeeeFormat(this);" 
     		/>
@@ -99,8 +138,8 @@
     		<legend class="screen-reader-text">
     			<span><?php echo __('Seleccionar formato de referencias Harvard')?></span>
     		</legend>
-    		<input type="radio" id="<?php echo $this->plugin_name; ?>-harvard_format" 
-    					name="<?php echo $this->plugin_name; ?>[harvard_format]" value="0" 
+    		<input type="radio" id="<?php echo $this->plugin_name; ?>-harvard_format"
+    					name="<?php echo $this->plugin_name; ?>[harvard_format]" 
     					<?php checked($harvard_format, 1)?> 
     					onclick="updateHarvardFormat(this);"
     		/>
@@ -110,6 +149,25 @@
 									from <a href="https://www.wikidata.org/wiki/Q2013">
 									https://www.wikidata.org/wiki/Q2013</a>.'
 									, $this->plugin_name); ?>
+			</label>
+    		
+    	</fieldset>
+    	
+    	<fieldset>
+    		<h3><?php echo __("Simple")?></h3>
+    		<legend class="screen-reader-text">
+    			<span><?php echo __('Seleccionar formato de referencias simple')?></span>
+    		</legend>
+    		<input type="radio" id="<?php echo $this->plugin_name; ?>-simple_format" 
+    					name="<?php echo $this->plugin_name; ?>[simple_format]"
+    					<?php checked($simple_format, 1)?> 
+    					onclick="updateSimpleFormat(this);" 
+    		/>
+    		<label for="<?php echo $this->plugin_name; ?>-simple_format">
+    			<?php echo __(' "Term", 
+								<a href="https://www.wikidata.org/wiki/Q2013">
+								https://www.wikidata.org/wiki/Q2013</a>.
+								Accessed: 24-jul-2017', $this->plugin_name); ?>
 			</label>
     		
     	</fieldset>

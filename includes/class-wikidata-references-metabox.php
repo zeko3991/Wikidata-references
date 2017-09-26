@@ -155,7 +155,7 @@ class Wikidata_References_metabox{
 		
 		
 		echo '<br> <input id="publish" class="button button-primary button-large" type="submit" value="Actualizar etiquetas" accesskey="p" tabindex="5" name="save"> <br>';
-		echo '<hr>';
+		//echo '<hr>';
 	}
 	
 	private function wkrf_render_wiki_references_add_new(){
@@ -180,7 +180,6 @@ class Wikidata_References_metabox{
 		echo '<input type="button" class="button" value="Añadir">';
 		echo '</p></div>';
 		
-		echo '<hr>';
 	}
 	
 }

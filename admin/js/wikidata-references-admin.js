@@ -40,11 +40,8 @@ function updateIeeeFormat(ieeeFormat){
 		document.getElementById("wikidata-references-ieee_format").value = 1;
 		document.getElementById("wikidata-references-harvard_format").checked = false;
 		document.getElementById("wikidata-references-harvard_format").value = 0;
-	}
-	else{
-		document.getElementById("wikidata-references-harvard_format").checked = true;
-		document.getElementById("wikidata-references-harvard_format").value = 1;
-		document.getElementById("wikidata-references-ieee_format").value = 0;
+		document.getElementById("wikidata-references-simple_format").checked = false;
+		document.getElementById("wikidata-references-simple_format").value = 0;
 	}
 }
 
@@ -58,14 +55,25 @@ function updateHarvardFormat(harvardFormat){
 		document.getElementById("wikidata-references-harvard_format").value = 1;
 		document.getElementById("wikidata-references-ieee_format").checked = false;
 		document.getElementById("wikidata-references-ieee_format").value = 0;
-	}
-	else{
-		document.getElementById("wikidata-references-ieee_format").checked = true;
-		document.getElementById("wikidata-references-ieee_format").value = 1;
-		document.getElementById("wikidata-references-harvard_format").value = 0;
+		document.getElementById("wikidata-references-simple_format").checked = false;
+		document.getElementById("wikidata-references-simple_format").value = 0;
 	}
 }
 
+/*
+ * Wikidata references
+ * Gestiona la selección de formatos de referenciación
+ */
+function updateSimpleFormat(simpleFormat){
+	
+	if(simpleFormat.checked == true){
+		document.getElementById("wikidata-references-simple_format").value = 1;
+		document.getElementById("wikidata-references-ieee_format").checked = false;
+		document.getElementById("wikidata-references-ieee_format").value = 0;
+		document.getElementById("wikidata-references-harvard_format").checked = false;
+		document.getElementById("wikidata-references-harvard_format").value = 0;
+	}
+}
 
 
 function hello(){
