@@ -38,33 +38,30 @@ class Wikidata_References_metabox{
 			$this->version = '1.0.0';
 		}
 		
-		
-		
 		if( is_admin() ) {
 			add_action('load-post.php', array($this, 'wkrf_init_wikidata_references_metabox') );
 			add_action('load-post-new.php', array($this, 'wkrf_init_wikidata_references_metabox') );
-		
-			
-			/* ajax source
-			 * https://wordpress.stackexchange.com/questions/221016/ajax-form-submit-within-a-post-metabox 
-			 */
-			
-			//ajax test
-			add_action('wp_ajax_my_ajax_action', array($this, 'wkrf_ajax_example'));
-		//	
 		}
-		add_action('admin_init', array($this, 'wkrf_ajax_example_init'));
-		//ajax test
+
+		add_action('wkrf', array($this, 'say_hello'));
+		add_action('init', array($this, 'testfun'));
+		
+		add_filter( 'content_save_pre', array($this, 'append_to_content' ));
+		
+		//add_filter( 'content_edit_pre', array($this, 'append_to_content' ));
+		
+		
+		
+		/*
+		 $includedStuff = get_included_files();
+		 foreach ($includedStuff as $elem){
+		 echo $elem;
+		 }
+		 */
 		
 		
 	}
-	
-	
-	
-	
-	
-	//private $metabox = null;
-	
+
 	/**
 	 * Wikidata references
 	 * initializes a metabox for the plugin
@@ -108,7 +105,6 @@ class Wikidata_References_metabox{
 	function wkrf_render_wiki_references_meta_box(){
 		//wp_nonce_field( basename( __FILE__), 'food_meta_box_nonce');
 		echo '<hr>';
-		//require_once 'options.php';
 		
 		$options = get_option($this->plugin_name);
 		
@@ -125,24 +121,63 @@ class Wikidata_References_metabox{
 			echo '<hr>';
 		}
 		
-		$this->wkrf_render_wiki_ajax_example();
-		echo '<hr>';
+		//////////////////////////
+		echo '<hr>';echo '<hr>';
+		$this->save_function();
+		echo '<hr>';echo '<hr>';
+		///////////////////////////
 		
 		if(!$references_by_tag && !$references_footnote){
 			echo __('Vaya, parece que no has elegido cómo insertar referencias');
 		}
 		
-		
-		/*
-		$includedStuff = get_included_files();
-		foreach ($includedStuff as $elem){
-			echo $elem;
-		}
-		*/
-		//$this->wkrf_render_wiki_references_tags();
-		//$this->wkrf_render_wiki_references_footnote();
 	}
 	
+	function save_function(){
+		echo "<h4>Pruebas de añadido de referencias</h4>";
+		//https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		//https://wordpress.stackexchange.com/questions/138737/using-multiple-submit-buttons-to-trigger-customised-php-functions
+		
+		/*https://tommcfarlin.com/sending-data-post/*/
+		/*
+		 * https://tommcfarlin.com/sending-data-post/
+		 * https://tommcfarlin.com/sending-data-post/
+		 * https://tommcfarlin.com/sending-data-post/
+		 * https://tommcfarlin.com/sending-data-post/
+		 * https://tommcfarlin.com/sending-data-post/
+		 * 
+		 * 
+		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		 * 
+		 * 
+		 * https://wordpress.stackexchange.com/questions/134664/what-is-correct-way-to-hook-when-update-post
+		 * 
+		 * 
+		 * https://wordpress.stackexchange.com/questions/214482/how-to-check-which-submission-button-was-clicked
+		 * https://codex.wordpress.org/Function_Reference/submit_button
+		 */
+
+		
+		submit_button("Haz cosas", "secondary", "ticket_action");
+		
+	} 
+	
+	
+	
+	function testfun(){
+		if( isset( $_POST['ticket_action'])){
+			
+			echo '<script type="text/javascript">alert("hello"); </script>';
+			
+		}
+		
+		if( isset( $_REQUEST['ticket_action'])){
+			
+			echo '<script type="text/javascript">alert("hello"); </script>';
+			
+		}
+	}
 	
 	/**
 	 * Wikidata references
@@ -173,7 +208,7 @@ class Wikidata_References_metabox{
 		
 		
 		echo '<br> <input id="publish" class="button button-primary button-large" type="submit" value="Actualizar etiquetas" accesskey="p" tabindex="5" name="save"> <br>';
-		//echo '<hr>';
+
 	}
 	
 	
@@ -195,37 +230,34 @@ class Wikidata_References_metabox{
 		echo '<input type="button" class="button" value="Añadir">';
 		echo '</p></div>';
 		
-	}
-	
-	private function wkrf_render_wiki_ajax_example(){
 		
-		echo '<form method="POST" action="submit">';
-		/*echo '<input type="hidden" name="wkrf_ajax_example_nonce" value="<?php echo wp_create_nonce("wkrf_ajax_example"); ?>" />';*/
-		echo '<input type="hidden" name="wkrf_ajax_example_nonce" />';
-		//echo '<button id="submit-my-form" type="submit"> </button>';
-		echo '<input type="submit" id="submit-my-form" value="Do ajax stuff" />';
-		echo '</form>';
-	}
-	
-	
-	
-	function wkrf_ajax_example(){
-		if(!wp_verify_nonce( $_POST['wkrf_ajax_example_nonce'], 'wkrf_ajax_example' )) {
-			die(-1);
-		}
-		
-		header("www.google.es");
-	}
-	
-	function wkrf_ajax_example_init(){
-		if($_POST['action'] == 'wkrf_ajax_example'){
-			do_action('wp_ajax_my_ajax_action');
-		}
-	}
-	
-	
-	function wkrf_init_wiki_ajax_example(){
 		
 	}
+	
+	
+	private function activate_add_content(){
+		//do_action('wp_insert_post_data');
+		//do_action('save_post');
+		add_filter( 'content_save_pre', array($this, 'append_to_content' ));
+		do_action('save_post');
+		remove_filter( 'content_save_pre', array($this, 'append_to_content' ));
+	}
+	
+	function append_to_content($content){
+		global $post;
+		return $content.
+		'<div id="wkrf_references">
+			<br /> This post was saved on '.$post->post_date.
+		'</div>';
+		
+	}
+	
+	function say_hello(){
+		echo "helloo";
+	}
+	
+	
+	
+	
 	
 }
