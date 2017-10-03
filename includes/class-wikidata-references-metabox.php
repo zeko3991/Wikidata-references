@@ -261,8 +261,8 @@ class Wikidata_References_metabox{
 		global $post;
 		$tags = wp_get_post_tags($post->ID);
 		
-		/*foreach ($tags as $tag_to_save){
-		/*	if(! isset( $_POST[$tag_to_save->name."_nonce"])){
+		foreach ($tags as $tag_to_save){
+			if(! isset( $_POST[$tag_to_save->name."_nonce"])){
 				return $post->ID;
 			}
 			if(! wp_verify_nonce( $_POST[$tag_to_save->name."_nonce"], 'save_'.$tag_to_save->name)){
@@ -271,7 +271,7 @@ class Wikidata_References_metabox{
 			
 			$sanitized_tag_to_save = sanitize_text_field($tag_to_save->name);
 			update_post_meta($post->ID, '_'.$tag_to_save->name, $sanitized_tag_to_save);
-		}*/
+		}
 		
 		
 	}
@@ -312,12 +312,12 @@ class Wikidata_References_metabox{
 		global $post;
 		//$tags = wp_get_post_tags($post->ID);
 		//$meta = get_post_meta( get_the_ID(), 'new-ref-post_ref', false);
-		$appendix = "apendice: ";
+		$appendix = "<br> apendice: ";
 		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
 		
 		$tags = wp_get_post_tags($post->ID);
 		
-		/*foreach ($tags as $tag_to_load){
+		foreach ($tags as $tag_to_load){
 			wp_nonce_field( 'save_'.$tag_to_load->name, $tag_to_load->name.'_nonce');
 			$aux_tag_to_load = get_post_meta($post->ID, '_'.$tag_to_load->name, true);
 			$appendix = $appendix.' <br> '.$aux_tag_to_load;
@@ -327,7 +327,7 @@ class Wikidata_References_metabox{
 			$appendix = $appendix. '<br> aaa: '.$elem;
 		}*/
 		
-		return $content. " hello ".$appendix." + <br> ".$prueba_uno;	
+		return $content. "<br> hello ".$appendix." + <br> ".$prueba_uno;	
 		
 		/*return $content." hello <br> ;
 		/*return $content.
