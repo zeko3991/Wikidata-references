@@ -51,7 +51,7 @@ class Wikidata_References_metabox{
 
 		add_action('wkrf', array($this, 'say_hello'));
 		add_action('save_post', array($this, 'wkrf_save_wikidata_references_metabox'));
-		//add_action('content_save_pre', array($this, 'wkrf_save_wikidata_references_tags_metabox'));
+		add_action('save_post', array($this, 'wkrf_save_wikidata_references_tags_metabox'));
 		add_filter( 'content_save_pre', array($this, 'append_to_content' ));
 		
 		//add_filter( 'content_edit_pre', array($this, 'append_to_content' ));
@@ -153,11 +153,6 @@ class Wikidata_References_metabox{
 		
 		/*https://tommcfarlin.com/sending-data-post/*/
 		/*
-		 * https://tommcfarlin.com/sending-data-post/
-		 * https://tommcfarlin.com/sending-data-post/
-		 * https://tommcfarlin.com/sending-data-post/
-		 * https://tommcfarlin.com/sending-data-post/
-		 * https://tommcfarlin.com/sending-data-post/
 		 * 
 		 * 
 		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
@@ -199,6 +194,7 @@ class Wikidata_References_metabox{
 			echo '<div id="wkrf-metabox-references-tags" class="wkrf-mtbox-references-tags">';
 			echo '<ul>';
 			foreach ($tags as $elem){
+				wp_nonce_field( 'save_'.$elem->name, $elem->name.'_nonce');
 				echo '<li><input type="checkbox" name="'.$elem->name.'" value="'.$elem->name.'"/>';
 				echo $elem->name."</li>";
 			}
@@ -262,12 +258,12 @@ class Wikidata_References_metabox{
 		$tags = wp_get_post_tags($post->ID);
 		
 		foreach ($tags as $tag_to_save){
-			if(! isset( $_POST[$tag_to_save->name."_nonce"])){
+		/*	if(! isset( $_REQUEST[$tag_to_save->name."_nonce"])){
 				return $post->ID;
 			}
-			if(! wp_verify_nonce( $_POST[$tag_to_save->name."_nonce"], 'save_'.$tag_to_save->name)){
+			if(! wp_verify_nonce( $_REQUEST[$tag_to_save->name."_nonce"], 'save_'.$tag_to_save->name)){
 				return $post->ID;
-			}
+			}*/
 			
 			$sanitized_tag_to_save = sanitize_text_field($tag_to_save->name);
 			update_post_meta($post->ID, '_'.$tag_to_save->name, $sanitized_tag_to_save);
@@ -318,7 +314,6 @@ class Wikidata_References_metabox{
 		$tags = wp_get_post_tags($post->ID);
 		
 		foreach ($tags as $tag_to_load){
-			wp_nonce_field( 'save_'.$tag_to_load->name, $tag_to_load->name.'_nonce');
 			$aux_tag_to_load = get_post_meta($post->ID, '_'.$tag_to_load->name, true);
 			$appendix = $appendix.' <br> '.$aux_tag_to_load;
 		}
@@ -328,7 +323,7 @@ class Wikidata_References_metabox{
 		}*/
 		
 		return $content. "<br> hello ".$appendix." + <br> ".$prueba_uno;	
-		
+		//return $content. "<br> hello <br> ".$prueba_uno;	
 		/*return $content." hello <br> ;
 		/*return $content.
 		'<div id="wkrf_references">
