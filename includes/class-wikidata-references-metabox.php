@@ -48,11 +48,14 @@ class Wikidata_References_metabox{
 			add_action('load-post.php', array($this, 'wkrf_init_wikidata_references_metabox') );
 			add_action('load-post-new.php', array($this, 'wkrf_init_wikidata_references_metabox') );
 		}
-
+		//https://code.tutsplus.com/articles/reusable-custom-meta-boxes-part-1-intro-and-basic-fields--wp-23259
+		//https://wordpress.stackexchange.com/questions/134664/what-is-correct-way-to-hook-when-update-post
 		add_action('wkrf', array($this, 'say_hello'));
-		add_action('save_post', array($this, 'wkrf_save_wikidata_references_metabox'));
+		add_action('save_post', array($this, 'wkrf_save_wikidata_references_metabox_prueba_uno'));
 		add_action('save_post', array($this, 'wkrf_save_wikidata_references_tags_metabox'));
-		add_filter( 'content_save_pre', array($this, 'append_to_content' ));
+		add_filter('content_save_pre', array($this, 'append_to_content' ));
+		//add_filter('content_save_pre', array($this, 'append_to_content' ));
+		
 		
 		//add_filter( 'content_edit_pre', array($this, 'append_to_content' ));
 		
@@ -90,12 +93,12 @@ class Wikidata_References_metabox{
 	public function wkrf_add_wiki_reference_metabox($post) {
 	
 		add_meta_box(
-				'wiki_references_metabox',
-				__( 'Wikidata References' ),
-				array($this, 'wkrf_render_wiki_references_metabox'),
-				'post',
-				'side',
-				'default'
+				'wiki_references_metabox',  //id
+				__( 'Wikidata References' ),  //title
+				array($this, 'wkrf_render_wiki_references_metabox'), //callback
+				'post', //page
+				'side', //context
+				'core'  //priority
 				);
 		
 	}
@@ -143,36 +146,6 @@ class Wikidata_References_metabox{
 	}
 	
 
-	
-	
-	
-	function save_function(){
-		echo "<h4>Pruebas de añadido de referencias</h4>";
-		//https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
-		//https://wordpress.stackexchange.com/questions/138737/using-multiple-submit-buttons-to-trigger-customised-php-functions
-		
-		/*https://tommcfarlin.com/sending-data-post/*/
-		/*
-		 * 
-		 * 
-		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
-		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
-		 * 
-		 * 
-		 * https://wordpress.stackexchange.com/questions/134664/what-is-correct-way-to-hook-when-update-post
-		 * 
-		 * 
-		 * https://wordpress.stackexchange.com/questions/214482/how-to-check-which-submission-button-was-clicked
-		 * https://codex.wordpress.org/Function_Reference/submit_button
-		 */
-
-		submit_button("Haz cosas", "secondary", "ticket_action");
-		
-	} 
-	
-	
-
-	
 	/**
 	 * Wikidata references
 	 * called by wkrf_render_wiki_references_metabox(), displays the option to
@@ -180,73 +153,41 @@ class Wikidata_References_metabox{
 	 * @since 1.0.0
 	 */
 	function wkrf_render_wiki_references_tags(){
-		//$tags = wp_get_post_tags($_GET['post']);
 		global $post;
 		$title = __('Referencias por etiqueta');
 		
-		//$prueba_uno = 0;
-		
-		//echo $post->ID;
 		$tags = wp_get_post_tags($post->ID);
 		echo '<h3>'.$title.'</h3>';
 		
 		if($tags != null){
 			echo '<div id="wkrf-metabox-references-tags" class="wkrf-mtbox-references-tags">';
 			echo '<ul>';
+
 			foreach ($tags as $elem){
-				wp_nonce_field( 'save_'.$elem->name, $elem->name.'_nonce');
-				echo '<li><input type="checkbox" name="'.$elem->name.'" value="'.$elem->name.'"/>';
-				echo $elem->name."</li>";
+				
+				$name = str_replace(" ", "_", $elem->name);
+				$id = $name;
+				$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+				wp_nonce_field( 'save_'.$name, $name.'_nonce');
+				
+				?>
+				
+				<li>
+					<input type="checkbox" id="wkrf-tag-<?php echo $id; ?>" name="wkrf-tag-<?php echo $name; ?>" value='yes'<?php checked("yes", $tag_post_value); ?> />
+					<span><?php echo $elem->name;?></span>
+				</li>
+				
+				<?php 
 			}
 			echo '</ul>';
 			echo '</div>';
 		}
-		
 		else{
 			echo __('No hay posibles referencias definidas');
 			echo '<br>';
 		}
-		
-		
-		echo '<br> <input id="publish" class="button button-primary button-large" type="submit" value="Actualizar etiquetas" accesskey="p" tabindex="5" name="save"> <br>';
 
 	}
-	
-	/**
-	 * fasdfasdfasdfasdfasdfasdfasdfas
-	 */
-	function render_prueba_uno(){
-		global $post;
-		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
-		wp_nonce_field( 'save_prueba_uno', 'prueba_uno_nonce');
-		echo '<ul>';
-		echo '<li><input type="text" name="prueba_uno" value="'.sanitize_text_field($prueba_uno). '" /></li>';
-		
-		
-		echo '</ul>';
-	}
-	
-	/**
-	 * Wikidata references
-	 * saves the metabox content when saving the post
-	 * @since 1.0.0
-	 */
-	function wkrf_save_wikidata_references_metabox(){
-		global $post;
-		
-		if( ! isset( $_POST['prueba_uno_nonce'])){
-			return $post->ID;
-		}
-		
-		if( ! wp_verify_nonce( $_POST['prueba_uno_nonce'], 'save_prueba_uno')){
-			return $post->ID;
-		}
-		
-		$prueba_uno = sanitize_text_field( $_POST['prueba_uno']);
-		update_post_meta($post->ID, '_prueba_uno', $prueba_uno);
-		
-	}
-	
 	
 	/**
 	 * Wikidata references
@@ -257,20 +198,97 @@ class Wikidata_References_metabox{
 		global $post;
 		$tags = wp_get_post_tags($post->ID);
 		
+		if( isset($_POST['wkrf-tag-prueba'])){
+			update_post_meta($post->ID, '_wkrf-tag-prueba', "yes");
+		}
+		else{
+			update_post_meta($post->ID, '_wkrf-tag-prueba', "no");
+		}
+		
 		foreach ($tags as $tag_to_save){
-		/*	if(! isset( $_REQUEST[$tag_to_save->name."_nonce"])){
+			$name = str_replace(" ", "_", $tag_to_save->name);
+			if(! wp_verify_nonce( $_REQUEST[$name."_nonce"], 'save_'.$name)){
 				return $post->ID;
 			}
-			if(! wp_verify_nonce( $_REQUEST[$tag_to_save->name."_nonce"], 'save_'.$tag_to_save->name)){
-				return $post->ID;
-			}*/
+
 			
-			$sanitized_tag_to_save = sanitize_text_field($tag_to_save->name);
-			update_post_meta($post->ID, '_'.$tag_to_save->name, $sanitized_tag_to_save);
+			if(isset( $_POST['wkrf-tag-'.$name])){
+				update_post_meta($post->ID, '_'.$name, "yes");
+			}
+			else{
+				//update_post_meta($post->ID, '_'.$tag_to_save->name, 0);
+				update_post_meta($post->ID, '_'.$name, "no");
+			}
+		}
+		
+	}
+	
+	/**
+	 * pruebas de 
+	 */
+	function render_prueba_uno(){
+		global $post;
+		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
+		wp_nonce_field( 'save_prueba_uno', 'prueba_uno_nonce');
+		echo '<ul>';
+		echo '<li><input type="text" name="prueba_uno" value="'.sanitize_text_field($prueba_uno). '" /></li>';
+		echo '</ul>';
+		
+		
+		$prueba_box = get_post_meta($post->ID, '_prueba_box', true);
+		wp_nonce_field( 'save_prueba_box', 'prueba_box_nonce');
+		
+		?>
+		
+		<input type="checkbox" id="prueba_box" name="prueba_box" value='yes'<?php checked("yes", $prueba_box); ?> />
+					<span><?php echo "prueba box"?></span>
+					
+					<?php 
+	}
+	
+	/**
+	 * Wikidata references
+	 * saves the metabox content when saving the post
+	 * @since 1.0.0
+	 */
+	function wkrf_save_wikidata_references_metabox_prueba_uno(){
+		global $post;
+		
+		if( ! isset( $_POST['prueba_uno_nonce'])){
+			return $post->ID;
+		}
+		
+		if( ! wp_verify_nonce( $_POST['prueba_uno_nonce'], 'save_prueba_uno')){
+			return $post->ID;
+		}
+		
+		if( ! isset( $_POST['prueba_box_nonce'])){
+			return "prueba box nonce not set";
+		}
+		
+		if( ! wp_verify_nonce( $_POST['prueba_box_nonce'], 'save_prueba_box')){
+			return "prueba box nonce not verified";
 		}
 		
 		
+		
+		$prueba_uno = sanitize_text_field( $_POST['prueba_uno']);
+		update_post_meta($post->ID, '_prueba_uno', $prueba_uno);
+		
+		
+		if( isset($_POST['prueba_box'])){
+			update_post_meta($post->ID, '_prueba_box', "yes");
+		}
+		else{
+			//update_post_meta($post->ID, '_'.$tag_to_save->name, 0);
+			update_post_meta($post->ID, '_prueba_box', "no");
+		}
+	//update_post_meta($post->ID, '_prueba_box', $_POST['prueba_box']);
+		
 	}
+	
+	
+
 	
 	
 	private function wkrf_render_wiki_references_footnote(){
@@ -308,13 +326,23 @@ class Wikidata_References_metabox{
 		global $post;
 		//$tags = wp_get_post_tags($post->ID);
 		//$meta = get_post_meta( get_the_ID(), 'new-ref-post_ref', false);
-		$appendix = "<br> apendice: ";
+		$appendix = "<br> etiquetas: ";
 		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
-		
+		$metabox_meta = get_post_meta($post->ID);
 		$tags = wp_get_post_tags($post->ID);
 		
 		foreach ($tags as $tag_to_load){
-			$aux_tag_to_load = get_post_meta($post->ID, '_'.$tag_to_load->name, true);
+			//$aux_tag_to_load = get_post_meta($post->ID, '_'.$tag_to_load->name, true);
+			/*if($aux_tag_to_load == 1){
+				$aux_tag_to_load = "checked";
+			}
+			else{
+				$aux_tag_to_load = "unchecked";
+			}*/
+			
+			if(isset($metabox_meta['_'.$tag_to_load->name])){
+				$aux_tag_to_load = $metabox_meta['_'.$tag_to_load->name][0];
+			}
 			$appendix = $appendix.' <br> '.$aux_tag_to_load;
 		}
 		
@@ -322,7 +350,14 @@ class Wikidata_References_metabox{
 			$appendix = $appendix. '<br> aaa: '.$elem;
 		}*/
 		
-		return $content. "<br> hello ".$appendix." + <br> ".$prueba_uno;	
+		
+		$prueba_box = get_post_meta($post->ID, '_prueba_box', true);
+		//return $content. $appendix." + <br> ".$prueba_uno;	
+		return $content. " <br> prueba box: ".$prueba_box;
+		
+		
+		
+		
 		//return $content. "<br> hello <br> ".$prueba_uno;	
 		/*return $content." hello <br> ;
 		/*return $content.
@@ -340,6 +375,27 @@ class Wikidata_References_metabox{
 		echo "helloo";
 	}
 	
+	function save_function(){
+		//https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		//https://wordpress.stackexchange.com/questions/138737/using-multiple-submit-buttons-to-trigger-customised-php-functions
+		
+		/*https://tommcfarlin.com/sending-data-post/*/
+		/*
+		 *
+		 *
+		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		 * https://www.sitepoint.com/handling-post-requests-the-wordpress-way/
+		 *
+		 *
+		 * https://wordpress.stackexchange.com/questions/134664/what-is-correct-way-to-hook-when-update-post
+		 *
+		 *
+		 * https://wordpress.stackexchange.com/questions/214482/how-to-check-which-submission-button-was-clicked
+		 * https://codex.wordpress.org/Function_Reference/submit_button
+		 */
+		
+		
+	} 
 	
 	
 	
