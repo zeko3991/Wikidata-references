@@ -52,11 +52,9 @@ class Wikidata_References_metabox{
 		//https://wordpress.stackexchange.com/questions/134664/what-is-correct-way-to-hook-when-update-post
 		add_action('wkrf', array($this, 'say_hello'));
 		add_action('save_post', array($this, 'wkrf_save_wikidata_references_metabox_prueba_uno'));
-		add_action('save_post', array($this, 'wkrf_save_wikidata_references_tags_metabox'));
-		add_filter('content_save_pre', array($this, 'append_to_content' ));
-		//add_filter('content_save_pre', array($this, 'append_to_content' ));
-		
-		
+		add_action('save_post', array($this, 'wkrf_save_wiki_references_tags_metabox'));
+		add_filter('content_edit_pre', array($this, 'append_to_content' ));
+
 		//add_filter( 'content_edit_pre', array($this, 'append_to_content' ));
 		
 		
@@ -194,16 +192,16 @@ class Wikidata_References_metabox{
 	 * saves the tags metabox content, only text
 	 * @since 1.0.0
 	 */
-	function wkrf_save_wikidata_references_tags_metabox(){
+	function wkrf_save_wiki_references_tags_metabox(){
 		global $post;
 		$tags = wp_get_post_tags($post->ID);
 		
-		if( isset($_POST['wkrf-tag-prueba'])){
+		/*if( isset($_POST['wkrf-tag-prueba'])){
 			update_post_meta($post->ID, '_wkrf-tag-prueba', "yes");
 		}
 		else{
 			update_post_meta($post->ID, '_wkrf-tag-prueba', "no");
-		}
+		}*/
 		
 		foreach ($tags as $tag_to_save){
 			$name = str_replace(" ", "_", $tag_to_save->name);
@@ -228,7 +226,9 @@ class Wikidata_References_metabox{
 	 */
 	function render_prueba_uno(){
 		global $post;
+		
 		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
+		
 		wp_nonce_field( 'save_prueba_uno', 'prueba_uno_nonce');
 		echo '<ul>';
 		echo '<li><input type="text" name="prueba_uno" value="'.sanitize_text_field($prueba_uno). '" /></li>';
@@ -254,7 +254,7 @@ class Wikidata_References_metabox{
 	function wkrf_save_wikidata_references_metabox_prueba_uno(){
 		global $post;
 		
-		if( ! isset( $_POST['prueba_uno_nonce'])){
+		if( ! isset( $_POST['prueba_uno'])){
 			return $post->ID;
 		}
 		
@@ -273,6 +273,7 @@ class Wikidata_References_metabox{
 		
 		
 		$prueba_uno = sanitize_text_field( $_POST['prueba_uno']);
+		
 		update_post_meta($post->ID, '_prueba_uno', $prueba_uno);
 		
 		
@@ -326,44 +327,54 @@ class Wikidata_References_metabox{
 		global $post;
 		//$tags = wp_get_post_tags($post->ID);
 		//$meta = get_post_meta( get_the_ID(), 'new-ref-post_ref', false);
-		$appendix = "<br> etiquetas: ";
+		//$appendix = "<br> etiquetas: ";
+		$appendix;
 		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
 		$metabox_meta = get_post_meta($post->ID);
 		$tags = wp_get_post_tags($post->ID);
+		$tag_post_value;
 		
+		///////////////////////////////////////////////////////////////////
+		///////////////MUESTRA DE ETIQUETAS SELECCIONADAS//////////////////
+		echo '<ul>';
 		foreach ($tags as $tag_to_load){
-			//$aux_tag_to_load = get_post_meta($post->ID, '_'.$tag_to_load->name, true);
-			/*if($aux_tag_to_load == 1){
-				$aux_tag_to_load = "checked";
+		//	http://www.lets-develop.com/html5-html-css-css3-php-wordpress-jquery-javascript-photoshop-illustrator-flash-tutorial/php-programming/remove-div-by-class-php-remove-div-contents/
+			$name = str_replace(" ", "_", $tag_to_load->name);
+			if(isset($metabox_meta['_'.$name])){  //si existe
+				$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+				if($tag_post_value == "yes"){	//si estaba marcado
+					if(strpos($content, 'id="wkrf-tag-'.$name.'"') == false){  //si no estaba ya en la lista de tags
+						$appendix = $appendix.' <li id="wkrf-tag-'.$name.'">'.$tag_to_load->name.'</li>';
+					}
+				}
+				else{ //si no estaba marcado lo eliminamos
+					//jquery, javascript, php???
+					if(strpos($content, 'id="wkrf-tag-'.$name.'"') == true){
+						$content = preg_replace('#<li id="wkrf-tag-'.$name.'">(.*?)</li>#', " ", $content);
+					}
+					
+				}
 			}
 			else{
-				$aux_tag_to_load = "unchecked";
-			}*/
 			
-			if(isset($metabox_meta['_'.$tag_to_load->name])){
-				$aux_tag_to_load = $metabox_meta['_'.$tag_to_load->name][0];
+			
 			}
-			$appendix = $appendix.' <br> '.$aux_tag_to_load;
+			
 		}
-		
-		/*foreach ($meta as $elem){
-			$appendix = $appendix. '<br> aaa: '.$elem;
-		}*/
+		echo '</ul>';
+		//////////////////////////////////////////////////////////////////////
+
 		
 		
 		$prueba_box = get_post_meta($post->ID, '_prueba_box', true);
-		//return $content. $appendix." + <br> ".$prueba_uno;	
-		return $content. " <br> prueba box: ".$prueba_box;
+		//return $content. $appendix." + <br> ".$prueba_uno;
+		return $content. $appendix;
+		//return $content. " <br> prueba box: ".$prueba_box;
 		
 		
 		
 		
-		//return $content. "<br> hello <br> ".$prueba_uno;	
-		/*return $content." hello <br> ;
-		/*return $content.
-		'<div id="wkrf_references">
-			<br /> This post was saved on '.$post->post_date. ' meta: '.$meta.
-		'</div>';*/
+		
 		
 		
 		
