@@ -336,7 +336,7 @@ class Wikidata_References_metabox{
 		
 		///////////////////////////////////////////////////////////////////
 		///////////////MUESTRA DE ETIQUETAS SELECCIONADAS//////////////////
-		echo '<ul>';
+		echo '<ul id="wkrf-tag-references">';
 		foreach ($tags as $tag_to_load){
 		//	http://www.lets-develop.com/html5-html-css-css3-php-wordpress-jquery-javascript-photoshop-illustrator-flash-tutorial/php-programming/remove-div-by-class-php-remove-div-contents/
 			$name = str_replace(" ", "_", $tag_to_load->name);
@@ -355,9 +355,10 @@ class Wikidata_References_metabox{
 					
 				}
 			}
-			else{
-			
-			
+			else{    // si no existe un metacampo involuctrado
+				if(strpos($content, 'id="wkrf-tag-'.$name.'"') == true){  //si está en la lista de checkboxes
+					$content = preg_replace('#<li id="wkrf-tag-'.$name.'">(.*?)</li>#', " ", $content);
+				}
 			}
 			
 		}
@@ -381,6 +382,9 @@ class Wikidata_References_metabox{
 		
 		
 	}
+	
+	
+	
 	
 	function say_hello(){
 		echo "helloo";

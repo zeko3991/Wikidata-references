@@ -14,15 +14,20 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-
+<!-- https://www.sitepoint.com/create-a-wordpress-theme-settings-page-with-the-settings-api/ -->
 
 <div class="wrap">
 	
 	<h2><?php echo esc_html(get_admin_page_title())?></h2>
 	
 	<form method="post" name="wiki_references_options" action="options.php">
-	
 	<?php 
+		settings_fields($this->plugin_name); 
+		do_settings_sections($this->plugin_name);	
+	?>
+	<?php 
+	
+		$tags = get_tags();
 		//Grab all setup options
 		$options = get_option($this->plugin_name);
 		
@@ -35,6 +40,8 @@
 		$ieee_format;
 		$harvard_format;
 		$simple_format;
+		
+		//
 		
 		
 		if(isset($options['ieee_format'])){
@@ -68,19 +75,51 @@
 		
 	?>
 	
-	<?php 
-		settings_fields($this->plugin_name); 
-		do_settings_sections($this->plugin_name);	
-	?>
-		
 	
+	
+		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- ///////////////////////////////////ASOCIACIONES//////////////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+		<h2><?php echo _e("Wikidata Associations")?></h2>
+		<div class="wkrf-setup">
 		
+		<?php 
+		$aux = 2;
+		foreach ($tags as $elem){
+			//$class = ($aux/2 == 0) ? "left" : "right";	
+			if ( $aux%2 == 0){
+				$class = "left";
+			}
+			else{
+				$class = "right";
+			}
+			$name = str_replace(" ", "_", $elem->name);
+			$id = $name;
+			//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+			wp_nonce_field( 'save_'.$name, $name.'_nonce');
+			$aux++;
+			?>
+			
+			<!-- <li>   -->
+				<div class=<?php echo $class ?>>
+					<input type="checkbox" id="wkrf-assoc-setup-<?php echo $id; ?>" name="wkrf-assoc-setup-<?php echo $name; ?>" value='yes'<?php //checked("yes", $tag_post_value); ?> />
+					<label><?php echo $elem->name;?></label>
+					<input class="wkrf-assoc-textfield" type="text" id="wkrf-assoc-field-<?php echo $id; ?>" name="wkrf-assoc-field-<?php echo $name; ?>" value="" />
+				</div>
+			
+			<!-- </li>   -->
+			
+				<?php 
+			}
+				?>
+		</div>
 		
+		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+		<div class="wkrf-setup">
 		<h2><?php echo __("Referencias")?></h2>
 		<!-- Activates/deactivates references by tag -->
-		<br>
-		
-		
     	
     	<fieldset>
 	        <legend class="screen-reader-text">
@@ -104,7 +143,7 @@
     	</fieldset>
     	<br>
     	<hr>
-    	
+    	</div>
     	
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////FORMATOS//////////////////////////////////////// -->

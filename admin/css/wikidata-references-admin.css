@@ -2,3 +2,28 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ 
+ 
+ .right {
+ 	width: 40%;
+ 	padding: 0 10px;
+ 	float: right;
+ }
+ 
+ .left {
+ 	width: 40%;
+ 	padding: 0 10px;
+ 	float: left;
+ }
+
+
+.wkrf-setup {
+	clear:both;
+	border-top: 5%;
+}
+
+.wkrf-assoc-textfield{
+	display: inline-block;
+	float: right;
+}
+ 
