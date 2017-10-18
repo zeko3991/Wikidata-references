@@ -17,6 +17,7 @@
 <!-- https://www.sitepoint.com/create-a-wordpress-theme-settings-page-with-the-settings-api/ -->
 
 <div class="wrap">
+
 	
 	<h2><?php echo esc_html(get_admin_page_title())?></h2>
 	
@@ -76,38 +77,27 @@
 	?>
 	
 	
-	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-    	<!-- ///////////////////////////////////ASOCIACIONES//////////////////////////////////////// -->
+    	<!-- ///////////////////////////////////ASSOCIATIONS//////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 		<h2><?php echo _e("Wikidata Associations")?></h2>
+		 <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
+		 <p>
 		<div class="wkrf-setup">
 		
 		<?php 
-		$aux = 2;
 		foreach ($tags as $elem){
-			//$class = ($aux/2 == 0) ? "left" : "right";	
-			if ( $aux%2 == 0){
-				$class = "left";
-			}
-			else{
-				$class = "right";
-			}
 			$name = str_replace(" ", "_", $elem->name);
 			$id = $name;
 			//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
 			wp_nonce_field( 'save_'.$name, $name.'_nonce');
-			$aux++;
 			?>
 			
-			<!-- <li>   -->
-				<div class=<?php echo $class ?>>
-					<input type="checkbox" id="wkrf-assoc-setup-<?php echo $id; ?>" name="wkrf-assoc-setup-<?php echo $name; ?>" value='yes'<?php //checked("yes", $tag_post_value); ?> />
-					<label><?php echo $elem->name;?></label>
-					<input class="wkrf-assoc-textfield" type="text" id="wkrf-assoc-field-<?php echo $id; ?>" name="wkrf-assoc-field-<?php echo $name; ?>" value="" />
-				</div>
-			
-			<!-- </li>   -->
+			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group"  >
+				<label class="col-md-6 col-xs-12" ><?php echo $elem->name?></label>
+				<input type="text" class="col-md-5 col-xs-5" placeholder="Wikidata ID#">
+				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" class="input-group-addon wkrf-association-icon" style="cursor:pointer" onclick="hello('<?php echo $elem->name;?>')"><i class="fa fa-search"></i></span>
+			</div>
 			
 				<?php 
 			}
@@ -118,6 +108,8 @@
     	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 		<div class="wkrf-setup">
+		<br>
+		<hr>
 		<h2><?php echo __("Referencias")?></h2>
 		<!-- Activates/deactivates references by tag -->
     	

@@ -5,14 +5,10 @@
  
  
  .right {
- 	width: 40%;
- 	padding: 0 10px;
  	float: right;
  }
  
  .left {
- 	width: 40%;
- 	padding: 0 10px;
  	float: left;
  }
 
@@ -25,5 +21,24 @@
 .wkrf-assoc-textfield{
 	display: inline-block;
 	float: right;
+	clear: left;
 }
- 
+
+.wkrf-assoc-icon {
+	float: right;
+	display:inline-block;
+    vertical-align: center;
+    border-top: 50px;
+}
+
+.wkrf-setup .wkrf-tag-form {
+	border: 3px solid;	
+	border-color: transparent;
+}
+
+
+
+
+
+
+

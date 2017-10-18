@@ -328,7 +328,7 @@ class Wikidata_References_metabox{
 		//$tags = wp_get_post_tags($post->ID);
 		//$meta = get_post_meta( get_the_ID(), 'new-ref-post_ref', false);
 		//$appendix = "<br> etiquetas: ";
-		$appendix;
+		$appendix = "";
 		$prueba_uno = get_post_meta($post->ID, '_prueba_uno', true);
 		$metabox_meta = get_post_meta($post->ID);
 		$tags = wp_get_post_tags($post->ID);
@@ -369,7 +369,7 @@ class Wikidata_References_metabox{
 		
 		$prueba_box = get_post_meta($post->ID, '_prueba_box', true);
 		//return $content. $appendix." + <br> ".$prueba_uno;
-		return $content. $appendix;
+		return $content.$appendix;
 		//return $content. " <br> prueba box: ".$prueba_box;
 		
 		

@@ -76,6 +76,12 @@ function updateSimpleFormat(simpleFormat){
 }
 
 
-function hello(){
-	alert("hello");
+function hello(text){
+	if(text == null){
+		alert("hello");
+	}
+	else{
+		alert("This will open a dialog to select an accurate wiki item for the tag: "+text);
+	}
+	
 }

@@ -39,7 +39,7 @@ class Wikidata_References_Admin {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
-
+	
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -74,7 +74,16 @@ class Wikidata_References_Admin {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wikidata-references-admin.css', array(), $this->version, 'all' );
-
+		
+		//FONT-AWESOME
+		wp_register_style('font-awesome', plugins_url('wikidata-references/font-awesome-4.7.0/css/font-awesome.min.css') );
+		wp_enqueue_style('font-awesome');
+		
+		//BOOTSTRAP
+		wp_register_style('bootstrap-style', plugins_url('wikidata-references/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css'));
+		wp_enqueue_style('bootstrap-style');
+		
+		
 	}
 
 	/**
@@ -97,7 +106,8 @@ class Wikidata_References_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wikidata-references-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_register_script('bootstrap-script', plugins_url('wikidata-references/bootstrap-4.0.0-alpha.6-dist/js/bootstrap.min.js') );
+		wp_enqueue_script('bootstrap-script');
 	}
 	
 	

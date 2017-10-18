@@ -190,9 +190,6 @@ class Wikidata_References {
 		$this->loader->add_action('admin_init', $plugin_admin, 'wkrf_setup_options_update');
 		
 		
-		
-		
-		
 	}
 
 	/**
