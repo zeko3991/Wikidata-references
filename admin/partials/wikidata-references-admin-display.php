@@ -16,10 +16,11 @@
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <!-- https://www.sitepoint.com/create-a-wordpress-theme-settings-page-with-the-settings-api/ -->
 
-<div class="wrap">
 
-	
-	<h2><?php echo esc_html(get_admin_page_title())?></h2>
+
+
+<div class="wrap">
+	<h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 	
 	<form method="post" name="wiki_references_options" action="options.php">
 	<?php 
@@ -92,12 +93,21 @@
 			//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
 			wp_nonce_field( 'save_'.$name, $name.'_nonce');
 			?>
+			 
 			
-			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group"  >
-				<label class="col-md-6 col-xs-12" ><?php echo $elem->name?></label>
-				<input type="text" class="col-md-5 col-xs-5" placeholder="Wikidata ID#">
-				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" class="input-group-addon wkrf-association-icon" style="cursor:pointer" onclick="hello('<?php echo $elem->name;?>')"><i class="fa fa-search"></i></span>
+			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
+				<label class="col-md-7 col-xs-7" ><?php echo $elem->name?></label>
+				<input type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#">
+				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
+					class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
+					onclick="wkrf_modal_selection('<?php echo $elem->name;?>')">
+						<i class="fa fa-search"></i>
+				</span>
 			</div>
+			
+			
+			
+			
 			
 				<?php 
 			}
@@ -211,6 +221,33 @@
 		
 	</form>
 
+</div>
+
+<!-- The Modal -->
+<div class="wrap">
+	
+	<div id="wkrf-modal-window" class="modal">
+	  <!-- Modal content -->
+	  <div id="wkrf-modal-window-content" class="modal-content  col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
+	    <span id="wkrf-close" class="close col-md-offset-10">&times;</span>
+	    <!-- <p>Some text in the Modal..</p> -->
+		    <div class="wkrf-modal-list-item col-md-12 row">
+		    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	
+		    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
+		    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
+		    </div>
+
+		
+	  </div>
+	
+	</div>
+</div>
+
+<div class="wrap">
+	<fieldset>
+		<button onclick='wkrf_wikidata_search_by_tag("car")'>pulsa aquí para buscar car</button>
+		<button onclick='hello("car")'>hello</button>
+	</fieldset>
 </div>
 
 <div class="wrap">
