@@ -44,16 +44,6 @@ var span;
 
 jQuery(document).ready(function(){
 	modal = document.getElementById("wkrf-modal-window"); //modal window
-	span = document.getElementById("wkrf-close"); //Cross to close the modal window
-	
-	/*
-	 * "Closes" the modal window, sets its visibility to none
-	 */
-	span.onclick = function() {
-		modal.style.display = "none";
-		wkrf_modal_clear();
-	}
-	
 	/*
 	 * If user clicks anywhere outside the modal window, it will be closed.
 	 */
@@ -65,23 +55,55 @@ jQuery(document).ready(function(){
 	}
 });
 
+
+/*
+ * "Closes" the modal window and clears its content.
+ */
+function wkrf_modal_selection_close(){
+	modal = document.getElementById("wkrf-modal-window"); //modal window
+	modal.style.display = "none";
+	wkrf_modal_clear();
+}
+
 /*
  * "Opens" the modal window, sets its visibility to "block"
  */
-function wkrf_modal_selection(term){
-	wkrf_wikidata_search_by_tag(term);
+function wkrf_modal_selection(term, input_id){
+	wkrf_wikidata_search_by_tag(term, input_id);
 	modal.style.display = "block";
 }
+
+/*
+ * Adds a list of wikidata items to the modal box, each list item will trigger an 
+ * onclick event to fill the input field related to the tag with the selected wikidata id.
+ * @input: wikidata_search -> json with the wikidata websearch by term info.
+ */
+function wkrf_modal_create_list(tag_term, wikidata_search, input_id){
+	var data = wikidata_search;
+	var wiki_id;
+	var description;
+	
+	var search_array = data.search;
+	console.log(search_array);
+	for(var found_item in search_array){
+		wiki_id = search_array[found_item].id;
+		description = search_array[found_item].description;
+		wkrf_modal_add_list_elem(tag_term, wiki_id, description, input_id);
+	}
+	
+}
+
 
 /*
  * Adds a single list elem to the modal box, those elements are suppossed to be wikidata items 
  * related to the tag or category.
  */
-function wkrf_modal_add_list_elem(tagname, wikidata_id, description){
+function wkrf_modal_add_list_elem(tagname, wikidata_id, description, input_id){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
 	var appendix =  
-		'<div class="wkrf-modal-list-item col-md-12 row"> ' +
-			'<div class="col-md-3"><b>'+tagname+'</b></div>' +
+		'<div class="wkrf-modal-list-item col-md-12 row" onclick=\"wkrf_fill_wiki_id(\''+input_id+'\',\''+wikidata_id+'\')" style="cursor:pointer"> ' +
+			//'<span onclick="hello()"><i class="fa fa-search"></i></span>' +
+			'<div class="col-md-3"  ><b>'+tagname+'</b></div>' +
 		    	'<div class="col-md-2"><a target="_blank" href="https://www.wikidata.org/wiki/'+wikidata_id+'">'+wikidata_id+'</a></div>' +	 
 		    	'<div class="col-md-7">'+ description +'</div>' +   
 		    '</div>';
@@ -89,7 +111,7 @@ function wkrf_modal_add_list_elem(tagname, wikidata_id, description){
 }
 
 /*
- * 
+ * Clears the content of the modal window so that it can be filled later.
  */
 function wkrf_modal_clear(){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
@@ -100,25 +122,28 @@ function wkrf_modal_clear(){
     		'<div class="col-md-7 col-xs-7"><h6>Description </h6></div>'+   
     	'</div>'
 }
+
+/*
+ * Closes the modal window and fills an input box by id with a wikidata id.
+ */
+function wkrf_fill_wiki_id(input_id, wikidata_id){
+	var input = document.getElementById(input_id);
+	input.value = wikidata_id;
+	wkrf_modal_selection_close();
+}
 ////////////////////////////////////////////////
 
 
 
 
 ///////////////Wikidata api request/////////////
-function wkrf_wikidata_search_by_tag(tag_term){
+function wkrf_wikidata_search_by_tag(tag_term, input_id){
 	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+tag_term+'&format=json&language='+language;
-	var wiki_id;
-	var description;
 	
 	jQuery.getJSON(request, function(data){
-		var search_array = data.search;
-		for(var found_item in search_array){
-			wiki_id = search_array[found_item].id;
-			description = search_array[found_item].description;
-			wkrf_modal_add_list_elem(tag_term, wiki_id, description);
-		}
+		wkrf_modal_create_list(tag_term, data, input_id);
 	});
+	
 }
 
 
