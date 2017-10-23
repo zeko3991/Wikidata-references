@@ -113,11 +113,17 @@
 	border-color: #DCDCDC;
 }
 
-.wkrf-modal-list-item:hover{
+.wkrf-modal-list-item:hover {
 	cursor:pointer;
 	background-color: #EFEFEF;
 }
 
+
+.wkrf_modal_window_message {
+	text-align: center;
+	padding: 10em;
+	
+}
 
 
 
