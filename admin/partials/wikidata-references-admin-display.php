@@ -44,7 +44,14 @@
 		$simple_format;
 		
 		//array of tags-wiki ids values
-		//$
+		$madrid;
+		
+		if(isset($options['madrid'])){
+			$madrid = $options['madrid'];
+			echo "<h1>madrid=".$madrid."</h1>";
+			
+			
+		}
 		
 		
 		if(isset($options['ieee_format'])){
@@ -99,8 +106,9 @@
 			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
 				<label class="col-md-7 col-xs-7" ><?php echo $elem->name?></label>
 				<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
-					name="<?php echo $this->plugin_name.'_tag_['.$name.']';?>
-					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#">
+					name="<?php echo $this->plugin_name.'['.$name.']';?>"
+					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
+					value="<?php if(isset($madrid)){ echo $madrid; } ?>">
 				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
 					class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
 					onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
