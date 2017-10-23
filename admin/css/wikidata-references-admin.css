@@ -91,15 +91,31 @@
 }
 */
 
-.wkrf-modal-list-item{
+.wkrf-modal-list-header{
 	height: auto;
-	margin-top: 1em;
-	margin-left: 2em;
+	padding-top: 1em;
+	padding-left: 5em;
 	padding-bottom: 1em;
 	display:block;
 	overflow:auto;
 	border-bottom: 1px solid;
 	border-color: #DCDCDC;
+}
+
+.wkrf-modal-list-item{
+	height: auto;
+	padding-top: 1em;
+	padding-left: 5em;
+	padding-bottom: 1em;
+	display:block;
+	overflow:auto;
+	border-bottom: 1px solid;
+	border-color: #DCDCDC;
+}
+
+.wkrf-modal-list-item:hover{
+	cursor:pointer;
+	background-color: #EFEFEF;
 }
 
 

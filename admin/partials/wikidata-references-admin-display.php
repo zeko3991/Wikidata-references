@@ -43,7 +43,8 @@
 		$harvard_format;
 		$simple_format;
 		
-		//
+		//array of tags-wiki ids values
+		//$
 		
 		
 		if(isset($options['ieee_format'])){
@@ -98,6 +99,7 @@
 			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
 				<label class="col-md-7 col-xs-7" ><?php echo $elem->name?></label>
 				<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
+					name="<?php echo $this->plugin_name.'_tag_['.$name.']';?>
 					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#">
 				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
 					class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
@@ -195,6 +197,7 @@
     		
     	</fieldset>
     	
+
     	<fieldset>
     		<h3><?php echo __("Simple")?></h3>
     		<legend class="screen-reader-text">
@@ -224,6 +227,10 @@
 
 </div>
 
+
+<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+<!-- ///////////////////////////////////MODAL WINDOW//////////////////////////////////// -->
+<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 <!-- The Modal -->
 <div class="wrap">
 	
@@ -232,7 +239,7 @@
 	  <div id="wkrf-modal-window-content" class="modal-content  col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
 	    <span id="wkrf-close" class="close col-md-offset-10" onclick="wkrf_modal_selection_close()">&times;</span>
 	    <!-- <p>Some text in the Modal..</p> -->
-		    <div class="wkrf-modal-list-item col-md-12 row">
+		    <div class="wkrf-modal-list-header col-md-12 row">
 		    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	
 		    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
 		    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
@@ -244,12 +251,7 @@
 	</div>
 </div>
 
-<div class="wrap">
-	<fieldset>
-		<button onclick='wkrf_wikidata_search_by_tag("car")'>pulsa aquí para buscar car</button>
-		<button onclick='hello("car")'>hello</button>
-	</fieldset>
-</div>
+
 
 <div class="wrap">
 	<fieldset>

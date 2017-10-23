@@ -222,7 +222,7 @@ class Wikidata_References_metabox{
 	}
 	
 	/**
-	 * pruebas de 
+	 * pruebas de guardado de metadatos en el post
 	 */
 	function render_prueba_uno(){
 		global $post;

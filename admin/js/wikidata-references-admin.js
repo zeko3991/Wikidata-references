@@ -84,7 +84,7 @@ function wkrf_modal_create_list(tag_term, wikidata_search, input_id){
 	var description;
 	
 	var search_array = data.search;
-	console.log(search_array);
+	//console.log(search_array);
 	for(var found_item in search_array){
 		wiki_id = search_array[found_item].id;
 		description = search_array[found_item].description;
@@ -102,7 +102,6 @@ function wkrf_modal_add_list_elem(tagname, wikidata_id, description, input_id){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
 	var appendix =  
 		'<div class="wkrf-modal-list-item col-md-12 row" onclick=\"wkrf_fill_wiki_id(\''+input_id+'\',\''+wikidata_id+'\')" style="cursor:pointer"> ' +
-			//'<span onclick="hello()"><i class="fa fa-search"></i></span>' +
 			'<div class="col-md-3"  ><b>'+tagname+'</b></div>' +
 		    	'<div class="col-md-2"><a target="_blank" href="https://www.wikidata.org/wiki/'+wikidata_id+'">'+wikidata_id+'</a></div>' +	 
 		    	'<div class="col-md-7">'+ description +'</div>' +   
@@ -116,7 +115,7 @@ function wkrf_modal_add_list_elem(tagname, wikidata_id, description, input_id){
 function wkrf_modal_clear(){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
 	wkrf_modal_window_content.innerHTML = 
-		'<div class="wkrf-modal-list-item col-md-12 row">'+
+		'<div class="wkrf-modal-list-header col-md-12 row">'+
     		'<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>'+	
     		'<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>'+	 
     		'<div class="col-md-7 col-xs-7"><h6>Description </h6></div>'+   

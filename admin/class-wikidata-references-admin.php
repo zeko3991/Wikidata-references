@@ -171,6 +171,7 @@ class Wikidata_References_Admin {
 		$valid['ieee_format'] = (isset($input['ieee_format']) && !empty($input['ieee_format'])) ? 1 : 0;
 		$valid['harvard_format'] = (isset($input['harvard_format']) && !empty($input['harvard_format'])) ? 1 : 0;
 		$valid['simple_format'] = (isset($input['simple_format']) && !empty($input['simple_format'])) ? 1 : 0;
+		$valid['madrid'] = (isset($input['madrid']) && !empty($input['simple_format'])) ? 1 : 0;
 		return $valid;
 	}
 
