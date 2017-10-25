@@ -81,15 +81,6 @@
 	overflow: scroll;
 }
 
-/*
-.wkrf-modal-list-item{
-	padding-bottom: 20px;
-	padding-top: 20px;
-	padding-left: 15px;
-	border-bottom: 1px solid;
-	border-color: #DCDCDC;
-}
-*/
 
 .wkrf-modal-list-header{
 	height: auto;
@@ -123,6 +114,11 @@
 	text-align: center;
 	padding: 10em;
 	
+}
+
+#wkrf_close {
+	float: right;
+	margin-left: 15em;
 }
 
 

@@ -105,13 +105,14 @@
 		foreach ($tags as $elem){
 			$name = str_replace(" ", "_", $elem->name);
 			$id = $name;
+			$tag_link = get_tag_link($elem->term_id);
 			//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
 			wp_nonce_field( 'save_'.$name, $name.'_nonce');
 			?>
 			 
 			
 			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-				<label class="col-md-7 col-xs-7" ><?php echo $elem->name?></label>
+				<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
 				<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
 					name="<?php echo $this->plugin_name.'['.$name.']';?>"
 					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
@@ -252,7 +253,7 @@
 	<div id="wkrf-modal-window" class="modal">
 	  <!-- Modal content -->
 	  <div id="wkrf-modal-window-content" class="modal-content  col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
-	    <span id="wkrf-close" class="close col-md-offset-10" onclick="wkrf_modal_selection_close()">&times;</span>
+	    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
 	    <!-- <p>Some text in the Modal..</p> -->
 		    <div class="wkrf-modal-list-header col-md-12 row">
 		    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	

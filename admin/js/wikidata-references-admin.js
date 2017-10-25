@@ -84,7 +84,7 @@ function wkrf_modal_create_list(tag_term, wikidata_search, input_id){
 	var description;
 	
 	var search_array = data.search;
-	//console.log(search_array);
+	console.log(search_array);
 	//for each result in json, will add a list elem.
 	for(var found_item in search_array){
 		wiki_id = search_array[found_item].id;
@@ -150,6 +150,7 @@ function wkrf_modal_add_list_elem(tagname, wikidata_id, description, input_id){
 function wkrf_modal_clear(){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
 	wkrf_modal_window_content.innerHTML = 
+		'<span id="wkrf-close" class="close col-md-offset-10" onclick="wkrf_modal_selection_close()">&times;</span>'+
 		'<div class="wkrf-modal-list-header col-md-12 row">'+
     		'<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>'+	
     		'<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>'+	 
@@ -172,9 +173,12 @@ function wkrf_fill_wiki_id(input_id, wikidata_id){
 
 ///////////////Wikidata api request/////////////
 function wkrf_wikidata_search_by_tag(tag_term, input_id){
+	// change:  &uselang=es (i.e) to change language results
+//	https:www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search=term&format=json&language=en
 	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+tag_term+'&format=json&language='+language;
-	
+	console.log(request);
 	jQuery.getJSON(request, function(data){
+		console.log(data);
 		wkrf_modal_create_list(tag_term, data, input_id);
 	});
 	

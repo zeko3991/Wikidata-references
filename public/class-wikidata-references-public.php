@@ -99,5 +99,41 @@ class Wikidata_References_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wikidata-references-public.js', array( 'jquery' ), $this->version, false );
 
 	}
+	
+	/**
+	 * base of wikidata url
+	 */
+	
+	
+	public function wkrf_add_header_metadata_action(){
+		//echo "<?php do_action( 'wkrf_add_header_tag_metadata'); ";
+		
+		//echo '<meta property="hello" content="hello" >';
+	}
+	
+	/**
+	 * Wikidata References
+	 * adds meta value for each tag with an associated wikidata id value
+	 * @since 1.0.0
+	 */
+	public function wkrf_add_header_tag_metadata(){
+		$options = get_option($this->plugin_name);
+		$tags = get_tags();
+		$wikidata_url ='https://www.wikidata.org/wiki/';
+		global $wp;
+		
+		foreach($tags as $tag){
+			$tag_link = get_tag_link($tag->term_id);
+			$tag_name = str_replace(" ", "_", $tag->name);
+			$current_url = home_url (add_query_arg(array(), $wp->request)) . '/';
+			
+			if(($current_url == $tag_link) && isset($options[$tag_name])){
+				echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options[$tag_name].'" />';
+			}
+		}
+		
+		
+//		echo '<meta property="tag link" content="'.
+	}
 
 }

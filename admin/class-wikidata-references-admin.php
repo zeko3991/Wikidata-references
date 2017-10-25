@@ -51,7 +51,8 @@ class Wikidata_References_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+		
+		//add_action('added_option', array($this, 'wkrf_add_meta_by_tags'));
 	}
 
 	/**
@@ -155,6 +156,7 @@ class Wikidata_References_Admin {
 	 */
 	public function wkrf_setup_options_update(){
 		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
+	//	$this->wkrf_add_meta_by_tags();
 	}
 	
 	
@@ -185,5 +187,28 @@ class Wikidata_References_Admin {
 		
 		return $valid;
 	}
+	
+	/**
+	 * Wikidata References
+	 * adds meta value for each tag with an associated wikidata id value
+	 * @since 1.0.0
+	 */
+	public function wkrf_add_meta_by_tags(){
+		$tags = get_tags();
+		$options = get_option($this->plugin_name);
+		
+		foreach($tags as $elem){
+			$name = str_replace(" ", "_", $elem->name);
+			if(isset($options[$name]) && ($options[$name] != null)){
+				add_term_meta ($elem->term_id, "property", "dc.sameAs");
+				add_term_meta ($elem->term_id, "content", "wikidata".$options[$name]);
+				/*echo "eeeeeeoo";
+				echo "<br>";
+				echo get_header();*/
+			}
+		}
+	}
+	
+
 
 }
