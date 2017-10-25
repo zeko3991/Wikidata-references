@@ -103,7 +103,13 @@ class Wikidata_References_Public {
 	
 	/**
 	 * Wikidata References
-	 * adds meta value for each tag with an associated wikidata id value
+	 * Adds meta value for each tag with an associated wikidata id value.
+	 * Action hooked to wp_head hook, when a page header is loaded.
+	 * Checks if the page that is being loaded is a post or a tag page.
+	 * 		-if a post: will add wiki metadata for every tag in the post, as 
+	 * 		 they are associated with a wikidata id at plugin setup page.
+	 * 		-if a tag page: will add wiki metadata for that specific tag as 
+	 * 		 it is associated with a wikidata id.
 	 * @since 1.0.0
 	 */
 	public function wkrf_add_header_tag_metadata(){
@@ -113,14 +119,14 @@ class Wikidata_References_Public {
 		global $wp;
 		
 		//if current url is a post, adds metadata depending of its tags
-		if(is_single(get_the_title())){
-			$post_tags = get_the_tags();
-			if($post_tags){
-				foreach($post_tags as $post_tag){
-					//echo '<meta property="name" content="'.$post_tag->name.'" />';
+		if(is_single(get_the_title())){									// if is a post
+			$post_tags = get_the_tags();								// gets the post tags list
+			if($post_tags){												// if list is not empty
+				foreach($post_tags as $post_tag){						
 					$tag_name = str_replace(" ", "_", $post_tag->name);
-					if(isset($options[$tag_name])){
-						echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';
+					// checks if the tag has an associated wikidata id	
+					if(isset($options[$tag_name])){						
+						echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';  // debug info metadata
 						echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options[$tag_name].'" />';
 					}
 				}
@@ -130,10 +136,12 @@ class Wikidata_References_Public {
 		
 		//if a tag page, adds metadata 
 		foreach($tags as $tag){
-			$tag_link = get_tag_link($tag->term_id);
+			$tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
 			$tag_name = str_replace(" ", "_", $tag->name);
-			$current_url = home_url (add_query_arg(array(), $wp->request)) . '/';
-			if(($current_url == $tag_link) && isset($options[$tag_name])){
+			$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
+			
+			// if current and tag url coincide, and tag associated to a wikidata id
+			if(($current_url == $tag_link) && isset($options[$tag_name])){       
 				echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options[$tag_name].'" />';
 			}
 		}
