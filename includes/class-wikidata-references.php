@@ -176,7 +176,8 @@ class Wikidata_References {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		
-		$metabox = new Wikidata_References_metabox();
+		//activate metabox.
+		//$metabox = new Wikidata_References_metabox();
 		
 		/*
 		 * Wikidata references
