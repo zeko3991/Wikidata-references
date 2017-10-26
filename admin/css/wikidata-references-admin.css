@@ -121,6 +121,13 @@
 	margin-left: 15em;
 }
 
+.wkrf-setup .wkrf-setup-button {
+	clear:both;
+}
+
+.wkrf-setup .wkrf-setup-button .btn {
+	margin-top: 3em;
+}
 
 
 

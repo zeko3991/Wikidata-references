@@ -146,6 +146,12 @@ class Wikidata_References_Public {
 			}
 		}
 		
+		//test, echoes all plugin saved options
+		/*
+		foreach($options as $option){
+			echo'<meta property="option" content="'.$option.'" />';
+		}
+		*/
 		
 	}
 

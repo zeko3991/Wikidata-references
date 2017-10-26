@@ -45,49 +45,51 @@
 		
 		//array of tags-wiki ids values
 		$wikidata_ids_by_tags = array();
+		$wikidata_descriptions_by_tags = array();
+		
 		foreach ($tags as $elem){
 			$name = str_replace(" ", "_", $elem->name);
 			if(isset($options[$name])){
 				$wikidata_ids_by_tags[$name] = $options[$name];
 			}
-		}
-		
-		
-		
-		/*if(isset($options['madrid'])){
-			$madrid = $options['madrid'];
-			echo "<h1>madrid=".$madrid."</h1>";
 			
-		}*/
-		
-		
-		if(isset($options['ieee_format'])){
-			$ieee_format = $options['ieee_format'];
-		}
-		else{
-			$ieee_format = 0;
+			if(isset($options['description-'.$name])){
+				$wikidata_descriptions_by_tags['description-'.$name] = $options['description-'.$name];
+			}
 		}
 		
-		if(isset($options['harvard_format'])){
-			$harvard_format = $options['harvard_format'];
-		}
-		else{
-			$harvard_format= 0;
-		}
+		/*
+	 * if(isset($options['madrid'])){
+	 * $madrid = $options['madrid'];
+	 * echo "<h1>madrid=".$madrid."</h1>";
+	 *
+	 * }
+	 */
 		
-		if(isset($options['simple_format'])){
-			$simple_format= $options['simple_format'];
-		}
-		else{
-			$simple_format= 0;
-		}
-		
-		if(!isset($options['ieee_format']) && !isset($options['harvard_format']) && !isset($options['simple_format'])){
-			$ieee_format = 1;
-			$options['ieee_format'] = 1;
-			$options['harvard_format'] = 0;
-			$options['simple_format'] = 0;
-		}
+	// selección de formatos
+	if (isset ( $options ['ieee_format'] )) {
+		$ieee_format = $options ['ieee_format'];
+	} else {
+		$ieee_format = 0;
+	}
+	
+	if (isset ( $options ['harvard_format'] )) {
+		$harvard_format = $options ['harvard_format'];
+	} else {
+		$harvard_format = 0;
+	}
+	
+	if (isset ( $options ['simple_format'] )) {
+		$simple_format = $options ['simple_format'];
+	} else {
+		$simple_format = 0;
+	}
+	if (! isset ( $options ['ieee_format'] ) && ! isset ( $options ['harvard_format'] ) && ! isset ( $options ['simple_format'] )) {
+		$ieee_format = 1;
+		$options ['ieee_format'] = 1;
+		$options ['harvard_format'] = 0;
+		$options ['simple_format'] = 0;
+	}
 		
 		
 	?>
@@ -102,37 +104,51 @@
 		<div class="wkrf-setup">
 		
 		<?php 
-		foreach ($tags as $elem){
-			$name = str_replace(" ", "_", $elem->name);
-			$id = $name;
-			$tag_link = get_tag_link($elem->term_id);
-			//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
-			wp_nonce_field( 'save_'.$name, $name.'_nonce');
-			?>
-			 
-			
-			<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-				<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
-				<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
-					name="<?php echo $this->plugin_name.'['.$name.']';?>"
-					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
-					value="<?php if(isset($wikidata_ids_by_tags[$name])){ echo $wikidata_ids_by_tags[$name]; } ?>">
-				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
-					class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
-					onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
-						<i class="fa fa-search"></i>
-				</span>
-			</div>
-			
-			
-			
-			
-			
-				<?php 
-			}
+			foreach ($tags as $elem){
+				$name = str_replace(" ", "_", $elem->name);
+				$id = $name;
+				$tag_link = get_tag_link($elem->term_id);
+				//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+				wp_nonce_field( 'save_'.$name, $name.'_nonce');
 				?>
+				
+				<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
+					<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
+					<!-- WIKI ID -->
+					<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
+						name="<?php echo $this->plugin_name.'['.$name.']';?>"
+						type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
+						title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+							echo $wikidata_descriptions_by_tags['description-'.$name]; }
+							else{ echo ""; }; ?>"
+						value="<?php if(isset($wikidata_ids_by_tags[$name])){ echo $wikidata_ids_by_tags[$name]; } ?>">
+					<!-- WIKI DESCRIPTION -->
+					<input id="<?php echo $this->plugin_name.'_description_'.$name; ?>"
+						name="<?php echo $this->plugin_name.'[description-'.$name.']'; ?>"
+						type="hidden" 
+						value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+							echo $wikidata_descriptions_by_tags['description-'.$name]; }
+							else{ echo ""; }; ?>">
+					<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
+						class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
+						onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
+							<i class="fa fa-search"></i>
+					</span>
+				</div>
+				
+				
+					<?php 
+				}
+					?>
+					
+					
+				<!--
+				desirable? 	
+				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
+					<button type="button" class=" btn btn-primary"  onclick="wkrf_auto_fill_wiki_ids("")"> <?php echo _("Auto fill wikidata ids"); ?> </button>
+				</div>
+				 -->
 		</div>
-		
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->

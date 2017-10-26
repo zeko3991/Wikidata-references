@@ -168,27 +168,37 @@ class Wikidata_References_Admin {
 	public function wkrf_validate_wiki_references_setup($input){
 		$valid = array();
 		
-		$valid['references_by_tag'] = (isset($input['references_by_tag']) && !empty($input['references_by_tag'])) ? 1 : 0;
-		$valid['references_footnote'] = (isset($input['references_footnote']) && !empty($input['references_footnote'])) ? 1 : 0;
-		$valid['ieee_format'] = (isset($input['ieee_format']) && !empty($input['ieee_format'])) ? 1 : 0;
-		$valid['harvard_format'] = (isset($input['harvard_format']) && !empty($input['harvard_format'])) ? 1 : 0;
-		$valid['simple_format'] = (isset($input['simple_format']) && !empty($input['simple_format'])) ? 1 : 0;
+		$valid ['references_by_tag'] = (isset ( $input ['references_by_tag'] ) && ! empty ( $input ['references_by_tag'] )) ? 1 : 0;
+		$valid ['references_footnote'] = (isset ( $input ['references_footnote'] ) && ! empty ( $input ['references_footnote'] )) ? 1 : 0;
+		$valid ['ieee_format'] = (isset ( $input ['ieee_format'] ) && ! empty ( $input ['ieee_format'] )) ? 1 : 0;
+		$valid ['harvard_format'] = (isset ( $input ['harvard_format'] ) && ! empty ( $input ['harvard_format'] )) ? 1 : 0;
+		$valid ['simple_format'] = (isset ( $input ['simple_format'] ) && ! empty ( $input ['simple_format'] )) ? 1 : 0;
 		
-		//$valid['madrid'] = (isset($input['madrid']) && !empty($input['simple_format'])) ? $input['madrid'] : 0;
-		
+
 		
 		//wikidata ids by tag validation
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
 		foreach ($tags as $elem){
 			$name = str_replace(" ", "_", $elem->name);
-			$valid[$name] = (isset($input[$name]) && !empty($input[$name])) ? $input[$name] : null;
+			
+			//tag name
+			$valid[$name] = (isset($input[$name]) && !empty($input[$name])) ? str_replace("\"", " ", $input[$name]): null;
+			//tag description, only available if there is an associated id
+			if($valid[$name]){
+				$valid['description-'.$name] = (isset($input['description-'.$name]) && !empty($input['description-'.$name])) ? $input['description-'.$name] : null;
+			}
+			else{
+				$valid['description-'.$name] = null;
+			}
+			 
 		}
 		
 		return $valid;
 	}
 	
 	/**
+	 * DEPRECATED
 	 * Wikidata References
 	 * adds meta value for each tag with an associated wikidata id value
 	 * @since 1.0.0
@@ -208,6 +218,7 @@ class Wikidata_References_Admin {
 			}
 		}
 	}
+
 	
 
 
