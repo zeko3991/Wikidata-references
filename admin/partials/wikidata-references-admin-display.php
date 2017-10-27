@@ -49,8 +49,8 @@
 		
 		foreach ($tags as $elem){
 			$name = str_replace(" ", "_", $elem->name);
-			if(isset($options[$name])){
-				$wikidata_ids_by_tags[$name] = $options[$name];
+			if(isset($options['tag-'.$name])){
+				$wikidata_ids_by_tags['tag-'.$name] = $options['tag-'.$name];
 			}
 			
 			if(isset($options['description-'.$name])){
@@ -94,53 +94,78 @@
 		
 	?>
 	
+		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- ///////////////////////////////////ORDINARY METADATA/////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+		
+		<div class="wkrf-setup">
+			<h2 class="wkrf-setup-title"><?php echo _e("Metadata")?></h2>
+		 	<span class="help-block"><?php echo __("WIP") ?></span>  
+		 	<p>
+		
+			<?php 
+				echo __("space for ordinary metadata and schema.org ?? ")
+					?>
+					
+					
+				<!--
+				desirable? 	
+				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
+					<button type="button" class=" btn btn-primary"  onclick="wkrf_auto_fill_wiki_ids("")"> <?php echo _("Auto fill wikidata ids"); ?> </button>
+				</div>
+				 -->
+				 
+		</div>
+		
 	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////ASSOCIATIONS//////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-		<h2><?php echo _e("Wikidata Associations")?></h2>
-		 <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
-		 <p>
+		
 		<div class="wkrf-setup">
 		
-		<?php 
-			foreach ($tags as $elem){
-				$name = str_replace(" ", "_", $elem->name);
-				$id = $name;
-				$tag_link = get_tag_link($elem->term_id);
-				//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
-				wp_nonce_field( 'save_'.$name, $name.'_nonce');
-				?>
-				
-				<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-					<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
-					<!-- WIKI ID -->
-					<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
-						name="<?php echo $this->plugin_name.'['.$name.']';?>"
-						type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
-						title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
-							echo $wikidata_descriptions_by_tags['description-'.$name]; }
-							else{ echo ""; }; ?>"
-						value="<?php if(isset($wikidata_ids_by_tags[$name])){ echo $wikidata_ids_by_tags[$name]; } ?>">
-					<!-- WIKI DESCRIPTION -->
-					<input id="<?php echo $this->plugin_name.'_description_'.$name; ?>"
-						name="<?php echo $this->plugin_name.'[description-'.$name.']'; ?>"
-						type="hidden" 
-						value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
-							echo $wikidata_descriptions_by_tags['description-'.$name]; }
-							else{ echo ""; }; ?>">
-					<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
-						class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
-						onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
-							<i class="fa fa-search"></i>
-					</span>
-				</div>
-				
+		<h2 class="wkrf-setup-title"><?php echo _e("Wikidata Associations")?></h2>
+			 <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
+			 <p>
+			 <div class="wkrf-form">
+			<?php 
+				foreach ($tags as $elem){
+					$name = str_replace(" ", "_", $elem->name);
+					$id = $name;
+					$tag_link = get_tag_link($elem->term_id);
+					//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+					wp_nonce_field( 'save_'.$name, $name.'_nonce');
+					?>
+					
+					<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
+						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
+						<!-- WIKI ID -->
+						<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
+							name="<?php echo $this->plugin_name.'[tag-'.$name.']';?>"
+							type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
+							title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+								echo $wikidata_descriptions_by_tags['description-'.$name]; }
+								else{ echo ""; }; ?>"
+							value="<?php if(isset($wikidata_ids_by_tags['tag-'.$name])){ echo $wikidata_ids_by_tags['tag-'.$name]; } ?>">
+						<!-- WIKI DESCRIPTION -->
+						<input id="<?php echo $this->plugin_name.'_description_'.$name; ?>"
+							name="<?php echo $this->plugin_name.'[description-'.$name.']'; ?>"
+							type="hidden" 
+							value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+								echo $wikidata_descriptions_by_tags['description-'.$name]; }
+								else{ echo ""; }; ?>">
+						<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
+							class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
+							onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
+								<i class="fa fa-search"></i>
+						</span>
+					</div>
+					
 				
 					<?php 
 				}
 					?>
-					
+				</div>
 					
 				<!--
 				desirable? 	
@@ -155,7 +180,7 @@
 		<div class="wkrf-setup">
 		<br>
 		<hr>
-		<h2><?php echo __("Referencias")?></h2>
+		<h2 class="wkrf-setup-title"><?php echo __("Referencias")?></h2>
 		<!-- Activates/deactivates references by tag -->
     	
     	<fieldset>

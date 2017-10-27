@@ -183,9 +183,9 @@ class Wikidata_References_Admin {
 			$name = str_replace(" ", "_", $elem->name);
 			
 			//tag name
-			$valid[$name] = (isset($input[$name]) && !empty($input[$name])) ? str_replace("\"", " ", $input[$name]): null;
+			$valid['tag-'.$name] = (isset($input['tag-'.$name]) && !empty($input['tag-'.$name])) ? $input['tag-'.$name] : null;
 			//tag description, only available if there is an associated id
-			if($valid[$name]){
+			if($valid['tag-'.$name]){
 				$valid['description-'.$name] = (isset($input['description-'.$name]) && !empty($input['description-'.$name])) ? $input['description-'.$name] : null;
 			}
 			else{

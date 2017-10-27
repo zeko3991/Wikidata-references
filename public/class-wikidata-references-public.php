@@ -125,9 +125,9 @@ class Wikidata_References_Public {
 				foreach($post_tags as $post_tag){						
 					$tag_name = str_replace(" ", "_", $post_tag->name);
 					// checks if the tag has an associated wikidata id	
-					if(isset($options[$tag_name])){						
+					if(isset($options['tag-'.$tag_name])){						
 						echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';  // debug info metadata
-						echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options[$tag_name].'" />';
+						echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
 					}
 				}
 			}
@@ -141,8 +141,8 @@ class Wikidata_References_Public {
 			$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
 			
 			// if current and tag url coincide, and tag associated to a wikidata id
-			if(($current_url == $tag_link) && isset($options[$tag_name])){       
-				echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options[$tag_name].'" />';
+			if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){       
+				echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
 			}
 		}
 		

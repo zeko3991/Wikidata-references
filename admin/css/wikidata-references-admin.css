@@ -120,6 +120,17 @@
 	float: right;
 	margin-left: 15em;
 }
+.wkrf-setup {
+	margin-top: 2em;
+	padding-bottom: 1em;
+	
+}
+
+.wkrf-setup {
+	margin-top: 1em;
+	overflow: auto;
+}
+
 
 .wkrf-setup .wkrf-setup-button {
 	clear:both;
@@ -128,6 +139,7 @@
 .wkrf-setup .wkrf-setup-button .btn {
 	margin-top: 3em;
 }
+
 
 
 

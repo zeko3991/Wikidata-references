@@ -215,6 +215,7 @@ class Wikidata_References {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		//$this->loader->add_action('wp_head', $plugin_public, 'wkrf_add_header_metadata_action', 1 , 1);
 		//$this->loader->add_action('wkrf_metadata_action', $plugin_public, 'wkrf_add_header_tag_metadata', 1, 1);
+		
 		$this->loader->add_action('wp_head', $plugin_public, 'wkrf_add_header_tag_metadata', 1, 1);
 		
 		
