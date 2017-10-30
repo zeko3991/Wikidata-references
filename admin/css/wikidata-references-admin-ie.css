@@ -1,0 +1,149 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+ 
+ 
+ .right {
+ 	float: right;
+ }
+ 
+ .left {
+ 	float: left;
+ }
+
+
+.wkrf-setup {
+	clear:both;
+	border-top: 5%;
+}
+
+.wkrf-assoc-textfield{
+	display: inline-block;
+	float: right;
+	clear: left;
+}
+
+.wkrf-assoc-icon {
+	float: right;
+	display:inline-block;
+    vertical-align: center;
+    border-top: 50px;
+}
+
+.wkrf-setup .wkrf-tag-form {
+	border: 3px solid;	
+	border-color: transparent;
+}
+
+
+/* MODAL BOX TO SELECT WIKI ITEM */
+.wrap .modal{
+	display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 5%; /* Location of the box */
+    padding-bottom: 10%;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.wrap  .modal .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.wkrf-modal-window-content{
+	overflow: scroll;
+}
+
+
+
+
+.wkrf-modal-list-header {
+	height: content;
+	padding-top: 3em;
+	padding-left: 5em;
+	padding-bottom: 3em;
+	display:block;
+	border-bottom: 1px solid;
+	border-color: #DCDCDC;
+	
+}
+
+.wkrf-modal-list-item{
+	clear: both;
+	height: content;
+	padding-top: 1em;
+	padding-left: 5em;
+	padding-bottom: 3em;
+	display:block;
+	border-bottom: 1px solid;
+	border-color: #DCDCDC;
+}
+
+.wkrf-modal-list-item:hover {
+	cursor:pointer;
+	background-color: #EFEFEF;
+}
+
+
+.wkrf_modal_window_message {
+	text-align: center;
+	padding: 10em;
+	
+}
+
+#wkrf_close {
+	float: right;
+	margin-left: 15em;
+}
+.wkrf-setup {
+	margin-top: 2em;
+	padding-bottom: 1em;
+	
+}
+
+.wkrf-setup {
+	margin-top: 1em;
+	overflow: auto;
+}
+
+
+.wkrf-setup .wkrf-setup-button {
+	clear:both;
+}
+
+.wkrf-setup .wkrf-setup-button .btn {
+	margin-top: 3em;
+}
+
+
+
+
+
+

@@ -73,8 +73,24 @@ class Wikidata_References_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wikidata-references-admin.css', array(), $this->version, 'all' );
+		global $is_winIE;
+		
+		
+		if($is_winIE){
+			/*CSS STYLE FOR INTERNET EXPLORER
+			 *
+			 * Built-in wp function wp_style_add_data() just works for IE versions 9 or 
+			 * previous, so it won't work with IE 10-11
+			 * wp_style_add_data( $this->plugin_name.'-ie', 'conditional', 'lt IE 9' );
+			 */
+			wp_enqueue_style( $this->plugin_name.'-ie', plugin_dir_url(__FILE__) . 'css/wikidata-references-admin-ie.css', array(), $this->version, 'all' );
+		}
+		else{
+			//CSS STYLE
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wikidata-references-admin.css', array(), $this->version, 'all' );
+		}
+		
+		
 		
 		//FONT-AWESOME
 		wp_register_style('font-awesome', plugins_url('wikidata-references/font-awesome-4.7.0/css/font-awesome.min.css') );

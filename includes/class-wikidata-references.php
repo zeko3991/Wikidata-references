@@ -138,7 +138,7 @@ class Wikidata_References {
 		 * Wikidata References
 		 * The class responsible for defining different utilities, as parsing text or checking data.
 		 */
-		require_once plugin_dir_path( dirname(__FILE__ ) ) . 'includes/class-wikidata-references-utilities.php';
+		//require_once plugin_dir_path( dirname(__FILE__ ) ) . 'includes/class-wikidata-references-utilities.php';
 		
 		
 		$this->loader = new Wikidata_References_Loader();
