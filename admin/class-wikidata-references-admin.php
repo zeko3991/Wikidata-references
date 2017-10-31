@@ -197,8 +197,10 @@ class Wikidata_References_Admin {
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
 		foreach ($tags as $elem){
 			$name = str_replace(" ", "_", $elem->name);
+			$name = str_replace("'", "", $name);
+			$name = str_replace('"', '', $name);
+			$name = str_replace('amp;', '', $name);
 			
-			//tag name
 			$valid['tag-'.$name] = (isset($input['tag-'.$name]) && !empty($input['tag-'.$name])) ? $input['tag-'.$name] : null;
 			//tag description, only available if there is an associated id
 			if($valid['tag-'.$name]){

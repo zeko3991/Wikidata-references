@@ -48,7 +48,7 @@
 		$wikidata_descriptions_by_tags = array();
 		
 		foreach ($tags as $elem){
-			$name = str_replace(" ", "_", $elem->name);
+			$name = wkrf_sanitize_tag_name($elem->name);
 			if(isset($options['tag-'.$name])){
 				$wikidata_ids_by_tags['tag-'.$name] = $options['tag-'.$name];
 			}
@@ -58,6 +58,24 @@
 			}
 		}
 		
+		
+		function wkrf_sanitize_search_term($input){
+			$name = str_replace("'", "", $input);
+			$name = str_replace('"', '', $name);
+			$name = str_replace('amp;', '', $name);
+			$name = str_replace('&', '', $name);
+			$name = str_replace('|', '', $name);
+			$name = str_replace('=', '', $name);
+			return $name;
+		}
+		
+		function wkrf_sanitize_tag_name($input){
+			$name = str_replace(" ", "_", $input);
+			$name = str_replace("'", "", $name);
+			$name = str_replace('"', '', $name);
+			$name = str_replace('amp;', '', $name);
+			return $name;
+		}
 		/*
 	 * if(isset($options['madrid'])){
 	 * $madrid = $options['madrid'];
@@ -130,33 +148,38 @@
 			 <div class="wkrf-form">
 			<?php 
 				foreach ($tags as $elem){
-					$name = str_replace(" ", "_", $elem->name);
-					$id = $name;
+					$name = wkrf_sanitize_tag_name($elem->name);
+					$search_name = wkrf_sanitize_search_term($elem->name);
 					$tag_link = get_tag_link($elem->term_id);
+					$tag_id = $this->plugin_name.'_tag_'.$name;
+					$tag_name = $this->plugin_name.'[tag-'.$name.']';
+					$description_id = $this->plugin_name.'_description_'.$name;
+					$description_name = $this->plugin_name.'[description-'.$name.']';
+					
 					//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
 					wp_nonce_field( 'save_'.$name, $name.'_nonce');
 					?>
 					
 					<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link;?>" > <?php echo $elem->name?></a></label>
+						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link; ?>" > <?php echo $elem->name?></a> </label>
 						<!-- WIKI ID -->
-						<input id="<?php echo $this->plugin_name.'_tag_'.$name; ?>"
-							name="<?php echo $this->plugin_name.'[tag-'.$name.']';?>"
+						<input id="<?php echo $tag_id; ?>"
+							name="<?php echo $tag_name; ?>"
 							type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
 							title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
 								echo $wikidata_descriptions_by_tags['description-'.$name]; }
 								else{ echo ""; }; ?>"
 							value="<?php if(isset($wikidata_ids_by_tags['tag-'.$name])){ echo $wikidata_ids_by_tags['tag-'.$name]; } ?>">
 						<!-- WIKI DESCRIPTION -->
-						<input id="<?php echo $this->plugin_name.'_description_'.$name; ?>"
-							name="<?php echo $this->plugin_name.'[description-'.$name.']'; ?>"
+						<input id="<?php echo $description_id; ?>"
+							name="<?php echo $description_name; ?>"
 							type="hidden" 
 							value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
 								echo $wikidata_descriptions_by_tags['description-'.$name]; }
 								else{ echo ""; }; ?>">
 						<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
 							class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
-							onclick="wkrf_modal_selection('<?php echo $elem->name;?>', '<?php echo $this->plugin_name.'_tag_'.$name; ?>')">
+							onclick="wkrf_modal_selection('<?php echo $search_name; ?>', '<?php echo $tag_id; ?>')">
 								<i class="fa fa-search"></i>
 						</span>
 					</div>
