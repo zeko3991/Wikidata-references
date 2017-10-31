@@ -23,67 +23,53 @@
 	<h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 	
 	<form method="post" name="wiki_references_options" action="options.php">
-	<?php 
-		settings_fields($this->plugin_name); 
-		do_settings_sections($this->plugin_name);	
+	<?php
+	settings_fields ( $this->plugin_name );
+	do_settings_sections ( $this->plugin_name );
 	?>
-	<?php 
+	<?php
 	
-		$tags = get_tags();
-		//Grab all setup options
-		$options = get_option($this->plugin_name);
-		
-		//Wiki references options
-		$references_by_tag = $options['references_by_tag'];
-		$references_footnote = $options['references_footnote'];	
-		
-		//Reference formats options
-		
-		$ieee_format;
-		$harvard_format;
-		$simple_format;
-		
-		//array of tags-wiki ids values
-		$wikidata_ids_by_tags = array();
-		$wikidata_descriptions_by_tags = array();
-		
-		foreach ($tags as $elem){
-			$name = wkrf_sanitize_tag_name($elem->name);
-			if(isset($options['tag-'.$name])){
-				$wikidata_ids_by_tags['tag-'.$name] = $options['tag-'.$name];
-			}
-			
-			if(isset($options['description-'.$name])){
-				$wikidata_descriptions_by_tags['description-'.$name] = $options['description-'.$name];
-			}
+	require_once ('wikidata-references-admin-utilities.php');
+	$utilities = new Wikidata_References_Utilities ();
+	
+	$tags = get_tags ();
+	// Grab all setup options
+	$options = get_option ( $this->plugin_name );
+	
+	// Wiki references options
+	$references_by_tag = $options ['references_by_tag'];
+	$references_footnote = $options ['references_footnote'];
+	
+	// Reference formats options
+	
+	$ieee_format;
+	$harvard_format;
+	$simple_format;
+	
+	// array of tags-wiki ids values
+	$wikidata_ids_by_tags = array ();
+	$wikidata_descriptions_by_tags = array ();
+	
+	foreach ( $tags as $elem ) {
+		// $name = wkrf_sanitize_tag_name($elem->name);
+		$name = $utilities->wkrf_sanitize_tag_name ( $elem->name );
+		if (isset ( $options ['tag-' . $name] )) {
+			$wikidata_ids_by_tags ['tag-' . $name] = $options ['tag-' . $name];
 		}
 		
-		
-		function wkrf_sanitize_search_term($input){
-			$name = str_replace("'", "", $input);
-			$name = str_replace('"', '', $name);
-			$name = str_replace('amp;', '', $name);
-			$name = str_replace('&', '', $name);
-			$name = str_replace('|', '', $name);
-			$name = str_replace('=', '', $name);
-			return $name;
+		if (isset ( $options ['description-' . $name] )) {
+			$wikidata_descriptions_by_tags ['description-' . $name] = $options ['description-' . $name];
 		}
-		
-		function wkrf_sanitize_tag_name($input){
-			$name = str_replace(" ", "_", $input);
-			$name = str_replace("'", "", $name);
-			$name = str_replace('"', '', $name);
-			$name = str_replace('amp;', '', $name);
-			return $name;
-		}
-		/*
+	}
+	
+	/*
 	 * if(isset($options['madrid'])){
 	 * $madrid = $options['madrid'];
 	 * echo "<h1>madrid=".$madrid."</h1>";
 	 *
 	 * }
 	 */
-		
+	
 	// selección de formatos
 	if (isset ( $options ['ieee_format'] )) {
 		$ieee_format = $options ['ieee_format'];
@@ -125,7 +111,6 @@
 				echo __("space for ordinary metadata and schema.org ?? ")
 					?>
 					
-					
 				<!--
 				desirable? 	
 				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
@@ -148,8 +133,10 @@
 			 <div class="wkrf-form">
 			<?php 
 				foreach ($tags as $elem){
-					$name = wkrf_sanitize_tag_name($elem->name);
-					$search_name = wkrf_sanitize_search_term($elem->name);
+					$name = $utilities->wkrf_sanitize_tag_name($elem->name);
+					//$name = wkrf_sanitize_tag_name($elem->name);
+					$search_name = $utilities->wkrf_sanitize_search_term($elem->name);
+					//$search_name = wkrf_sanitize_search_term($elem->name);
 					$tag_link = get_tag_link($elem->term_id);
 					$tag_id = $this->plugin_name.'_tag_'.$name;
 					$tag_name = $this->plugin_name.'[tag-'.$name.']';

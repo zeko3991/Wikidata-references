@@ -40,6 +40,15 @@ class Wikidata_References_Admin {
 	 */
 	private $version;
 	
+	
+	/**
+	 * Utilities class instance
+	 * 
+	 * @since 1.0.0
+	 * @access private
+	 */
+	private $utilities;
+	
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -52,6 +61,9 @@ class Wikidata_References_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		
+		
+		require_once('partials/wikidata-references-admin-utilities.php');
+		$this->utilities = new Wikidata_References_Utilities();
 		//add_action('added_option', array($this, 'wkrf_add_meta_by_tags'));
 	}
 
@@ -196,10 +208,10 @@ class Wikidata_References_Admin {
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
 		foreach ($tags as $elem){
-			$name = str_replace(" ", "_", $elem->name);
-			$name = str_replace("'", "", $name);
-			$name = str_replace('"', '', $name);
-			$name = str_replace('amp;', '', $name);
+			$name = $this->utilities->wkrf_sanitize_tag_name($elem->name);
+			
+			
+			
 			
 			$valid['tag-'.$name] = (isset($input['tag-'.$name]) && !empty($input['tag-'.$name])) ? $input['tag-'.$name] : null;
 			//tag description, only available if there is an associated id
@@ -215,27 +227,7 @@ class Wikidata_References_Admin {
 		return $valid;
 	}
 	
-	/**
-	 * DEPRECATED
-	 * Wikidata References
-	 * adds meta value for each tag with an associated wikidata id value
-	 * @since 1.0.0
-	 */
-	public function wkrf_add_meta_by_tags(){
-		$tags = get_tags();
-		$options = get_option($this->plugin_name);
-		
-		foreach($tags as $elem){
-			$name = str_replace(" ", "_", $elem->name);
-			if(isset($options[$name]) && ($options[$name] != null)){
-				add_term_meta ($elem->term_id, "property", "dc.sameAs");
-				add_term_meta ($elem->term_id, "content", "wikidata".$options[$name]);
-				/*echo "eeeeeeoo";
-				echo "<br>";
-				echo get_header();*/
-			}
-		}
-	}
+
 
 	
 
