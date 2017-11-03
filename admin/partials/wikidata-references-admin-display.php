@@ -24,14 +24,16 @@
 	
 	<form method="post" name="wiki_references_options" action="options.php">
 	<?php
+	
 	settings_fields ( $this->plugin_name );
 	do_settings_sections ( $this->plugin_name );
-	?>
-	<?php
 	
+	
+	//Utilities class instance 
 	require_once ('wikidata-references-admin-utilities.php');
 	$utilities = new Wikidata_References_Utilities ();
 	
+	// Grab all tags
 	$tags = get_tags ();
 	// Grab all setup options
 	$options = get_option ( $this->plugin_name );
@@ -41,7 +43,6 @@
 	$references_footnote = $options ['references_footnote'];
 	
 	// Reference formats options
-	
 	$ieee_format;
 	$harvard_format;
 	$simple_format;
@@ -62,13 +63,6 @@
 		}
 	}
 	
-	/*
-	 * if(isset($options['madrid'])){
-	 * $madrid = $options['madrid'];
-	 * echo "<h1>madrid=".$madrid."</h1>";
-	 *
-	 * }
-	 */
 	
 	// selección de formatos
 	if (isset ( $options ['ieee_format'] )) {
@@ -102,6 +96,7 @@
     	<!-- ///////////////////////////////////ORDINARY METADATA/////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 		
+		<!-- 
 		<div class="wkrf-setup">
 			<h2 class="wkrf-setup-title"><?php echo _e("Metadata")?></h2>
 		 	<span class="help-block"><?php echo __("WIP") ?></span>  
@@ -110,16 +105,16 @@
 			<?php 
 				echo __("space for ordinary metadata and schema.org ?? ")
 					?>
-					
+			 -->		
 				<!--
 				desirable? 	
 				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
 					<button type="button" class=" btn btn-primary"  onclick="wkrf_auto_fill_wiki_ids("")"> <?php echo _("Auto fill wikidata ids"); ?> </button>
 				</div>
 				 -->
-				 
+				<!--  
 		</div>
-		
+				 -->
 	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////ASSOCIATIONS//////////////////////////////////// -->
@@ -134,9 +129,7 @@
 			<?php 
 				foreach ($tags as $elem){
 					$name = $utilities->wkrf_sanitize_tag_name($elem->name);
-					//$name = wkrf_sanitize_tag_name($elem->name);
 					$search_name = $utilities->wkrf_sanitize_search_term($elem->name);
-					//$search_name = wkrf_sanitize_search_term($elem->name);
 					$tag_link = get_tag_link($elem->term_id);
 					$tag_id = $this->plugin_name.'_tag_'.$name;
 					$tag_name = $this->plugin_name.'[tag-'.$name.']';

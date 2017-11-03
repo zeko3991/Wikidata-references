@@ -154,5 +154,33 @@ class Wikidata_References_Public {
 		*/
 		
 	}
+	
+	
+	
+	public function wkrf_add_tag_title_microdata($content){
+		//$old_title = '#<h1 class="page-title">(.*?)</h1>#';
+		$old_title = '/shop/';
+		//$old_title = '/Etiqueta: shop/';
+		
+		//$old_title = '/<p>nueva entrada<\/p>/';
+		//$old_title = '/<header class="page-header">(.*?)<\/header>/';
+		//$new_title = '<h1 class="page-title">New title</h1>';
+		$new_title = 'shoop';
+		//$new_title = '<h1 class="page-titleee">';
+		//$new_title = '<p>Changed this using "the content" hooks</>';
+		//$new_header= get_header();
+		//error_log('-------------------------');
+		error_log('header: '.$content);
+		//error_log('-------------------------');
+		$content= preg_replace($old_title, $new_title, $content);
+		//$header= 'helo'.$header;
+		error_log("body: ".$content);
+		//$content= $content.' <meta property="holi" content="holi" />';
+		//$content = $content.' donde entra esto?';
+		//$content = $content.' \n '.single_tag_title();
+		//$content = $content.'Changed this using "the_title" hook';
+		return $content;
+		
+	}
 
 }

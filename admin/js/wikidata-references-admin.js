@@ -182,9 +182,6 @@ function wkrf_fill_wiki_id(input_id, wikidata_id, description){
 	wkrf_modal_selection_close();
 }
 
-function wkrf_auto_fill_wiki_ids(tag_list){
-	alert("still does not work =) ");
-}
 ////////////////////////////////////////////////
 
 
