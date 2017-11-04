@@ -31,10 +31,16 @@
     border-top: 50px;
 }
 
+.wkrf-setup .wkrf-metadata-form {
+	border: 3px solid;	
+	border-color: transparent;
+}
 .wkrf-setup .wkrf-tag-form {
 	border: 3px solid;	
 	border-color: transparent;
 }
+
+
 
 
 /* MODAL BOX TO SELECT WIKI ITEM */
@@ -122,13 +128,13 @@
 }
 .wkrf-setup {
 	margin-top: 2em;
+	margin-bottom: 15em;
 	padding-bottom: 1em;
 	
 }
 
 .wkrf-setup {
 	margin-top: 1em;
-	overflow: auto;
 }
 
 

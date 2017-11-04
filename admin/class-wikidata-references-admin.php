@@ -196,23 +196,27 @@ class Wikidata_References_Admin {
 	public function wkrf_validate_wiki_references_setup($input){
 		$valid = array();
 		
+		//deprecated?
 		$valid ['references_by_tag'] = (isset ( $input ['references_by_tag'] ) && ! empty ( $input ['references_by_tag'] )) ? 1 : 0;
 		$valid ['references_footnote'] = (isset ( $input ['references_footnote'] ) && ! empty ( $input ['references_footnote'] )) ? 1 : 0;
 		$valid ['ieee_format'] = (isset ( $input ['ieee_format'] ) && ! empty ( $input ['ieee_format'] )) ? 1 : 0;
 		$valid ['harvard_format'] = (isset ( $input ['harvard_format'] ) && ! empty ( $input ['harvard_format'] )) ? 1 : 0;
 		$valid ['simple_format'] = (isset ( $input ['simple_format'] ) && ! empty ( $input ['simple_format'] )) ? 1 : 0;
 		
-
+		$valid['prueba'] = (isset($input['prueba']) && ! empty($input['prueba'])) ? $input['prueba'] : null;
+		//metadata values
+		$valid ['author_meta'] = (isset ($input['author_meta']) && ! empty ($input['author_meta'])) ? $input['author_meta'] : null;
+		$valid ['copyright_meta'] = (isset ($input['copyright_meta'])  && ! empty ($input['copyright_meta'])) ? $input['copyright_meta'] : null;
+		$valid ['subject_meta'] = (isset ($input['subject_meta']) && ! empty ($input['subject_meta'])) ? $input['subject_meta'] : null;
+		$valid ['description_meta'] = (isset ($input['description_meta']) && ! empty ($input['description_meta'])) ? $input['description_meta'] : null;
+		$valid ['keywords_meta'] = (isset ($input['keywords_meta']) && ! empty ($input['keywords_meta'])) ? $input['keywords_meta'] : null;
+		$valid ['metadata_checkbox'] = (isset ($input['metadata_checkbox']) && ! empty ($input['metadata_checkbox'])) ? 1 : 0;
 		
 		//wikidata ids by tag validation
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
 		foreach ($tags as $elem){
 			$name = $this->utilities->wkrf_sanitize_tag_name($elem->name);
-			
-			
-			
-			
 			$valid['tag-'.$name] = (isset($input['tag-'.$name]) && !empty($input['tag-'.$name])) ? $input['tag-'.$name] : null;
 			//tag description, only available if there is an associated id
 			if($valid['tag-'.$name]){

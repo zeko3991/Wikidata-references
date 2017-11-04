@@ -100,6 +100,30 @@ class Wikidata_References_Public {
 
 	}
 
+	/**
+	 * Wikidata References
+	 * Adds metadata to head from the metadata values added in plugin setup.
+	 */
+	public function wkrf_add_header_metadata(){
+	    $options = get_option($this->plugin_name);
+	    if($options['metadata_checkbox']){
+	        if(isset($options['author_meta'])){
+	            echo '<meta name="author" content="'.$options['author_meta'].'" />';
+	        }
+	        if(isset($options['copyright_meta'])){
+	            echo '<meta name="copyright" content="'.$options['copyright_meta'].'" />';
+	        }
+	        if(isset($options['subject_meta'])){
+	            echo '<meta name="subject" content="'.$options['subject_meta'].'" />';
+	        }
+	        if(isset($options['description_meta'])){
+	            echo '<meta name="description" content="'.$options['description_meta'].'" />';
+	        }
+	        if(isset($options['keywords_meta'])){
+	            echo '<meta name="keywords" content="'.$options['keywords_meta'].'" />';
+	        }
+	    }
+	}
 	
 	/**
 	 * Wikidata References

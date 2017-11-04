@@ -38,6 +38,14 @@
 	// Grab all setup options
 	$options = get_option ( $this->plugin_name );
 	
+	
+	$author = $options['author_meta'];
+	$metadata_checkbox = $options['metadata_checkbox'];
+	
+	
+	
+	
+	
 	// Wiki references options
 	$references_by_tag = $options ['references_by_tag'];
 	$references_footnote = $options ['references_footnote'];
@@ -96,25 +104,63 @@
     	<!-- ///////////////////////////////////ORDINARY METADATA/////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 		
-		<!-- 
-		<div class="wkrf-setup">
-			<h2 class="wkrf-setup-title"><?php echo _e("Metadata")?></h2>
-		 	<span class="help-block"><?php echo __("WIP") ?></span>  
-		 	<p>
 		
-			<?php 
-				echo __("space for ordinary metadata and schema.org ?? ")
-					?>
-			 -->		
-				<!--
-				desirable? 	
-				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
-					<button type="button" class=" btn btn-primary"  onclick="wkrf_auto_fill_wiki_ids("")"> <?php echo _("Auto fill wikidata ids"); ?> </button>
-				</div>
-				 -->
-				<!--  
+		<div class="wkrf-setup">
+			<h2 class="wkrf-setup-title"><?php echo _e("Metadata")?></h2> 	
+    		 	<!-- AUTHOR -->
+    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
+        				<label class="col-md-3 col-xs-12 " >Author</label>
+        				<input id="<?php echo $this->plugin_name.'_author_meta';?>" type="text" class="col-md-4 col-xs-12"
+        					   name="<?php echo $this->plugin_name; ?>[author_meta]" 
+        					   title="<?php echo _("metadata Author's name"); ?>"
+        					   placeholder="author"
+        					   value="<?php if(isset($author)){ echo $author; } ?>">				
+    			</div>
+    			<!-- COPYRIGHT -->
+    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
+        				<label class="col-md-3 col-xs-12 " >Copyright</label>
+        				<input id="<?php echo $this->plugin_name.'_copyright_meta';?>" type="text" class="col-md-4 col-xs-12"
+        					   name="<?php echo $this->plugin_name; ?>[copyright_meta]" 
+        					   title="<?php echo _("metadata copyright information"); ?>"
+        					   value="<?php if(isset($options['copyright_meta'])){ echo $options['copyright_meta']; } ?>"
+        					   placeholder="copyright information">				
+    			</div>
+    			<!-- SUBJECT -->
+    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
+        				<label class="col-md-3 col-xs-12 " >Subject</label>
+        				<input id="<?php echo $this->plugin_name.'_subject_meta';?>" type="text" class="col-md-4 col-xs-12"
+        					   name="<?php echo $this->plugin_name; ?>[subject_meta]" 
+        					   title="<?php echo _("metadata website's subject"); ?>"
+        					   placeholder="website's subject"
+        					   value="<?php if(isset($options['subject_meta'])){ echo $options['subject_meta']; } ?>">				
+    			</div>
+    			<!-- DESCRIPTION -->
+    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
+        				<label class="col-md-3 col-xs-12 " >Description</label>
+        				<input id="<?php echo $this->plugin_name.'_description_meta';?>" type="text" class="col-md-4 col-xs-12"
+        					   name="<?php echo $this->plugin_name; ?>[description_meta]" 
+        					   title="<?php echo _("metadata web description"); ?>"
+        					   placeholder="description"
+        					   value="<?php if(isset($options['description_meta'])){ echo $options['description_meta']; } ?>">
+    			</div>
+    			<!-- KEYWORDS -->
+    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
+        				<label class="col-md-3 col-xs-12 " >Keywords</label>
+        				<input id="<?php echo $this->plugin_name.'_keywords_meta';?>" type="text" class="col-md-4 col-xs-12"
+        					   name="<?php echo $this->plugin_name; ?>[keywords_meta]" 
+        					   title="<?php echo _("keywords of your web"); ?>"
+        					   placeholder="keywords, separated by commas"
+        					   value="<?php if(isset($options['keywords_meta'])){ echo $options['keywords_meta']; } ?>">
+    			</div>
+    			<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
+    			<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+        				<label for="<?php echo $this->plugin_name; ?>-metadata_checkbox">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_checkbox" name="<?php echo $this->plugin_name; ?>[metadata_checkbox]" value="1" <?php checked($metadata_checkbox, 1); ?> />
+    	            	<span><?php esc_attr_e('Add this metadata to my website\'s head', $this->plugin_name); ?></span>
+    	        </label>
+    			</div>
 		</div>
-				 -->
+		<hr>
 	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////ASSOCIATIONS//////////////////////////////////// -->
@@ -125,6 +171,7 @@
 		<h2 class="wkrf-setup-title"><?php echo _e("Wikidata Associations")?></h2>
 			 <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
 			 <p>
+			 
 			 <div class="wkrf-form">
 			<?php 
 				foreach ($tags as $elem){
@@ -141,7 +188,7 @@
 					?>
 					
 					<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link; ?>" > <?php echo $elem->name?></a> </label>
+						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link; ?>" > <?php echo $elem->name; ?></a> </label>
 						<!-- WIKI ID -->
 						<input id="<?php echo $tag_id; ?>"
 							name="<?php echo $tag_name; ?>"
