@@ -16,6 +16,9 @@
 .wkrf-setup {
 	clear:both;
 	border-top: 5%;
+	margin-top: 2em;
+	margin-bottom: 15em;
+	padding-bottom: 1em;
 }
 
 .wkrf-assoc-textfield{
@@ -126,12 +129,7 @@
 	float: right;
 	margin-left: 15em;
 }
-.wkrf-setup {
-	margin-top: 2em;
-	margin-bottom: 15em;
-	padding-bottom: 1em;
-	
-}
+
 
 .wkrf-setup {
 	margin-top: 1em;

@@ -40,8 +40,8 @@
 	
 	
 	$author = $options['author_meta'];
-	$metadata_checkbox = $options['metadata_checkbox'];
-	$tag_title_link_checkbox = $options['tag_title_link_checkbox'];
+	$metadata_enable = $options['metadata_enable'];
+	$tag_title_link_enable = $options['tag_title_link_enable'];
 	
 	
 	
@@ -154,8 +154,8 @@
     			</div>
     			<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
     			<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
-        				<label for="<?php echo $this->plugin_name; ?>-metadata_checkbox">
-    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_checkbox" name="<?php echo $this->plugin_name; ?>[metadata_checkbox]" value="1" <?php checked($metadata_checkbox, 1); ?> />
+        				<label for="<?php echo $this->plugin_name; ?>-metadata_enable">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_enable" name="<?php echo $this->plugin_name; ?>[metadata_enable]" value="1" <?php checked($metadata_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add this metadata to my website\'s head', $this->plugin_name); ?></span>
     	        </label>
     			</div>
@@ -216,9 +216,10 @@
 				}
 					?>
 					<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
+					
     				<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-tag-title-link-checkbox">
-    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-tag_title_link_checkbox" name="<?php echo $this->plugin_name; ?>[tag_title_link_checkbox]" value="1" <?php checked($tag_title_link_checkbox, 1); ?> />
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-tag_title_link_enable" name="<?php echo $this->plugin_name; ?>[tag_title_link_enable]" value="1" <?php checked($tag_title_link_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add a link to wikidata on tag archive\'s title', $this->plugin_name); ?></span>
     	       			</label>
     				</div>
@@ -234,6 +235,8 @@
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<?php /**
+    	
 		<div class="wkrf-setup">
 		<br>
 		<hr>
@@ -264,10 +267,14 @@
     	<hr>
     	</div>
     	
+    	*/?>
+    	
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////FORMATOS//////////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	
+    	
+    	<?php /**
     	<h2><?php echo __("Formatos")?></h2>
     	
     	
@@ -333,6 +340,7 @@
     	<br>
     	<hr>
     	
+    	*/?>
 		
 		<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
 		

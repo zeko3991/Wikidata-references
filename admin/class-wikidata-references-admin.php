@@ -210,8 +210,8 @@ class Wikidata_References_Admin {
 		$valid ['subject_meta'] = (isset ($input['subject_meta']) && ! empty ($input['subject_meta'])) ? $input['subject_meta'] : null;
 		$valid ['description_meta'] = (isset ($input['description_meta']) && ! empty ($input['description_meta'])) ? $input['description_meta'] : null;
 		$valid ['keywords_meta'] = (isset ($input['keywords_meta']) && ! empty ($input['keywords_meta'])) ? $input['keywords_meta'] : null;
-		$valid ['metadata_checkbox'] = (isset ($input['metadata_checkbox']) && ! empty ($input['metadata_checkbox'])) ? 1 : 0;
-		$valid ['tag_title_link_checkbox'] = (isset($input['tag_title_link_checkbox']) && ! empty ($input['tag_title_link_checkbox'])) ? 1 : 0;
+		$valid ['metadata_enable'] = (isset ($input['metadata_enable']) && ! empty ($input['metadata_enable'])) ? 1 : 0;
+		$valid ['tag_title_link_enable'] = (isset($input['tag_title_link_enable']) && ! empty ($input['tag_title_link_enable'])) ? 1 : 0;
 		//wikidata ids by tag validation
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
@@ -239,7 +239,7 @@ class Wikidata_References_Admin {
 	public function wkrf_add_header_metadata(){
 	    global $post;
 	    $options = get_option($this->plugin_name);
-	    if($options['metadata_checkbox']){
+	    if($options['metadata_enable']){
 	        if(isset($options['author_meta'])){
 	            echo '<meta name="author" content="'.$options['author_meta'].'" />';
 	            $result = add_post_meta($post->ID, "key", "value", true);
@@ -322,7 +322,7 @@ class Wikidata_References_Admin {
 	    $the_archive_title = __('Tag archives: ');
 	    //if a tag page, adds link 
 	    
-	    if($options['tag_title_link_checkbox']){
+	    if($options['tag_title_link_enable']){
     	    foreach($tags as $tag){
     	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
     	        $tag_name = str_replace(" ", "_", $tag->name);
@@ -330,7 +330,10 @@ class Wikidata_References_Admin {
     	   
     	        // if current and tag url coincide, and tag associated to a wikidata id
     	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
-    	            $content = '<h1 class="page-title">'.$the_archive_title.'<a target="_blank" href='.$wikidata_url.$options['tag-'.$tag_name].' >'.$tag->name.'</a></h1>';
+    	            $content = '<h1 class="page-title">'.$the_archive_title.'<a target="_blank" 
+                                    alt="'.$wikidata_url.$options['tag-'.$tag_name].'" 
+                                    title="'.$wikidata_url.$options['tag-'.$tag_name].'" 
+                                    href='.$wikidata_url.$options['tag-'.$tag_name].' >'.$tag->name.'</a></h1>';
     	            return $content;
     	        }
     	    }
