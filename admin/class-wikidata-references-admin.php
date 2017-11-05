@@ -211,7 +211,7 @@ class Wikidata_References_Admin {
 		$valid ['description_meta'] = (isset ($input['description_meta']) && ! empty ($input['description_meta'])) ? $input['description_meta'] : null;
 		$valid ['keywords_meta'] = (isset ($input['keywords_meta']) && ! empty ($input['keywords_meta'])) ? $input['keywords_meta'] : null;
 		$valid ['metadata_checkbox'] = (isset ($input['metadata_checkbox']) && ! empty ($input['metadata_checkbox'])) ? 1 : 0;
-		
+		$valid ['tag_title_link_checkbox'] = (isset($input['tag_title_link_checkbox']) && ! empty ($input['tag_title_link_checkbox'])) ? 1 : 0;
 		//wikidata ids by tag validation
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
@@ -231,6 +231,114 @@ class Wikidata_References_Admin {
 		return $valid;
 	}
 	
+	
+	/**
+	 * Wikidata References
+	 * Adds metadata to head from the metadata values added in plugin setup.
+	 */
+	public function wkrf_add_header_metadata(){
+	    global $post;
+	    $options = get_option($this->plugin_name);
+	    if($options['metadata_checkbox']){
+	        if(isset($options['author_meta'])){
+	            echo '<meta name="author" content="'.$options['author_meta'].'" />';
+	            $result = add_post_meta($post->ID, "key", "value", true);
+	            echo '<meta name="inserting_post_meta" content="'.$result.'" />';
+	        }
+	        if(isset($options['copyright_meta'])){
+	            echo '<meta name="copyright" content="'.$options['copyright_meta'].'" />';
+	        }
+	        if(isset($options['subject_meta'])){
+	            echo '<meta name="subject" content="'.$options['subject_meta'].'" />';
+	        }
+	        if(isset($options['description_meta'])){
+	            echo '<meta name="description" content="'.$options['description_meta'].'" />';
+	        }
+	        if(isset($options['keywords_meta'])){
+	            echo '<meta name="keywords" content="'.$options['keywords_meta'].'" />';
+	        }
+	    }
+	}
+	
+	
+	/**
+	 * Wikidata References
+	 * Adds meta value for each tag with an associated wikidata id value.
+	 * Action hooked to wp_head hook, when a page header is loaded.
+	 * Checks if the page that is being loaded is a post or a tag page.
+	 * 		-if a post: will add wiki metadata for every tag in the post, as
+	 * 		 they are associated with a wikidata id at plugin setup page.
+	 * 		-if a tag page: will add wiki metadata for that specific tag as
+	 * 		 it is associated with a wikidata id.
+	 * @since 1.0.0
+	 */
+	public function wkrf_add_header_tag_metadata(){
+	    $options = get_option($this->plugin_name);
+	    $tags = get_tags();
+	    $wikidata_url ='https://www.wikidata.org/wiki/';
+	    global $wp;
+	    
+	    //if current url is a post, adds metadata depending of its tags
+	    if(is_single(get_the_title())){									// if is a post
+	        $post_tags = get_the_tags();								// gets the post tags list
+	        if($post_tags){												// if list is not empty
+	            foreach($post_tags as $post_tag){
+	                $tag_name = str_replace(" ", "_", $post_tag->name);
+	                // checks if the tag has an associated wikidata id
+	                if(isset($options['tag-'.$tag_name])){
+	                    echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';  // debug info metadata
+	                    echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
+	                }
+	            }
+	        }
+	        return; //if current page is a post, will not check if its url coincides with a tag page url
+	    }
+	    
+	    //if a tag page, adds metadata
+	    foreach($tags as $tag){
+	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
+	        $tag_name = str_replace(" ", "_", $tag->name);
+	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
+	        
+	        // if current and tag url coincide, and tag associated to a wikidata id
+	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
+	            echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
+	        }
+	    }
+	    
+	}
+	
+	
+    
+	/**
+	 * Wikidata References
+	 * Adds microdata and a link to wikidata tag
+	 */
+	public function wkrf_change_tag_archive_title($content){
+	    global $wp;
+	    $options = get_option($this->plugin_name);
+	    $tags = get_tags();
+	    $wikidata_url ='https://www.wikidata.org/wiki/';
+	    $the_archive_title = __('Tag archives: ');
+	    //if a tag page, adds link 
+	    
+	    if($options['tag_title_link_checkbox']){
+    	    foreach($tags as $tag){
+    	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
+    	        $tag_name = str_replace(" ", "_", $tag->name);
+    	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
+    	   
+    	        // if current and tag url coincide, and tag associated to a wikidata id
+    	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
+    	            $content = '<h1 class="page-title">'.$the_archive_title.'<a target="_blank" href='.$wikidata_url.$options['tag-'.$tag_name].' >'.$tag->name.'</a></h1>';
+    	            return $content;
+    	        }
+    	    }
+	    }
+    	  
+	    return $content;
+	    
+	}
 
 
 	
