@@ -395,16 +395,16 @@ class Wikidata_References_Admin {
 		//if called when saving a new post
 		$options = get_option($this->plugin_name);
 		$posts_list = get_posts(-1); //gets all posts
+		$metadata_posts_enable = isset($options['metadata_posts_enable']) ? 1 : 0;
+		$author = isset($options['author_meta']) ? $options['author_meta'] : null;
+		$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
+		$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
+		$description = isset($options['description_meta']) ? $options['description_meta'] : null;
+		$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
 		
 		switch ($post_id){
 			case null:		
 				if($metadata_posts_enable){
-					
-					$author = isset($options['author_meta']) ? $options['author_meta'] : null;
-					$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
-					$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
-					$description = isset($options['description_meta']) ? $options['description_meta'] : null;
-					$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
 					
 					foreach($posts_list as $post){
 						if($author != null){
