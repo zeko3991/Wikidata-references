@@ -185,6 +185,8 @@ class Wikidata_References_Admin {
 	public function wkrf_setup_options_update(){
 		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
 	//	$this->wkrf_add_meta_by_tags();
+		$this->wkrf_add_meta_to_tags();
+		$this->wkrf_add_meta_to_posts(null);
 	}
 	
 	
@@ -203,7 +205,7 @@ class Wikidata_References_Admin {
 		$valid ['harvard_format'] = (isset ( $input ['harvard_format'] ) && ! empty ( $input ['harvard_format'] )) ? 1 : 0;
 		$valid ['simple_format'] = (isset ( $input ['simple_format'] ) && ! empty ( $input ['simple_format'] )) ? 1 : 0;
 		
-		$valid['prueba'] = (isset($input['prueba']) && ! empty($input['prueba'])) ? $input['prueba'] : null;
+		//$valid['prueba'] = (isset($input['prueba']) && ! empty($input['prueba'])) ? $input['prueba'] : null;
 		//metadata values
 		$valid ['author_meta'] = (isset ($input['author_meta']) && ! empty ($input['author_meta'])) ? $input['author_meta'] : null;
 		$valid ['copyright_meta'] = (isset ($input['copyright_meta'])  && ! empty ($input['copyright_meta'])) ? $input['copyright_meta'] : null;
@@ -212,6 +214,9 @@ class Wikidata_References_Admin {
 		$valid ['keywords_meta'] = (isset ($input['keywords_meta']) && ! empty ($input['keywords_meta'])) ? $input['keywords_meta'] : null;
 		$valid ['metadata_enable'] = (isset ($input['metadata_enable']) && ! empty ($input['metadata_enable'])) ? 1 : 0;
 		$valid ['tag_title_link_enable'] = (isset($input['tag_title_link_enable']) && ! empty ($input['tag_title_link_enable'])) ? 1 : 0;
+		$valid ['metadata_posts_enable'] = (isset($input['metadata_posts_enable']) && ! empty ($input['metadata_posts_enable'])) ? 1 : 0;
+		$valid ['metadata_tags_enable'] = (isset($input['metadata_tags_enable']) && ! empty ($input['metadata_tags_enable'])) ? 1 : 0;
+		
 		//wikidata ids by tag validation
 		$tags = get_tags();
 		//foreach tag, finds if there is an option related to its name. If found, will take the value from input.
@@ -283,12 +288,15 @@ class Wikidata_References_Admin {
 	        $post_tags = get_the_tags();								// gets the post tags list
 	        if($post_tags){												// if list is not empty
 	            foreach($post_tags as $post_tag){
-	                $tag_name = str_replace(" ", "_", $post_tag->name);
+	                //$tag_name = str_replace(" ", "_", $post_tag->name);
+	                $tag_name = $this->utilities->wkrf_sanitize_tag_name($post_tag->name);
+	                
 	                // checks if the tag has an associated wikidata id
 	                if(isset($options['tag-'.$tag_name])){
 	                    echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';  // debug info metadata
 	                    echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
 	                }
+	                
 	            }
 	        }
 	        return; //if current page is a post, will not check if its url coincides with a tag page url
@@ -297,11 +305,12 @@ class Wikidata_References_Admin {
 	    //if a tag page, adds metadata
 	    foreach($tags as $tag){
 	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
-	        $tag_name = str_replace(" ", "_", $tag->name);
+	        $tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
 	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
 	        
 	        // if current and tag url coincide, and tag associated to a wikidata id
 	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
+	        	//add_term_meta($tag->term_id, "key", "mi_value", true);
 	            echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
 	        }
 	    }
@@ -312,7 +321,7 @@ class Wikidata_References_Admin {
     
 	/**
 	 * Wikidata References
-	 * Adds microdata and a link to wikidata tag
+	 * Adds a link to wikidata to the tag archive title
 	 */
 	public function wkrf_change_tag_archive_title($content){
 	    global $wp;
@@ -320,12 +329,13 @@ class Wikidata_References_Admin {
 	    $tags = get_tags();
 	    $wikidata_url ='https://www.wikidata.org/wiki/';
 	    $the_archive_title = __('Tag archives: ');
+	    $tag_title_link_enable = isset($options['tag_title_link_enable']) ? $options['tag_title_link_enable'] : false;
 	    //if a tag page, adds link 
 	    
-	    if($options['tag_title_link_enable']){
+	    if($tag_title_link_enable){
     	    foreach($tags as $tag){
     	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
-    	        $tag_name = str_replace(" ", "_", $tag->name);
+    	        $tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
     	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
     	   
     	        // if current and tag url coincide, and tag associated to a wikidata id
@@ -343,7 +353,92 @@ class Wikidata_References_Admin {
 	    
 	}
 
+	
+	
+	
+	
+	/**
+	 * Adds wikidata meta data to all tags.
+	 * Will add a link to wikidata term related to the tag name.
+	 * @param unknown $tag_list
+	 */
+	public function wkrf_add_meta_to_tags(){
+		
+		$tag_list = get_tags();
+		$options = get_option($this->plugin_name);
+		$wikidata_key = 'wikidata_link';
+		$wikidata_url ='https://www.wikidata.org/wiki/';
+		$metadata_tags_enable = isset($options['metadata_tags_enable']) ? 1 : 0;
+		
+		if($metadata_tags_enable){
+			foreach($tag_list as $tag){
+				$tag_id = $tag->term_id;
+				$tag_link = get_tag_link($tag_id);
+				$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
+				if(isset($options['tag-'.$tag_name])){
+					$wikidata_tag_link = $wikidata_url.$options['tag-'.$tag_name];
+					update_term_meta($tag_id, $wikidata_key, $wikidata_tag_link);
+				}
+				else{
+					delete_term_meta($tag_id, $wikidata_key);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param unknown $post_id
+	 */
+	public function wkrf_add_meta_to_posts($post_id){
+		//if called when saving a new post
+		$options = get_option($this->plugin_name);
+		$posts_list = get_posts(-1); //gets all posts
+		
+		switch ($post_id){
+			case null:		
+				if($metadata_posts_enable){
+					
+					$author = isset($options['author_meta']) ? $options['author_meta'] : null;
+					$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
+					$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
+					$description = isset($options['description_meta']) ? $options['description_meta'] : null;
+					$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
+					
+					foreach($posts_list as $post){
+						if($author != null){
+							update_post_meta($post->ID, "author", $author);
+						}
+						if($copyright != null){
+							update_post_meta($post->ID, "copyright", $copyright);
+						}
+						if($subject != null){
+							update_post_meta($post->ID, "subject", $subject);
+						}
+						if($description != null){
+							update_post_meta($post->ID, "description", $description);
+						}
+						if($keywords != null){
+							update_post_meta($post->ID, "keywords", $keywords);
+						}
+					}			
+				}
+				else{
+					foreach($posts_list as $post){
+						delete_post_meta($post->ID, "author", $author);
+						delete_post_meta($post->ID, "copyright", $copyright);
+						delete_post_meta($post->ID, "subject", $subject);
+						delete_post_meta($post->ID, "description", $description);
+						delete_post_meta($post->ID, "keywords", $keywords);
+					}
+				}
+				break;
+			
+		}
+	}
 
+	
 	
 
 

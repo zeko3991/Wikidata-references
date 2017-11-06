@@ -17,8 +17,8 @@
 	clear:both;
 	border-top: 5%;
 	margin-top: 2em;
-	margin-bottom: 15em;
 	padding-bottom: 1em;
+	overflow: auto;
 }
 
 .wkrf-assoc-textfield{
@@ -43,6 +43,9 @@
 	border-color: transparent;
 }
 
+.margin-top {
+	margin-top: 3em;
+}
 
 
 
@@ -131,18 +134,6 @@
 }
 
 
-.wkrf-setup {
-	margin-top: 1em;
-}
-
-
-.wkrf-setup .wkrf-setup-button {
-	clear:both;
-}
-
-.wkrf-setup .wkrf-setup-button .btn {
-	margin-top: 3em;
-}
 
 
 

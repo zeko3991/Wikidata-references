@@ -38,22 +38,24 @@
 	// Grab all setup options
 	$options = get_option ( $this->plugin_name );
 	
+	//metadata options
+	$author = isset($options['author_meta']) ? $options['author_meta'] : null;
+	$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
+	$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
+	$description = isset($options['description_meta']) ? $options['description_meta'] : null;
+	$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
 	
-	$author = $options['author_meta'];
-	$metadata_enable = $options['metadata_enable'];
-	$tag_title_link_enable = $options['tag_title_link_enable'];
 	
-	
-	
+	$metadata_enable = isset($options['metadata_enable']) ? $options['metadata_enable'] : null;
+	$tag_title_link_enable = isset($options['tag_title_link_enable']) ? $options['tag_title_link_enable'] : null;
+	$metadata_posts_enable = isset($options['metadata_posts_enable']) ? $options['metadata_posts_enable'] : null;
+	$metadata_tags_enable = isset($options['metadata_tags_enable']) ? $options['metadata_tags_enable'] : null;
 	
 	// Wiki references options
-	$references_by_tag = $options ['references_by_tag'];
-	$references_footnote = $options ['references_footnote'];
+	$references_by_tag = isset($options ['references_by_tag']) ? $options ['references_by_tag']: null;
+	$references_footnote = isset($options ['references_footnote']) ? $options ['references_footnote'] : null;
 	
-	// Reference formats options
-	$ieee_format;
-	$harvard_format;
-	$simple_format;
+
 	
 	// array of tags-wiki ids values
 	$wikidata_ids_by_tags = array ();
@@ -72,24 +74,11 @@
 	}
 	
 	
-	// selección de formatos
-	if (isset ( $options ['ieee_format'] )) {
-		$ieee_format = $options ['ieee_format'];
-	} else {
-		$ieee_format = 0;
-	}
-	
-	if (isset ( $options ['harvard_format'] )) {
-		$harvard_format = $options ['harvard_format'];
-	} else {
-		$harvard_format = 0;
-	}
-	
-	if (isset ( $options ['simple_format'] )) {
-		$simple_format = $options ['simple_format'];
-	} else {
-		$simple_format = 0;
-	}
+	// format selection
+	$ieee_format = isset($options['ieee_format']) ? $options ['ieee_format'] : 0;
+	$harvard_format = isset($options ['harvard_format']) ? $options ['harvard_format'] : 0;
+	$simple_format = isset($options ['simple_format']) ? $options ['simple_format'] : 0;
+
 	if (! isset ( $options ['ieee_format'] ) && ! isset ( $options ['harvard_format'] ) && ! isset ( $options ['simple_format'] )) {
 		$ieee_format = 1;
 		$options ['ieee_format'] = 1;
@@ -122,7 +111,7 @@
         				<input id="<?php echo $this->plugin_name.'_copyright_meta';?>" type="text" class="col-md-4 col-xs-12"
         					   name="<?php echo $this->plugin_name; ?>[copyright_meta]" 
         					   title="<?php echo _("metadata copyright information"); ?>"
-        					   value="<?php if(isset($options['copyright_meta'])){ echo $options['copyright_meta']; } ?>"
+        					   value="<?php if(isset($copyright)){ echo $copyright; } ?>"
         					   placeholder="copyright information">				
     			</div>
     			<!-- SUBJECT -->
@@ -132,7 +121,7 @@
         					   name="<?php echo $this->plugin_name; ?>[subject_meta]" 
         					   title="<?php echo _("metadata website's subject"); ?>"
         					   placeholder="website's subject"
-        					   value="<?php if(isset($options['subject_meta'])){ echo $options['subject_meta']; } ?>">				
+        					   value="<?php if(isset($subject)){ echo $subject; } ?>">				
     			</div>
     			<!-- DESCRIPTION -->
     			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
@@ -141,7 +130,7 @@
         					   name="<?php echo $this->plugin_name; ?>[description_meta]" 
         					   title="<?php echo _("metadata web description"); ?>"
         					   placeholder="description"
-        					   value="<?php if(isset($options['description_meta'])){ echo $options['description_meta']; } ?>">
+        					   value="<?php if(isset($description)){ echo $description; } ?>">
     			</div>
     			<!-- KEYWORDS -->
     			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
@@ -150,13 +139,19 @@
         					   name="<?php echo $this->plugin_name; ?>[keywords_meta]" 
         					   title="<?php echo _("keywords of your web"); ?>"
         					   placeholder="keywords, separated by commas"
-        					   value="<?php if(isset($options['keywords_meta'])){ echo $options['keywords_meta']; } ?>">
+        					   value="<?php if(isset($keywords)){ echo $keywords; } ?>">
     			</div>
     			<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
-    			<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+    			<div class="wkrf-metadata-form margin-top col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-metadata_enable">
     	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_enable" name="<?php echo $this->plugin_name; ?>[metadata_enable]" value="1" <?php checked($metadata_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add this metadata to my website\'s head', $this->plugin_name); ?></span>
+    	        </label>
+    			</div>
+    			<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+        				<label for="<?php echo $this->plugin_name; ?>-metadata_posts_enable">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_posts_enable" name="<?php echo $this->plugin_name; ?>[metadata_posts_enable]" value="1" <?php checked($metadata_posts_enable, 1); ?> />
+    	            	<span><?php esc_attr_e('Add this metadata to my posts', $this->plugin_name); ?></span>
     	        </label>
     			</div>
 		</div>
@@ -169,68 +164,66 @@
 		<div class="wkrf-setup">
 		
 		<h2 class="wkrf-setup-title"><?php echo _e("Wikidata Associations")?></h2>
-			 <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
-			 <p>
+	    <span class="help-block"><?php echo __("Set a Wikidata ID to your tags and categories") ?></span>  
+	    <p>
 			 
-			 <div class="wkrf-form">
-			<?php 
-				foreach ($tags as $elem){
-					$name = $utilities->wkrf_sanitize_tag_name($elem->name);
-					$search_name = $utilities->wkrf_sanitize_search_term($elem->name);
-					$tag_link = get_tag_link($elem->term_id);
-					$tag_id = $this->plugin_name.'_tag_'.$name;
-					$tag_name = $this->plugin_name.'[tag-'.$name.']';
-					$description_id = $this->plugin_name.'_description_'.$name;
-					$description_name = $this->plugin_name.'[description-'.$name.']';
-					
-					//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
-					wp_nonce_field( 'save_'.$name, $name.'_nonce');
-					?>
-					
-					<div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
-						<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link; ?>" > <?php echo $elem->name; ?></a> </label>
-						<!-- WIKI ID -->
-						<input id="<?php echo $tag_id; ?>"
-							name="<?php echo $tag_name; ?>"
-							type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
-							title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
-								echo $wikidata_descriptions_by_tags['description-'.$name]; }
-								else{ echo ""; }; ?>"
-							value="<?php if(isset($wikidata_ids_by_tags['tag-'.$name])){ echo $wikidata_ids_by_tags['tag-'.$name]; } ?>">
-						<!-- WIKI DESCRIPTION -->
-						<input id="<?php echo $description_id; ?>"
-							name="<?php echo $description_name; ?>"
-							type="hidden" 
-							value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
-								echo $wikidata_descriptions_by_tags['description-'.$name]; }
-								else{ echo ""; }; ?>">
-						<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
-							class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
-							onclick="wkrf_modal_selection('<?php echo $search_name; ?>', '<?php echo $tag_id; ?>')">
-								<i class="fa fa-search"></i>
-						</span>
-					</div>
-					
+		<?php 
+			foreach ($tags as $elem){
+				$name = $utilities->wkrf_sanitize_tag_name($elem->name);
+				$search_name = $utilities->wkrf_sanitize_search_term($elem->name);
+				$tag_link = get_tag_link($elem->term_id);
+				$tag_id = $this->plugin_name.'_tag_'.$name;
+				$tag_name = $this->plugin_name.'[tag-'.$name.']';
+				$description_id = $this->plugin_name.'_description_'.$name;
+				$description_name = $this->plugin_name.'[description-'.$name.']';
 				
-					<?php 
-				}
-					?>
-					<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
+				//$tag_post_value = get_post_meta($post->ID, '_'.$name, true);
+				wp_nonce_field( 'save_'.$name, $name.'_nonce');
+				?>
+				
+		   <div class="wkrf-tag-form col-xl-4 col-md-4 col-xs-12 left input-group input-group-sm"  >
+				<label class="col-md-7 col-xs-7" ><a target="_blank" href="<?php echo $tag_link; ?>" > <?php echo $elem->name; ?></a> </label>
+				<!-- WIKI ID -->
+				<input id="<?php echo $tag_id; ?>"
+					name="<?php echo $tag_name; ?>"
+					type="text" class="col-md-4 col-xs-4" placeholder="Wikidata ID#"
+					title="<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+						echo $wikidata_descriptions_by_tags['description-'.$name]; }
+						else{ echo ""; }; ?>"
+					value="<?php if(isset($wikidata_ids_by_tags['tag-'.$name])){ echo $wikidata_ids_by_tags['tag-'.$name]; } ?>">
+				<!-- WIKI DESCRIPTION -->
+				<input id="<?php echo $description_id; ?>"
+					name="<?php echo $description_name; ?>"
+					type="hidden" 
+					value= "<?php if(isset($wikidata_descriptions_by_tags['description-'.$name])){ 
+						echo $wikidata_descriptions_by_tags['description-'.$name]; }
+						else{ echo ""; }; ?>">
+				<span  title="Look for a wikidata item related to the term <?php echo $elem->name;?>" 
+					class="input-group-addon wkrf-association-icon " style="cursor:pointer" 
+					onclick="wkrf_modal_selection('<?php echo $search_name; ?>', '<?php echo $tag_id; ?>')">
+						<i class="fa fa-search"></i>
+				</span>
+			</div>
+				
+			
+				<?php 
+			}
+				?>
+				<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
 					
-    				<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
-        				<label for="<?php echo $this->plugin_name; ?>-tag-title-link-checkbox">
-    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-tag_title_link_enable" name="<?php echo $this->plugin_name; ?>[tag_title_link_enable]" value="1" <?php checked($tag_title_link_enable, 1); ?> />
+    			<div class="wkrf-metadata-form margin-top col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+        			<label for="<?php echo $this->plugin_name; ?>-tag-title-link-checkbox">
+    	                <input type="checkbox" id="<?php echo $this->plugin_name; ?>-tag_title_link_enable" name="<?php echo $this->plugin_name; ?>[tag_title_link_enable]" value="1" <?php checked($tag_title_link_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add a link to wikidata on tag archive\'s title', $this->plugin_name); ?></span>
-    	       			</label>
-    				</div>
-				</div>
-					
-				<!--
-				desirable? 	
-				<div class="col-md-12 wkrf-setup-button" style="clear:both;">
-					<button type="button" class=" btn btn-primary"  onclick="wkrf_auto_fill_wiki_ids("")"> <?php echo _("Auto fill wikidata ids"); ?> </button>
-				</div>
-				 -->
+    	       		</label>
+    			</div>
+    			<div class="wkrf-metadata-form col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+        			<label for="<?php echo $this->plugin_name; ?>-metadata_tags_enable">
+    	                <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_tags_enable" name="<?php echo $this->plugin_name; ?>[metadata_tags_enable]" value="1" <?php checked($metadata_tags_enable, 1); ?> />
+    	            	<span><?php esc_attr_e('Add wikidata link to tag\'s metadata', $this->plugin_name); ?></span>
+    	       		</label>
+    			</div>
+    	
 		</div>
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
@@ -278,72 +271,73 @@
     	<h2><?php echo __("Formatos")?></h2>
     	
     	
-    	
-    	<fieldset>
-    		<h3><?php echo __("IEEE Referencing System")?></h3>
-    		<legend class="screen-reader-text">
-    			<span><?php echo __('Seleccionar formato de referencias IEEE')?></span>
-    		</legend>
-    		<input type="radio" id="<?php echo $this->plugin_name; ?>-ieee_format" 
-    					name="<?php echo $this->plugin_name; ?>[ieee_format]"
-    					<?php checked($ieee_format, 1)?> 
-    					onclick="updateIeeeFormat(this);" 
-    		/>
-    		<label for="<?php echo $this->plugin_name; ?>-ieee_format">
-    			<?php echo __(' [1] "Term", <i>Wikidata</i>, 2015. [Online]. 
-									Available: <a href="https://www.wikidata.org/wiki/Q2013">
+    	<div class="wkrf-setup">
+	    	<fieldset>
+	    		<h3><?php echo __("IEEE Referencing System")?></h3>
+	    		<legend class="screen-reader-text">
+	    			<span><?php echo __('Seleccionar formato de referencias IEEE')?></span>
+	    		</legend>
+	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-ieee_format" 
+	    					name="<?php echo $this->plugin_name; ?>[ieee_format]"
+	    					<?php checked($ieee_format, 1)?> 
+	    					onclick="updateIeeeFormat(this);" 
+	    		/>
+	    		<label for="<?php echo $this->plugin_name; ?>-ieee_format">
+	    			<?php echo __(' [1] "Term", <i>Wikidata</i>, 2015. [Online]. 
+										Available: <a href="https://www.wikidata.org/wiki/Q2013">
+										https://www.wikidata.org/wiki/Q2013</a>.
+										Accessed: 24-jul-2017', $this->plugin_name); ?>
+				</label>
+	    		
+	    	</fieldset>
+	    	
+	    	<fieldset>
+	    		<h3><?php echo __("Harvard Referencing System")?></h3>
+	    		<legend class="screen-reader-text">
+	    			<span><?php echo __('Seleccionar formato de referencias Harvard')?></span>
+	    		</legend>
+	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-harvard_format"
+	    					name="<?php echo $this->plugin_name; ?>[harvard_format]" 
+	    					<?php checked($harvard_format, 1)?> 
+	    					onclick="updateHarvardFormat(this);"
+	    		/>
+	    		<label for="<?php echo $this->plugin_name; ?>-harvard_format">
+	    			<?php echo __('  "Term", <i>Wikidata</i>, Wikimedia Foundation. 19 September 2017.
+										Viewed 21 September 2017, 
+										from <a href="https://www.wikidata.org/wiki/Q2013">
+										https://www.wikidata.org/wiki/Q2013</a>.'
+										, $this->plugin_name); ?>
+				</label>
+	    		
+	    	</fieldset>
+	    	
+	
+	    	<fieldset>
+	    		<h3><?php echo __("Simple")?></h3>
+	    		<legend class="screen-reader-text">
+	    			<span><?php echo __('Seleccionar formato de referencias simple')?></span>
+	    		</legend>
+	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-simple_format" 
+	    					name="<?php echo $this->plugin_name; ?>[simple_format]"
+	    					<?php checked($simple_format, 1)?> 
+	    					onclick="updateSimpleFormat(this);" 
+	    		/>
+	    		<label for="<?php echo $this->plugin_name; ?>-simple_format">
+	    			<?php echo __(' "Term", 
+									<a href="https://www.wikidata.org/wiki/Q2013">
 									https://www.wikidata.org/wiki/Q2013</a>.
 									Accessed: 24-jul-2017', $this->plugin_name); ?>
-			</label>
-    		
-    	</fieldset>
-    	
-    	<fieldset>
-    		<h3><?php echo __("Harvard Referencing System")?></h3>
-    		<legend class="screen-reader-text">
-    			<span><?php echo __('Seleccionar formato de referencias Harvard')?></span>
-    		</legend>
-    		<input type="radio" id="<?php echo $this->plugin_name; ?>-harvard_format"
-    					name="<?php echo $this->plugin_name; ?>[harvard_format]" 
-    					<?php checked($harvard_format, 1)?> 
-    					onclick="updateHarvardFormat(this);"
-    		/>
-    		<label for="<?php echo $this->plugin_name; ?>-harvard_format">
-    			<?php echo __('  "Term", <i>Wikidata</i>, Wikimedia Foundation. 19 September 2017.
-									Viewed 21 September 2017, 
-									from <a href="https://www.wikidata.org/wiki/Q2013">
-									https://www.wikidata.org/wiki/Q2013</a>.'
-									, $this->plugin_name); ?>
-			</label>
-    		
-    	</fieldset>
-    	
-
-    	<fieldset>
-    		<h3><?php echo __("Simple")?></h3>
-    		<legend class="screen-reader-text">
-    			<span><?php echo __('Seleccionar formato de referencias simple')?></span>
-    		</legend>
-    		<input type="radio" id="<?php echo $this->plugin_name; ?>-simple_format" 
-    					name="<?php echo $this->plugin_name; ?>[simple_format]"
-    					<?php checked($simple_format, 1)?> 
-    					onclick="updateSimpleFormat(this);" 
-    		/>
-    		<label for="<?php echo $this->plugin_name; ?>-simple_format">
-    			<?php echo __(' "Term", 
-								<a href="https://www.wikidata.org/wiki/Q2013">
-								https://www.wikidata.org/wiki/Q2013</a>.
-								Accessed: 24-jul-2017', $this->plugin_name); ?>
-			</label>
-    		
-    	</fieldset>
-    	<br>
-    	<hr>
-    	
+				</label>
+	    		
+	    	</fieldset>
+	    	<br>
+	    	<hr>
+    	</div>
     	*/?>
-		
-		<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
-		
+
+		<div class="wkrf-setup">
+			<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
+		</div>
 		
 	</form>
 
