@@ -307,7 +307,7 @@ class Wikidata_References_Admin {
 	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
 	        $tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
 	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-	        
+
 	        // if current and tag url coincide, and tag associated to a wikidata id
 	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
 	        	//add_term_meta($tag->term_id, "key", "mi_value", true);
@@ -341,7 +341,6 @@ class Wikidata_References_Admin {
     	        // if current and tag url coincide, and tag associated to a wikidata id
     	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
     	            $content = '<h1 class="page-title">'.$the_archive_title.'<a target="_blank" 
-                                    alt="'.$wikidata_url.$options['tag-'.$tag_name].'" 
                                     title="'.$wikidata_url.$options['tag-'.$tag_name].'" 
                                     href='.$wikidata_url.$options['tag-'.$tag_name].' >'.$tag->name.'</a></h1>';
     	            return $content;
@@ -368,7 +367,7 @@ class Wikidata_References_Admin {
 		$options = get_option($this->plugin_name);
 		$wikidata_key = 'wikidata_link';
 		$wikidata_url ='https://www.wikidata.org/wiki/';
-		$metadata_tags_enable = isset($options['metadata_tags_enable']) ? 1 : 0;
+		$metadata_tags_enable = isset($options['metadata_tags_enable']) ? $options['metadata_tags_enable'] : 0;
 		
 		if($metadata_tags_enable){
 			foreach($tag_list as $tag){
@@ -393,48 +392,67 @@ class Wikidata_References_Admin {
 	 */
 	public function wkrf_add_meta_to_posts($post_id){
 		//if called when saving a new post
+		error_log("post id: ".$post_id);
 		$options = get_option($this->plugin_name);
 		$posts_list = get_posts(-1); //gets all posts
-		$metadata_posts_enable = isset($options['metadata_posts_enable']) ? 1 : 0;
+		$metadata_posts_enable = isset($options['metadata_posts_enable']) ? $options['metadata_posts_enable'] : 0;
 		$author = isset($options['author_meta']) ? $options['author_meta'] : null;
 		$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
 		$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
 		$description = isset($options['description_meta']) ? $options['description_meta'] : null;
 		$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
 		
-		switch ($post_id){
-			case null:		
-				if($metadata_posts_enable){
-					
-					foreach($posts_list as $post){
-						if($author != null){
-							update_post_meta($post->ID, "author", $author);
-						}
-						if($copyright != null){
-							update_post_meta($post->ID, "copyright", $copyright);
-						}
-						if($subject != null){
-							update_post_meta($post->ID, "subject", $subject);
-						}
-						if($description != null){
-							update_post_meta($post->ID, "description", $description);
-						}
-						if($keywords != null){
-							update_post_meta($post->ID, "keywords", $keywords);
-						}
-					}			
-				}
-				else{
-					foreach($posts_list as $post){
-						delete_post_meta($post->ID, "author", $author);
-						delete_post_meta($post->ID, "copyright", $copyright);
-						delete_post_meta($post->ID, "subject", $subject);
-						delete_post_meta($post->ID, "description", $description);
-						delete_post_meta($post->ID, "keywords", $keywords);
+		if($post_id == null){
+			if($metadata_posts_enable){
+				
+				foreach($posts_list as $post){
+					if($author != null){
+						update_post_meta($post->ID, "author", $author);
 					}
+					if($copyright != null){
+						update_post_meta($post->ID, "copyright", $copyright);
+					}
+					if($subject != null){
+						update_post_meta($post->ID, "subject", $subject);
+					}
+					if($description != null){
+						update_post_meta($post->ID, "description", $description);
+					}
+					if($keywords != null){
+						update_post_meta($post->ID, "keywords", $keywords);
+					}
+				}			
+			}
+			else{
+				foreach($posts_list as $post){
+					delete_post_meta($post->ID, "author");
+					delete_post_meta($post->ID, "copyright");
+					delete_post_meta($post->ID, "subject");
+					delete_post_meta($post->ID, "description");
+					delete_post_meta($post->ID, "keywords");
 				}
-				break;
-			
+			}
+		}
+		else if($post_id != null){
+			if($metadata_posts_enable){
+				
+				foreach($posts_list as $post){
+					update_post_meta($post->ID, "author", $author);
+					update_post_meta($post->ID, "copyright", $copyright);
+					update_post_meta($post->ID, "subject", $subject);
+					update_post_meta($post->ID, "description", $description);
+					update_post_meta($post->ID, "keywords", $keywords);
+				}
+			}
+			else{
+				foreach($posts_list as $post){
+					delete_post_meta($post->ID, "author");
+					delete_post_meta($post->ID, "copyright");
+					delete_post_meta($post->ID, "subject");
+					delete_post_meta($post->ID, "description");
+					delete_post_meta($post->ID, "keywords");
+				}
+			}
 		}
 	}
 
