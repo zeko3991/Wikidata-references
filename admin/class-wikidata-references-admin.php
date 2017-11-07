@@ -388,7 +388,7 @@ class Wikidata_References_Admin {
 			foreach($tag_list as $tag){
 				$tag_id = $tag->term_id;
 				delete_term_meta($tag_id, $wikidata_id_key);
-				delete_term_meta($tag_id, $wikidata_key);
+				delete_term_meta($tag_id, $wikidata_link_key);
 			}
 		}
 	}
