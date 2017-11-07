@@ -64,7 +64,6 @@ class Wikidata_References_Admin {
 		
 		require_once('partials/wikidata-references-admin-utilities.php');
 		$this->utilities = new Wikidata_References_Utilities();
-		//add_action('added_option', array($this, 'wkrf_add_meta_by_tags'));
 	}
 
 	/**
@@ -184,7 +183,6 @@ class Wikidata_References_Admin {
 	 */
 	public function wkrf_setup_options_update(){
 		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
-	//	$this->wkrf_add_meta_by_tags();
 		$this->wkrf_add_meta_to_tags();
 		$this->wkrf_add_meta_to_posts(null);
 	}
@@ -247,8 +245,8 @@ class Wikidata_References_Admin {
 	    if($options['metadata_enable']){
 	        if(isset($options['author_meta'])){
 	            echo '<meta name="author" content="'.$options['author_meta'].'" />';
-	            $result = add_post_meta($post->ID, "key", "value", true);
-	            echo '<meta name="inserting_post_meta" content="'.$result.'" />';
+	            //$result = add_post_meta($post->ID, "key", "value", true);
+	           // echo '<meta name="inserting_post_meta" content="'.$result.'" />';
 	        }
 	        if(isset($options['copyright_meta'])){
 	            echo '<meta name="copyright" content="'.$options['copyright_meta'].'" />';
@@ -365,7 +363,8 @@ class Wikidata_References_Admin {
 		
 		$tag_list = get_tags();
 		$options = get_option($this->plugin_name);
-		$wikidata_key = 'wikidata_link';
+		$wikidata_id_key = 'wikidata_id';
+		$wikidata_link_key = 'wikidata_link';
 		$wikidata_url ='https://www.wikidata.org/wiki/';
 		$metadata_tags_enable = isset($options['metadata_tags_enable']) ? $options['metadata_tags_enable'] : 0;
 		
@@ -376,25 +375,41 @@ class Wikidata_References_Admin {
 				$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
 				if(isset($options['tag-'.$tag_name])){
 					$wikidata_tag_link = $wikidata_url.$options['tag-'.$tag_name];
-					update_term_meta($tag_id, $wikidata_key, $wikidata_tag_link);
+					update_term_meta($tag_id, $wikidata_id_key, $options['tag-'.$tag_name]);
+					update_term_meta($tag_id, $wikidata_link_key, $wikidata_tag_link);
 				}
 				else{
-					delete_term_meta($tag_id, $wikidata_key);
+					delete_term_meta($tag_id, $wikidata_id_key);
+					delete_term_meta($tag_id, $wikidata_link_key);
 				}
+			}
+		}
+		else{
+			foreach($tag_list as $tag){
+				$tag_id = $tag->term_id;
+				delete_term_meta($tag_id, $wikidata_id_key);
+				delete_term_meta($tag_id, $wikidata_key);
 			}
 		}
 	}
 	
 	
 	/**
-	 * 
-	 * @param unknown $post_id
+	 * Adds generic metadata to posts
+	 * If $post_id is null will update/delete all posts metadata, updating or 
+	 * adding values if option "metadata_post_enable" is activated or deleting
+	 * them from all posts if disabled.
+	 * If $post_id is not null and refers to an existing post, will update / delete
+	 * metadata from that post.
+	 * @param int $post_id
 	 */
 	public function wkrf_add_meta_to_posts($post_id){
 		//if called when saving a new post
-		error_log("post id: ".$post_id);
+		
 		$options = get_option($this->plugin_name);
 		$posts_list = get_posts(-1); //gets all posts
+		
+		//gets metadata values
 		$metadata_posts_enable = isset($options['metadata_posts_enable']) ? $options['metadata_posts_enable'] : 0;
 		$author = isset($options['author_meta']) ? $options['author_meta'] : null;
 		$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
