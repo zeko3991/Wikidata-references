@@ -479,6 +479,7 @@ class Wikidata_References_Admin {
 		//Insert HTML and form elements here
 	}
 	
+	/*
 	function wkrf_save_tag_wiki_meta($term_id){
 		$wikidata_id = $_REQUEST['wikidata_id'];
 		//$form_field_2 = $_REQUEST['field-name-2'];
@@ -487,7 +488,7 @@ class Wikidata_References_Admin {
 		update_option($term_id, $meta);
 		update_term_meta($term_id, "wikidata_id", $meta);
 	}
-  
+  */
 	////////////////////////////////////////////////
 	
 	/**
@@ -507,19 +508,10 @@ class Wikidata_References_Admin {
 	 */
 	function wkrf_add_post_tag_wikidata_column_content($content, $column_name, $term_id){
 		$term = get_term($term_id);
+		$wikidata_id = get_option("wikidata_id_tag_".$term->name);
 		switch($column_name){
 			case 'wikidata_id':
-				/*if(get_option($term_id) != null){
-					$option = get_option($term_id);
-					foreach($option as $opt){
-						$content .= $opt;
-					}
-					//$content = $option['wikidata_id'];
-				}
-				else{
-					$content = "na";
-				}*/
-				$content = $term->name;
+				$content = $wikidata_id;
 				break;
 			default:
 				break;
@@ -580,18 +572,30 @@ class Wikidata_References_Admin {
 	}
 	
 	
+	/**
+	 * Displays a field to fill with a wikidata id in tag edit
+	 * screen
+	 * @param unknown $term
+	 */
 	function wkrf_edit_wikidata_id_tag_field($term){
-		$term_id = $term->term_id;
-		$term_meta = get_option("wikidata_id_tag_".$term_id);
+		$term = get_term($term);
+		$term_name = $term->name;
+		$wikidata_id = get_option("wikidata_id_post_tag_".$term_name);
+		$wikidata_description = get_option("wikidata_description_post_tag_".$term_name);
+		$text = "hello";
 		
 		?>
 		<tr class ="form-field">
 			<th scope="row">
 				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID') ?></label>
 				<td>
-					<input type="text" name="term_meta[wikidata_id]" id="term_meta[wikidata_id]">
+					<input type="text" name="term_meta[wikidata_id]" id="term_meta[wikidata_id]"
+						   value="<?php if(isset($wikidata_id)){ echo $wikidata_id; } ?>" >
 					<span class="dashicons dashicons-search" style="cursor:pointer" 
 						  onclick="wkrf_modal_selection(getElementById('slug').value,'term_meta[wikidata_id]')"></span>
+					<input type="text" style="display:none" name="term_meta[wikidata_description]" id="term_meta[wikidata_description]"
+						   value="<?php if(isset($wikidata_description)){ echo $wikidata_description; } else{ echo "nada"; } ?> " >
+					<p class="description"><?php echo $wikidata_description; ?> </p>
 				</td>	
 			</th>
 		</tr>
@@ -613,6 +617,26 @@ class Wikidata_References_Admin {
 		<?php 
 	}
 	
+	function wkrf_save_wikidata_tag_field($term, $taxonomy){
+		$term = get_term($term);
+		$term_name= $term->name;
+		
+		error_log("taxonomy = ".$taxonomy);
+		
+		if (isset( $_POST['term_meta'])){
+			echo "dale";
+			error_log("setted");
+			error_log("name ".$term_name);
+			$term_meta = array();
+			error_log($_POST['term_meta']['wikidata_id']);
+			$term_meta['wikidata_id'] = isset( $_POST['term_meta']['wikidata_id']) ? $_POST['term_meta']['wikidata_id'] : '';
+			$term_meta['wikidata_description'] = isset( $_POST['term_meta']['wikidata_description']) ? $_POST['term_meta']['wikidata_description'] : '';
+			update_option("wikidata_id_".$taxonomy."_".$term_name, $term_meta['wikidata_id']);
+			update_option("wikidata_description_".$taxonomy."_".$term_name, $term_meta['wikidata_description']);
+		}
+		else{
+			error_log("no setted");
+		}
+	}
 	
-
 }

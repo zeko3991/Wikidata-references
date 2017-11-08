@@ -216,11 +216,13 @@ class Wikidata_References {
 		//$this->loader->add_action('add_tag_form_fields', 'tag_add_form_fields', 10, 1);
 		
 		//$this->loader->add_action('category_add_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
-		$this->loader->add_action('category_edit_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
+		//$this->loader->add_action('category_edit_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
 		
-		
+		$post_tag = 'post_tag';
 		//$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
+		//$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
 		$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
+		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_tag_field', 10, 2);
 	
 	}
 

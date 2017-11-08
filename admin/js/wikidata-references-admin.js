@@ -181,8 +181,8 @@ function wkrf_modal_clear(){
 function wkrf_fill_wiki_id(input_id, wikidata_id, description){
 	var input_wiki_id = document.getElementById(input_id);
 	input_wiki_id.value = wikidata_id;
-	//var input_wiki_description = document.getElementById(input_id.replace("_tag_", "_description_"));
-	//input_wiki_description.value = description;
+	var input_wiki_description = document.getElementById(input_id.replace("_id", "_description"));
+	input_wiki_description.value = description;
 	wkrf_modal_selection_close();
 }
 
