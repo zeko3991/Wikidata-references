@@ -70,7 +70,11 @@ function wkrf_modal_selection_close(){
  * "Opens" the modal window, sets its visibility to "block"
  */
 function wkrf_modal_selection(term, input_id){
-	wkrf_wikidata_search_by_tag(term, input_id);
+	wkrf_wikidata_search_by_term(term, input_id);
+	modal.style.display = "block";
+}
+
+function wkrf_display_modal_selection(){
 	modal.style.display = "block";
 }
 
@@ -80,7 +84,7 @@ function wkrf_modal_selection(term, input_id){
  * wikidata id. @input: wikidata_search -> json with the wikidata websearch by
  * term info.
  */
-function wkrf_modal_create_list(tag_term, wikidata_search, input_id) {
+function wkrf_modal_create_list(term, wikidata_search, input_id) {
 	var data = wikidata_search;
 	var wiki_id;
 	var description;
@@ -98,7 +102,7 @@ function wkrf_modal_create_list(tag_term, wikidata_search, input_id) {
 
 		description = String(description).replace(/"/g, '´');
 		description = description.replace(/'/g, "\´");
-		wkrf_modal_add_list_elem(tag_term, wiki_id, description, input_id);
+		wkrf_modal_add_list_elem(term, wiki_id, description, input_id);
 	}
 
 	// if first elem of array is null, its empty, so We will show a message of
@@ -146,11 +150,11 @@ function wkrf_modal_add_message(message){
  * Adds a single list elem to the modal box, those elements are suppossed to be wikidata items 
  * related to the tag or category.
  */
-function wkrf_modal_add_list_elem(tagname, wikidata_id, description, input_id){
+function wkrf_modal_add_list_elem(termname, wikidata_id, description, input_id){
 	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
 	var appendix =  
 		'<div class="wkrf-modal-list-item col-md-12 row" onclick=\"wkrf_fill_wiki_id(\''+input_id+'\',\''+wikidata_id+'\',\''+description+'\')" style="cursor:pointer"> ' +
-			'<div class="col-md-3"  ><b>'+tagname+'</b></div>' +
+			'<div class="col-md-3"  ><b>'+termname+'</b></div>' +
 		    	'<div class="col-md-2"><a target="_blank" href="https://www.wikidata.org/wiki/'+wikidata_id+'">'+wikidata_id+'</a></div>' +	 
 		    	'<div class="col-md-7">'+ description +'</div>' +   
 		    '</div>';
@@ -177,8 +181,8 @@ function wkrf_modal_clear(){
 function wkrf_fill_wiki_id(input_id, wikidata_id, description){
 	var input_wiki_id = document.getElementById(input_id);
 	input_wiki_id.value = wikidata_id;
-	var input_wiki_description = document.getElementById(input_id.replace("_tag_", "_description_"));
-	input_wiki_description.value = description;
+	//var input_wiki_description = document.getElementById(input_id.replace("_tag_", "_description_"));
+	//input_wiki_description.value = description;
 	wkrf_modal_selection_close();
 }
 
@@ -188,14 +192,14 @@ function wkrf_fill_wiki_id(input_id, wikidata_id, description){
 
 
 ///////////////Wikidata api request/////////////
-function wkrf_wikidata_search_by_tag(tag_term, input_id){
+function wkrf_wikidata_search_by_term(term, input_id){
 	// change:  &uselang=es (i.e) to change language results
 //	https:www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search=term&format=json&language=en
-	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+tag_term+'&format=json&language='+language;
+	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+term+'&format=json&language='+language;
 	console.log(request);
 	jQuery.getJSON(request, function(data){
 		console.log(data);
-		wkrf_modal_create_list(tag_term, data, input_id);
+		wkrf_modal_create_list(term, data, input_id);
 	});
 	
 }

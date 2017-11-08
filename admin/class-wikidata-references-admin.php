@@ -388,7 +388,7 @@ class Wikidata_References_Admin {
 			foreach($tag_list as $tag){
 				$tag_id = $tag->term_id;
 				delete_term_meta($tag_id, $wikidata_id_key);
-				delete_term_meta($tag_id, $wikidata_key);
+				delete_term_meta($tag_id, $wikidata_link_key);
 			}
 		}
 	}
@@ -470,9 +470,149 @@ class Wikidata_References_Admin {
 			}
 		}
 	}
-
 	
 	
-
+	function wkrf_render_tag_wiki_column(){
+		$term_id = $_GET['tag_ID'];
+		$term = get_term_by('id', $term_id, 'taxonomy');
+		//$meta = get_option("taxonomy_{$term_id}");
+		//Insert HTML and form elements here
+	}
+	
+	function wkrf_save_tag_wiki_meta($term_id){
+		$wikidata_id = $_REQUEST['wikidata_id'];
+		//$form_field_2 = $_REQUEST['field-name-2'];
+		$meta['wikidata_id'] = $wikidata_id;
+		//$meta['key_value_2'] = $form_field_2;
+		update_option($term_id, $meta);
+		update_term_meta($term_id, "wikidata_id", $meta);
+	}
+  
+	////////////////////////////////////////////////
+	
+	/**
+	 * Tag column wikidata id
+	 * @param unknown $columns
+	 * @return unknown
+	 */
+	function wkrf_add_post_tag_wikidata_column($columns){
+		$columns['wikidata_id'] = 'Wikidata ID';
+		return $columns;
+	}
+	
+	/**
+	 * Tag Colmn CONTENT wikidata id
+	 * @param unknown $content
+	 * @return unknown
+	 */
+	function wkrf_add_post_tag_wikidata_column_content($content, $column_name, $term_id){
+		$term = get_term($term_id);
+		switch($column_name){
+			case 'wikidata_id':
+				/*if(get_option($term_id) != null){
+					$option = get_option($term_id);
+					foreach($option as $opt){
+						$content .= $opt;
+					}
+					//$content = $option['wikidata_id'];
+				}
+				else{
+					$content = "na";
+				}*/
+				$content = $term->name;
+				break;
+			default:
+				break;
+		}
+		return $content;
+	}
+	
+	function tag_add_form_fields ($taxonomy){
+		?>
+		<div class="form-field term-colorpicker-wrap">
+        <label for="term-colorpicker">Category Color</label>
+        	<input type="color" name="_tag_color" value="#737373" class="colorpicker" id="term-colorpicker" />
+        	<p>This is the field description where you can tell the user how the color is used in the theme.</p>
+    	</div>
+    	<?php 
+	}
+		
+	
+	/////////////////////////////////
+	
+	
+	function add_post_tag_columns($columns){
+		$columns['foo'] = 'Foo';
+		return $columns;
+	}
+	
+	
+	function add_post_tag_column_content($content, $column_name, $term_id){
+		$term = get_term($term_id);
+		switch($column_name){
+			case 'foo':
+				$content = $term->name;
+				break;
+			default:
+				break;
+		}
+		$content .= 'Bar';
+		return $content;
+	}
+	
+	/////////////////////////////////////////////////////////////
+	function wkrf_edit_featured_category_field($term){
+		$term_id = $term;
+		$term_meta = get_option("taxonomy_".$term_id->term_id);
+		?>
+		<tr class="form-field">
+	        <th scope="row">
+	            <label for="term_meta[featured]"><?php echo _e('Home Featured') ?></label>
+	            <td>
+	            	<select name="term_meta[featured]" id="term_meta[featured]">
+	                	<option value="0" <?=($term_meta['featured'] == 0) ? 'selected': ''?>><?php echo _e('No'); ?></option>
+	                	<option value="1" <?=($term_meta['featured'] == 1) ? 'selected': ''?>><?php echo _e('Yes'); ?></option>
+	            	</select>                   
+	            </td>
+	        </th>
+	    </tr>
+	    <?php 
+	}
+	
+	
+	function wkrf_edit_wikidata_id_tag_field($term){
+		$term_id = $term->term_id;
+		$term_meta = get_option("wikidata_id_tag_".$term_id);
+		
+		?>
+		<tr class ="form-field">
+			<th scope="row">
+				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID') ?></label>
+				<td>
+					<input type="text" name="term_meta[wikidata_id]" id="term_meta[wikidata_id]">
+					<span class="dashicons dashicons-search" style="cursor:pointer" 
+						  onclick="wkrf_modal_selection(getElementById('slug').value,'term_meta[wikidata_id]')"></span>
+				</td>	
+			</th>
+		</tr>
+		<div class="wrap">
+			<div id="wkrf-modal-window" class="modal">
+				  <!-- Modal content -->
+				  <div id="wkrf-modal-window-content" class="modal-content  col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
+				    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
+				    <!-- <p>Some text in the Modal..</p> -->
+					    <div class="wkrf-modal-list-header col-md-12 row">
+					    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	
+					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
+					    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
+					    </div>
+				  </div>
+			</div>
+		</div>
+	
+		<?php 
+	}
+	
+	
 
 }
