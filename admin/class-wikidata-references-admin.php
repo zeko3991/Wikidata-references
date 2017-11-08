@@ -508,7 +508,7 @@ class Wikidata_References_Admin {
 	 */
 	function wkrf_add_post_tag_wikidata_column_content($content, $column_name, $term_id){
 		$term = get_term($term_id);
-		$wikidata_id = get_option("wikidata_id_tag_".$term->name);
+		$wikidata_id = get_option("wikidata_id_post_tag_".$term->name);
 		switch($column_name){
 			case 'wikidata_id':
 				$content = $wikidata_id;
