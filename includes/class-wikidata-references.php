@@ -200,13 +200,13 @@ class Wikidata_References {
 		//adds wikidata tag metadata to head
 		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_header_tag_metadata', 1, 1);
 		//changes the tag archive title for a link to wikidata
-		$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_change_tag_archive_title', 10, 1);
+		//$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_change_tag_archive_title', 10, 1);
 		//adds metadata to a post when saved
 		$this->loader->add_action('save_post', $plugin_admin, 'wkrf_add_meta_to_posts', 1, 1);
 		
 		
 		//$this->loader->add_action('taxonomy_edit_form', $plugin_admin, 'wkrf_render_tag_wiki_column');
-		$this->loader->add_action('edit_terms', $plugin_admin, 'wkrf_save_tag_wiki_meta', 10, 2);
+	//	$this->loader->add_action('edit_terms', $plugin_admin, 'wkrf_save_tag_wiki_meta', 10, 2);
 	//	$this->loader->add_filter('manage_edit-post_tag_columns', $plugin_admin, 'add_post_tag_columns');
 	//	$this->loader->add_filter('manage_post_tag_custom_column', $plugin_admin, 'add_post_tag_column_content', 10, 3);
 		
@@ -218,12 +218,12 @@ class Wikidata_References {
 		//$this->loader->add_action('category_add_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
 		//$this->loader->add_action('category_edit_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
 		
-		$post_tag = 'post_tag';
 		//$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
 		//$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
+		$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_tag_field', 10, 1);
 		$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
-		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_tag_field', 10, 2);
-	
+		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_taxonomy_fields', 10, 2);
+		$this->loader->add_action('create_post_tag', $plugin_admin, 'wkrf_add_new_tag_wikidata_id', 10, 2);
 	}
 
 	/**

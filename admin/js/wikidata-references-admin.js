@@ -108,28 +108,35 @@ function wkrf_modal_create_list(term, wikidata_search, input_id) {
 	// if first elem of array is null, its empty, so We will show a message of
 	// empty search.
 	// (el buen hardcode)
-	if (search_array[0] == null) {
-		wkrf_modal_add_message('No items matching your tag were found  <br>'
-				+ '<img class="icon icons8-Sad" width="50" height="50"'
-				+ 'src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAED0lEQVRoQ+'
-				+ '2aj7EMQRDG+0WACBABIkAEiAARIAJEgAh4ESACRIAIEAEioH5X8131/pmdnpldd3Vlqrbevfd2Zvrrr7vn2749'
-				+ 'sxMZZyeCw9YEctHMbprZdTO7ZWZX0uV99TH9ws8vZvbJzH6t4cw1gNw3s7vparHpnZlxnbdM1pweIE/N7MHI63g'
-				+ 'Yb3PhabzuB2zBHIxxwaDGdzN71gqoBQgGvHYAMP5N8mptmAAKNh+b2bWECEAPkzPCJNUCeZE2ZYOv6bPiPrxp5kY'
-				+ 'c9NIB4vOT6KJRIHjuQ0rk3ykE2GiLATuE2IUUmrcjBSEChLgmlPgJC+TFOPbXBsRehCvhxl73zIyQy44SEM8EIKC/'
-				+ 'Ng9aQbI3YSswi8yUgHx2TPxLEAI/BnMj55UlIOTAoxROhwAxB+aVKzYDTDkgGE5yk9h83jonSuFHzhBmFABCbFIpc0'
-				+ 'C+pXOC8rdVdSoZP/4/1YzyT9JfHf9zDgilj1Ob5MYTxzSIDJJ/4uA5IGJjlsIDo1LIT1gZA+GM4MxAdjDpGIdYQcZw1'
-				+ 'uzGGAgq9E7SOvubjgyNnP3eK24PhJr9Mxl9KXDwcT/Jh+jjM8CJ3eiB2Tp/1k4PBIPeVoSV2POE8UyBxyKjZz7ll0cAp'
-				+ 'AvrDEJL1ep5Em0lY/7M3AAbsBkZPfMntnpGhDJareYM4QCF+sjomT+JHg9EZRc9EznJe0IDoD3zOd/Qgdi5018eiDxUEp'
-				+ 'LythKcMo10ID84fWuSnQLROn9gbw+QSPhsec9/IFt6t2XtLCPol8speSLJ3rL5WnOU7Hth21N+1zKqZR2Jx70m9EBqD8Sc'
-				+ 'AWg1NsJrvm0K41ywzZmFVmodiwdirUTxRlCKeSwedx6XDAUU5ZfH12jJ1nqLEqVWNGpRAOAhneg/koFsJha4V+zAFoDJRwY'
-				+ 'gmA+gyCiKRn/aDrR+ZnUW5NkFJhnEKwZFO48A4n71fznp2bfETlHGY4xu2h/9Cy5Sqwh9xbydCm0YOIIQU2cx2/JJa2vfxQc'
-				+ 'r7lUZLolHleg1WkWEnRyx1CdQtSJ8mbMfc7pK3YoIKw0EdE2ZZYMVcwJRrBxjO2jCxhIQUUjiEWKHPukJNxqGFJiqBh0g1TIF'
-				+ 'RKi13xU0+cm+kV7dMtWyar0cCsz424BsISg9RFW19ldmpOorjRIQbBt/6UL93jpnqr9cigABjGemVlLUEuUlT/jLpSgQGaMCwO'
-				+ '+wQnmOSpISIColDT/lQTax5xaqBcIabIikkOgDEACR5SWdNLYBppH9HMICwDmB5KlyUAsQGcPmXALE3/WyAD/RYHMvDKCp9MKAb'
-				+ '5QDAIc0fR/TA0SA8B7CD8+2DJhEZ3U1zdcAIuP1aoZ/qcazxX0kL+Gnl2r0qkeLAwZz1gTSbUzPAicD5C+nGA5CzmeI1AAAAABJR'
-				+ 'U5ErkJggg==">'
-				+ '<br><br>Look for an accurate id in <a target="_blank" href="https://www.wikidata.org">wikidata</a>');
-		wkrf_modal_add_message('')
+
+	if ((search_array == null) || (search_array[0] == null)) {
+		if(search_array == null){
+			wkrf_modal_add_message('Term Slug is empty!');
+		}
+		else{
+			wkrf_modal_add_message('No items matching your tag were found  <br>'
+					+ '<img class="icon icons8-Sad" width="50" height="50"'
+					+ 'src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAED0lEQVRoQ+'
+					+ '2aj7EMQRDG+0WACBABIkAEiAARIAJEgAh4ESACRIAIEAEioH5X8131/pmdnpldd3Vlqrbevfd2Zvrrr7vn2749'
+					+ 'sxMZZyeCw9YEctHMbprZdTO7ZWZX0uV99TH9ws8vZvbJzH6t4cw1gNw3s7vparHpnZlxnbdM1pweIE/N7MHI63g'
+					+ 'Yb3PhabzuB2zBHIxxwaDGdzN71gqoBQgGvHYAMP5N8mptmAAKNh+b2bWECEAPkzPCJNUCeZE2ZYOv6bPiPrxp5kY'
+					+ 'c9NIB4vOT6KJRIHjuQ0rk3ykE2GiLATuE2IUUmrcjBSEChLgmlPgJC+TFOPbXBsRehCvhxl73zIyQy44SEM8EIKC/'
+					+ 'Ng9aQbI3YSswi8yUgHx2TPxLEAI/BnMj55UlIOTAoxROhwAxB+aVKzYDTDkgGE5yk9h83jonSuFHzhBmFABCbFIpc0'
+					+ 'C+pXOC8rdVdSoZP/4/1YzyT9JfHf9zDgilj1Ob5MYTxzSIDJJ/4uA5IGJjlsIDo1LIT1gZA+GM4MxAdjDpGIdYQcZw1'
+					+ 'uzGGAgq9E7SOvubjgyNnP3eK24PhJr9Mxl9KXDwcT/Jh+jjM8CJ3eiB2Tp/1k4PBIPeVoSV2POE8UyBxyKjZz7ll0cAp'
+					+ 'AvrDEJL1ep5Em0lY/7M3AAbsBkZPfMntnpGhDJareYM4QCF+sjomT+JHg9EZRc9EznJe0IDoD3zOd/Qgdi5018eiDxUEp'
+					+ 'LythKcMo10ID84fWuSnQLROn9gbw+QSPhsec9/IFt6t2XtLCPol8speSLJ3rL5WnOU7Hth21N+1zKqZR2Jx70m9EBqD8Sc'
+					+ 'AWg1NsJrvm0K41ywzZmFVmodiwdirUTxRlCKeSwedx6XDAUU5ZfH12jJ1nqLEqVWNGpRAOAhneg/koFsJha4V+zAFoDJRwY'
+					+ 'gmA+gyCiKRn/aDrR+ZnUW5NkFJhnEKwZFO48A4n71fznp2bfETlHGY4xu2h/9Cy5Sqwh9xbydCm0YOIIQU2cx2/JJa2vfxQc'
+					+ 'r7lUZLolHleg1WkWEnRyx1CdQtSJ8mbMfc7pK3YoIKw0EdE2ZZYMVcwJRrBxjO2jCxhIQUUjiEWKHPukJNxqGFJiqBh0g1TIF'
+					+ 'RKi13xU0+cm+kV7dMtWyar0cCsz424BsISg9RFW19ldmpOorjRIQbBt/6UL93jpnqr9cigABjGemVlLUEuUlT/jLpSgQGaMCwO'
+					+ '+wQnmOSpISIColDT/lQTax5xaqBcIabIikkOgDEACR5SWdNLYBppH9HMICwDmB5KlyUAsQGcPmXALE3/WyAD/RYHMvDKCp9MKAb'
+					+ '5QDAIc0fR/TA0SA8B7CD8+2DJhEZ3U1zdcAIuP1aoZ/qcazxX0kL+Gnl2r0qkeLAwZz1gTSbUzPAicD5C+nGA5CzmeI1AAAAABJR'
+					+ 'U5ErkJggg==">'
+					+ '<br><br>Look for an accurate id in <a target="_blank" href="https://www.wikidata.org">wikidata</a>');
+			wkrf_modal_add_message('');
+		}
+		
 	}
 
 }
