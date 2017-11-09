@@ -280,12 +280,9 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */
 	public function wkrf_add_header_tag_metadata(){
-	    $options = get_option($this->plugin_name);
 	    $tags = get_tags();
-	    $wikidata_url ='https://www.wikidata.org/wiki/';
-	    global $wp;
 	    
-	    //if current url is a post, adds metadata depending of its tags
+	  /*  //if current url is a post, adds metadata depending of its tags
 	    if(is_single(get_the_title())){									// if is a post
 	        $post_tags = get_the_tags();								// gets the post tags list
 	        if($post_tags){												// if list is not empty
@@ -303,21 +300,26 @@ class Wikidata_References_Admin {
 	        }
 	        return; //if current page is a post, will not check if its url coincides with a tag page url
 	    }
-	    
+	    */
 	    //if a tag page, adds metadata
-	    foreach($tags as $tag){
-	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
-	        $tag_slug = $tag->slug;
-	        //$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
-	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-	        $wikidata_id = get_option("wikidata_id_post_tag_".$tag_slug);
-			$wikidata_link = get_option("wikidata_link_post_tag_".$tag_slug);
-			error_log("wikidata link: ".$wikidata_link);
-	        // if current and tag url coincide, and tag associated to a wikidata id
-	        if(($current_url == $tag_link) && isset($wikidata_id)){
-	        	//add_term_meta($tag->term_id, "key", "mi_value", true);
-	            echo '<meta property="dc.sameAs" content="'.$wikidata_link.'" />';
-	        }
+	    if(is_tag()){
+		    foreach($tags as $tag){
+		    	if(is_tag($tag->term_id, $tag->slug)){
+			        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
+			        $tag_slug = $tag->slug;
+			        //$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
+			        //$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
+			        $wikidata_id = get_option("wikidata_id_post_tag_".$tag_slug);
+					$wikidata_link = get_option("wikidata_link_post_tag_".$tag_slug);
+					error_log("wikidata link: ".$wikidata_link);
+			        // if current and tag url coincide, and tag associated to a wikidata id
+			        if(!empty($wikidata_id) ){
+			        	//add_term_meta($tag->term_id, "key", "mi_value", true);
+			            echo '<meta property="dc.sameAs" content="'.$wikidata_link.'" />';
+			        }
+			        break;
+		    	}
+		    }
 	    }
 	    
 	}
@@ -499,7 +501,7 @@ class Wikidata_References_Admin {
 	 * @param wp_object $columns
 	 * @return $columns
 	 */
-	function wkrf_add_post_tag_wikidata_column($columns){
+	function wkrf_add_taxonomy_wikidata_column($columns){
 		$columns['wikidata_id'] = 'Wikidata ID';
 		return $columns;
 	}
@@ -509,10 +511,11 @@ class Wikidata_References_Admin {
 	 * @param unknown $content
 	 * @return unknown
 	 */
-	function wkrf_add_post_tag_wikidata_column_content($content, $column_name, $term_id){
+	function wkrf_add_taxonomy_wikidata_column_content($content, $column_name, $term_id){
 		$term = get_term($term_id);
 		$term_slug = $term->slug;
-		$wikidata_id = get_option("wikidata_id_post_tag_".$term_slug);
+		$term_taxonomy = $term->taxonomy;
+		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term_slug);
 		switch($column_name){
 			case 'wikidata_id':
 				$content = $wikidata_id;
@@ -528,8 +531,8 @@ class Wikidata_References_Admin {
 	 * Appends a field to the "new tag" form 
 	 * @param unknown $term
 	 */
-	function wkrf_add_wikidata_id_tag_field($term){
-		
+	function wkrf_add_wikidata_id_taxonomy_field($term){
+		$taxonomy = get_current_screen()->taxonomy;
 		?>
 		<tr class ="form-field">
 			<th scope="row">
@@ -550,7 +553,7 @@ class Wikidata_References_Admin {
 				    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
 				    <!-- <p>Some text in the Modal..</p> -->
 					    <div class="wkrf-modal-list-header col-md-12 row">
-					    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	
+					    	<div class="col-md-3 col-xs-3"><h6><?php _e($taxonomy);?> name</h6></div>	
 					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
 					    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
 					    </div>
@@ -567,11 +570,12 @@ class Wikidata_References_Admin {
 	 * screen
 	 * @param unknown $term
 	 */
-	function wkrf_edit_wikidata_id_tag_field($term){
+	function wkrf_edit_wikidata_id_taxonomy_field($term){
 		//$term = get_term($term);
 		$term_slug = $term->slug;
-		$wikidata_id = get_option("wikidata_id_post_tag_".$term->slug);
-		$wikidata_description = empty($wikidata_id) ? null : get_option("wikidata_description_post_tag_".$term_slug);
+		$term_taxonomy = $term->taxonomy;
+		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term->slug);
+		$wikidata_description = empty($wikidata_id) ? null : get_option("wikidata_description_".$term_taxonomy."_".$term_slug);
 		
 		?>
 		<tr class ="form-field">
@@ -595,7 +599,7 @@ class Wikidata_References_Admin {
 				    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
 				    <!-- <p>Some text in the Modal..</p> -->
 					    <div class="wkrf-modal-list-header col-md-12 row">
-					    	<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>	
+					    	<div class="col-md-3 col-xs-3"><h6><?php _e($term_taxonomy); ?> name</h6></div>	
 					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
 					    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
 					    </div>
@@ -607,8 +611,10 @@ class Wikidata_References_Admin {
 	}
 	
 	function wkrf_add_new_tag_wikidata_id($term_id, $taxonomy_id){	
-			$taxonomy = get_term($taxonomy_id);
-			$this->wkrf_save_wikidata_taxonomy_fields($term_id, 'post_tag');
+			$taxonomy = get_term($taxonomy_id)->taxonomy;
+			//error_log("TAXONOMY : ".$taxonomy);
+			$this->wkrf_save_wikidata_taxonomy_fields($term_id, $taxonomy);
+			//$this->wkrf_save_wikidata_taxonomy_fields($term_id, 'post_tag');
 			
 	}
 	
@@ -638,11 +644,11 @@ class Wikidata_References_Admin {
 				update_option("wikidata_id_".$taxonomy."_".$term_slug, $term_meta['wikidata_id']);
 				update_option("wikidata_description_".$taxonomy."_".$term_slug, $term_meta['wikidata_description']);
 				update_option("wikidata_link_".$taxonomy."_".$term_slug, $this->wikidata_url.$term_meta['wikidata_id']);
-				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - deleted options for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
+				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - saved options for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
 				
 				update_term_meta($term_id, $this->wikidata_id_key, $term_meta['wikidata_id']);
 				update_term_meta($term_id, $this->wikidata_link_key, $this->wikidata_url.$term_meta['wikidata_id']);
-				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - deleted metadata for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
+				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - saved metadata for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
 			}
 		}
 		else{
