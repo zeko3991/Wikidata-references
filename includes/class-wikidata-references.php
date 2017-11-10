@@ -198,7 +198,7 @@ class Wikidata_References {
 		//adds ordinary metadata to head
 		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_header_metadata', 1, 1);
 		//adds wikidata tag metadata to head
-		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_header_tag_metadata', 1, 1);
+		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_head_wikidata_taxonomy_links', 1, 1);
 		//changes the tag archive title for a link to wikidata
 		//$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_change_tag_archive_title', 10, 1);
 		//adds metadata to a post when saved

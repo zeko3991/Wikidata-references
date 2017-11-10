@@ -108,8 +108,8 @@ class Wikidata_References_Admin {
 		
 		
 		//FONT-AWESOME
-		wp_register_style('font-awesome', plugins_url('wikidata-references/font-awesome-4.7.0/css/font-awesome.min.css') );
-		wp_enqueue_style('font-awesome');
+		//wp_register_style('font-awesome', plugins_url('wikidata-references/font-awesome-4.7.0/css/font-awesome.min.css') );
+		//wp_enqueue_style('font-awesome');
 		
 		//BOOTSTRAP
 		wp_register_style('bootstrap-style', plugins_url('wikidata-references/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css'));
@@ -162,11 +162,13 @@ class Wikidata_References_Admin {
 	 * Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 	 */
 	public function wkrf_add_action_links($links){
-		$settings_link = array(
+		/*$settings_link = array(
 				'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', $this->plugin_name) . '</a>',
 		);
+		*/
+		//return array_merge($settings_link, $links);
 		
-		return array_merge($settings_link, $links);
+		return $links;
 	}
 	
 	
@@ -187,7 +189,6 @@ class Wikidata_References_Admin {
 	 */
 	public function wkrf_setup_options_update(){
 		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
-		$this->wkrf_add_meta_to_tags();
 		$this->wkrf_add_meta_to_posts(null);
 	}
 	
@@ -279,7 +280,7 @@ class Wikidata_References_Admin {
 	 * 		 it is associated with a wikidata id.
 	 * @since 1.0.0
 	 */
-	public function wkrf_add_header_tag_metadata(){
+	public function wkrf_add_head_wikidata_taxonomy_links(){
 	    $tags = get_tags();
 	    
 	  /*  //if current url is a post, adds metadata depending of its tags
@@ -359,53 +360,6 @@ class Wikidata_References_Admin {
     	  
 	    return $content;
 	    
-	}
-
-	
-	
-	
-	
-	/**
-	 * Adds wikidata meta data to all tags.
-	 * Will add a link to wikidata term related to the tag name.
-	 * @param unknown $tag_list
-	 */
-	public function wkrf_add_meta_to_tags(){
-		
-		$tag_list = get_tags();
-		$options = get_option($this->plugin_name);
-		$wikidata_id_key = 'wikidata_id';
-		$wikidata_link_key = 'wikidata_link';
-		$wikidata_url ='https://www.wikidata.org/wiki/';
-		$metadata_tags_enable = isset($options['metadata_tags_enable']) ? $options['metadata_tags_enable'] : 0;
-		
-		if($metadata_tags_enable){
-			foreach($tag_list as $tag){
-				$tag_id = $tag->term_id;
-				$tag_link = get_tag_link($tag_id);
-				$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
-				if(isset($options['tag-'.$tag_name])){
-					$wikidata_tag_link = $wikidata_url.$options['tag-'.$tag_name];
-					update_term_meta($tag_id, $wikidata_id_key, $options['tag-'.$tag_name]);
-					update_term_meta($tag_id, $wikidata_link_key, $wikidata_tag_link);
-				}
-				else{
-					delete_term_meta($tag_id, $wikidata_id_key);
-					delete_term_meta($tag_id, $wikidata_link_key);
-				}
-			}
-		}
-		else{
-			foreach($tag_list as $tag){
-				$tag_id = $tag->term_id;
-				delete_term_meta($tag_id, $wikidata_id_key);
-				delete_term_meta($tag_id, $wikidata_link_key);
-			}
-		}
-		
-		
-		$obj = get_queried_object();
-		//error_log("engancho cosas: slug->".$obj->slug." term_id->".$obj->term_id);
 	}
 	
 	
