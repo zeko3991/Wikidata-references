@@ -521,8 +521,7 @@ class Wikidata_References_Admin {
 			$order = isset($_REQUEST['order'])   ? trim(wp_unslash($_REQUEST['order']))   : 'DESC';
 			
 			if($orderby == 'wikidata_id'){
-				$terms['join'] .= " INNER JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.slug)";
-				//error_log(" INNER JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.slug");
+				$terms['join'] .= " LEFT JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.slug)";
 				$terms['orderby'] = "ORDER BY opt.option_value";
 				$terms['order']   = $order;
 			}
@@ -564,7 +563,7 @@ class Wikidata_References_Admin {
 					    <div class="wkrf-modal-list-header col-md-12 row">
 					    	<div class="col-md-3 col-xs-3"><h6><?php _e($taxonomy);?> name</h6></div>	
 					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
-					    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
+					    	<div class="col-md-7 col-xs-7"><h6><?php _e('Description')?></h6></div>   
 					    </div>
 				  </div>
 			</div>
