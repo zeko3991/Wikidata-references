@@ -59,12 +59,6 @@ register_deactivation_hook( __FILE__, 'deactivate_wikidata_references' );
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-wikidata-references.php';
 
-/**
- * Wikidata References
- * The class responsible for defining and displaying a metabox in the editing post area for wikidata
- * references plugin.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wikidata-references-metabox.php';
 
 
 

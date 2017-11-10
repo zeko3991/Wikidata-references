@@ -42,7 +42,6 @@ jQuery(document).ready(function(){
 var modal;
 var span;
 
-
 jQuery(document).ready(function(){
 	modal = document.getElementById("wkrf-modal-window"); //modal window
 	/*

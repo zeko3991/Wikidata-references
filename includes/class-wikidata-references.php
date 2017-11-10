@@ -80,9 +80,7 @@ class Wikidata_References {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_public_hooks();
 		
-		//$metabox = new Wikidata_References_metabox();
 		
 	}
 
@@ -94,7 +92,6 @@ class Wikidata_References {
 	 * - Wikidata_References_Loader. Orchestrates the hooks of the plugin.
 	 * - Wikidata_References_i18n. Defines internationalization functionality.
 	 * - Wikidata_References_Admin. Defines all hooks for the admin area.
-	 * - Wikidata_References_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -121,26 +118,6 @@ class Wikidata_References {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wikidata-references-admin.php';
 
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wikidata-references-public.php';
-		
-		/**
-		 * Wikidata References
-		 * The class responsible for defining and displaying a metabox in the editing post area for wikidata
-		 * references plugin.
-		 */
-		require_once plugin_dir_path( dirname(__FILE__ ) ) . 'includes/class-wikidata-references-metabox.php';
-		
-		/**
-		 * Wikidata References
-		 * The class responsible for defining different utilities, as parsing text or checking data.
-		 */
-		//require_once plugin_dir_path( dirname(__FILE__ ) ) . 'includes/class-wikidata-references-utilities.php';
-		
-		
 		$this->loader = new Wikidata_References_Loader();
 
 	}
@@ -155,11 +132,8 @@ class Wikidata_References {
 	 * @access   private
 	 */
 	private function set_locale() {
-
 		$plugin_i18n = new Wikidata_References_i18n();
-
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -203,29 +177,16 @@ class Wikidata_References {
 		//$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_change_tag_archive_title', 10, 1);
 		//adds metadata to a post when saved
 		$this->loader->add_action('save_post', $plugin_admin, 'wkrf_add_meta_to_posts', 1, 1);
-		
-		
-		//$this->loader->add_action('taxonomy_edit_form', $plugin_admin, 'wkrf_render_tag_wiki_column');
-	//	$this->loader->add_action('edit_terms', $plugin_admin, 'wkrf_save_tag_wiki_meta', 10, 2);
-	//	$this->loader->add_filter('manage_edit-post_tag_columns', $plugin_admin, 'add_post_tag_columns');
-	//	$this->loader->add_filter('manage_post_tag_custom_column', $plugin_admin, 'add_post_tag_column_content', 10, 3);
-		
-	//	$this->loader->add_filter('manage_edit-post_tag_columns', $plugin_admin, 'wkrf_add_post_tag_wikidata_column');
-	//	$this->loader->add_filter('manage_post_tag_custom_column', $plugin_admin, 'wkrf_add_post_tag_wikidata_column_content', 10, 3);
-		
-		//$this->loader->add_action('add_tag_form_fields', 'tag_add_form_fields', 10, 1);
-		
-		//$this->loader->add_action('category_add_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
-		//$this->loader->add_action('category_edit_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
-		
-		//$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_edit_featured_category_field', 10, 1);
-		//$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_tag_field', 10, 1);
+
 		
 		//TAG WIKIDATA ASSOCIATION IN TAG EDIT SCREEN
 		
-			//Wikidata id column
+			//Wikidata id post tag column
 		$this->loader->add_filter('manage_edit-post_tag_columns', $plugin_admin, 'wkrf_add_taxonomy_wikidata_column');
 		$this->loader->add_filter('manage_post_tag_custom_column', $plugin_admin, 'wkrf_add_taxonomy_wikidata_column_content', 10, 3);
+		$this->loader->add_filter('manage_edit-post_tag_sortable_columns', $plugin_admin, 'wkrf_register_wikidata_sortable_column');
+			
+			
 			//add new/edit tag form
 		$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_taxonomy_field', 10, 1);
@@ -233,33 +194,20 @@ class Wikidata_References {
 		$this->loader->add_action('create_post_tag', $plugin_admin, 'wkrf_add_new_tag_wikidata_id', 10, 2);
 		////////////////////////////////////////////////////
 		
-		
+			//Wikidata id category column
 		$this->loader->add_filter('manage_edit-category_columns', $plugin_admin, 'wkrf_add_taxonomy_wikidata_column');
 		$this->loader->add_filter('manage_category_custom_column', $plugin_admin, 'wkrf_add_taxonomy_wikidata_column_content', 10, 3);
+		$this->loader->add_filter('manage_edit-category_sortable_columns', $plugin_admin, 'wkrf_register_wikidata_sortable_column');
 		
 		$this->loader->add_action('category_add_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10 , 1);
 		$this->loader->add_action('edit_category_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_taxonomy_fields', 10, 2);
 		$this->loader->add_action('create_category', $plugin_admin, 'wkrf_add_new_tag_wikidata_id', 10, 2);
+		
+			//Taxonomy (post_tag and category) column sort 
+		$this->loader->add_filter('terms_clauses', $plugin_admin, 'wrkf_sort_taxonomy_by_wikidata_id', 10, 3);
 	}
 
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_public_hooks() {
-
-		$plugin_public = new Wikidata_References_Public( $this->get_plugin_name(), $this->get_version() );
-		
-		
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		
-		
-	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
