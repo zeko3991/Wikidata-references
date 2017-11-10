@@ -216,12 +216,6 @@ class Wikidata_References_Admin {
 		
 		//$valid['prueba'] = (isset($input['prueba']) && ! empty($input['prueba'])) ? $input['prueba'] : null;
 		//metadata values
-		$valid ['author_meta'] = (isset ($input['author_meta']) && ! empty ($input['author_meta'])) ? $input['author_meta'] : null;
-		$valid ['copyright_meta'] = (isset ($input['copyright_meta'])  && ! empty ($input['copyright_meta'])) ? $input['copyright_meta'] : null;
-		$valid ['subject_meta'] = (isset ($input['subject_meta']) && ! empty ($input['subject_meta'])) ? $input['subject_meta'] : null;
-		$valid ['description_meta'] = (isset ($input['description_meta']) && ! empty ($input['description_meta'])) ? $input['description_meta'] : null;
-		$valid ['keywords_meta'] = (isset ($input['keywords_meta']) && ! empty ($input['keywords_meta'])) ? $input['keywords_meta'] : null;
-		$valid ['metadata_enable'] = (isset ($input['metadata_enable']) && ! empty ($input['metadata_enable'])) ? 1 : 0;
 		$valid ['tag_title_link_enable'] = (isset($input['tag_title_link_enable']) && ! empty ($input['tag_title_link_enable'])) ? 1 : 0;
 		$valid ['metadata_posts_enable'] = (isset($input['metadata_posts_enable']) && ! empty ($input['metadata_posts_enable'])) ? 1 : 0;
 		$valid ['metadata_tags_enable'] = (isset($input['metadata_tags_enable']) && ! empty ($input['metadata_tags_enable'])) ? 1 : 0;
@@ -231,34 +225,6 @@ class Wikidata_References_Admin {
 		return $valid;
 	}
 	
-	
-	/**
-	 * Wikidata References
-	 * Adds metadata to head from the metadata values added in plugin setup.
-	 */
-	public function wkrf_add_header_metadata(){
-	    global $post;
-	    $options = get_option($this->plugin_name);
-	    if($options['metadata_enable']){
-	        if(isset($options['author_meta'])){
-	            echo '<meta name="author" content="'.$options['author_meta'].'" />';
-	            //$result = add_post_meta($post->ID, "key", "value", true);
-	           // echo '<meta name="inserting_post_meta" content="'.$result.'" />';
-	        }
-	        if(isset($options['copyright_meta'])){
-	            echo '<meta name="copyright" content="'.$options['copyright_meta'].'" />';
-	        }
-	        if(isset($options['subject_meta'])){
-	            echo '<meta name="subject" content="'.$options['subject_meta'].'" />';
-	        }
-	        if(isset($options['description_meta'])){
-	            echo '<meta name="description" content="'.$options['description_meta'].'" />';
-	        }
-	        if(isset($options['keywords_meta'])){
-	            echo '<meta name="keywords" content="'.$options['keywords_meta'].'" />';
-	        }
-	    }
-	}
 	
 	
 	/**
@@ -303,10 +269,11 @@ class Wikidata_References_Admin {
 		    foreach($tags as $tag){
 		    	if(is_tag($tag->term_id, $tag->slug)){
 			        $tag_slug = $tag->slug;
+			        $tag_id = $tag->term_id;
 			        //$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
 			        //$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-			        $wikidata_id = get_option("wikidata_id_".$this->taxonomy_post_tag."_".$tag_slug);
-					$wikidata_link = get_option("wikidata_link_".$this->taxonomy_post_tag."_".$tag_slug);
+			        $wikidata_id = get_option("wikidata_id_".$this->taxonomy_post_tag."_".$tag_id);
+			        $wikidata_link = get_option("wikidata_link_".$this->taxonomy_post_tag."_".$tag_id);
 			        // if current and tag url coincide, and tag associated to a wikidata id
 					if(!empty($wikidata_id) && !empty($wikidata_link)){
 			        	//add_term_meta($tag->term_id, "key", "mi_value", true);
@@ -318,9 +285,9 @@ class Wikidata_References_Admin {
 	    }
 	    else if(is_category()){
 	    	foreach($categories as $category){
-	    		if(is_category($category->term_id, $category->slug)){
-	    			$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->slug);
-	    			$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->slug);
+	    		if(is_category($category->term_id, $category->term_id)){
+	    			$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->term_id);
+	    			$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->term_id);
 	    			//error_log("AAAA- "."wikidata_link_".$this->taxonomy_category."_".$category->slug);
 	    			//error_log("AAAA- id:".$wikidata_id."   link:".$wikidata_link);
 	    			if(!empty($wikidata_id) && !empty($wikidata_link)){
@@ -480,9 +447,8 @@ class Wikidata_References_Admin {
 	 */
 	function wkrf_add_taxonomy_wikidata_column_content($content, $column_name, $term_id){
 		$term = get_term($term_id);
-		$term_slug = $term->slug;
 		$term_taxonomy = $term->taxonomy;
-		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term_slug);
+		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term_id);
 		switch($column_name){
 			case 'wikidata_id':
 				$content = $wikidata_id;
@@ -521,7 +487,7 @@ class Wikidata_References_Admin {
 			$order = isset($_REQUEST['order'])   ? trim(wp_unslash($_REQUEST['order']))   : 'DESC';
 			
 			if($orderby == 'wikidata_id'){
-				$terms['join'] .= " LEFT JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.slug)";
+				$terms['join'] .= " LEFT JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.term_id)";
 				$terms['orderby'] = "ORDER BY opt.option_value";
 				$terms['order']   = $order;
 			}
@@ -576,13 +542,12 @@ class Wikidata_References_Admin {
 	/**
 	 * Displays a field to fill with a wikidata id in tag edit
 	 * screen
-	 * @param unknown $term
+	 * @param wp_term $term
 	 */
 	function wkrf_edit_wikidata_id_taxonomy_field($term){
-		$term_slug = $term->slug;
 		$term_taxonomy = $term->taxonomy;
-		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term->slug);
-		$wikidata_description = empty($wikidata_id) ? null : get_option("wikidata_description_".$term_taxonomy."_".$term_slug);
+		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term->term_id);
+		$wikidata_description = empty($wikidata_id) ? null : get_option("wikidata_description_".$term_taxonomy."_".$term->term_id);
 		
 		?>
 		<tr class ="form-field">
@@ -617,7 +582,7 @@ class Wikidata_References_Admin {
 		<?php 
 	}
 	
-	function wkrf_add_new_tag_wikidata_id($term_id, $taxonomy_id){	
+	function wkrf_add_new_term_wikidata_id($term_id, $taxonomy_id){	
 			$taxonomy = get_term($taxonomy_id)->taxonomy;
 			$this->wkrf_save_wikidata_taxonomy_fields($term_id, $taxonomy);
 	}
@@ -625,18 +590,16 @@ class Wikidata_References_Admin {
 	
 	function wkrf_save_wikidata_taxonomy_fields($term_id, $taxonomy){
 		$term = get_term($term_id);
-		$term_slug= $term->slug;
 		
 		if (isset( $_POST['term_meta'])){
-			echo "dale";
 			$term_meta = array();
 			$term_meta['wikidata_id'] = isset( $_POST['term_meta']['wikidata_id']) ? $_POST['term_meta']['wikidata_id'] : '';
 			$term_meta['wikidata_description'] = isset( $_POST['term_meta']['wikidata_description']) ? $_POST['term_meta']['wikidata_description'] : '';
 			
 			if(empty($term_meta['wikidata_id'])){
-				delete_option("wikidata_id_".$taxonomy."_".$term_slug);
-				delete_option("wikidata_description_".$taxonomy."_".$term_slug);
-				delete_option("wikidata_link_".$taxonomy."_".$term_slug);
+				delete_option("wikidata_id_".$taxonomy."_".$term_id);
+				delete_option("wikidata_description_".$taxonomy."_".$term_id);
+				delete_option("wikidata_link_".$taxonomy."_".$term_id);
 				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - deleted options for term_id: ".$term_id);
 				
 				delete_term_meta($term_id, $this->wikidata_id_key);
@@ -645,9 +608,9 @@ class Wikidata_References_Admin {
 				
 			}
 			else{
-				update_option("wikidata_id_".$taxonomy."_".$term_slug, $term_meta['wikidata_id']);
-				update_option("wikidata_description_".$taxonomy."_".$term_slug, $term_meta['wikidata_description']);
-				update_option("wikidata_link_".$taxonomy."_".$term_slug, $this->wikidata_url.$term_meta['wikidata_id']);
+			    update_option("wikidata_id_".$taxonomy."_".$term_id, $term_meta['wikidata_id']);
+			    update_option("wikidata_description_".$taxonomy."_".$term_id, $term_meta['wikidata_description']);
+			    update_option("wikidata_link_".$taxonomy."_".$term_id, $this->wikidata_url.$term_meta['wikidata_id']);
 				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - saved options for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
 				
 				update_term_meta($term_id, $this->wikidata_id_key, $term_meta['wikidata_id']);

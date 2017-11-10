@@ -30,5 +30,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-$tags = get_tags();
+//require_once('includes/class-wikidata-references-activator.php');
+$deactivator = new Wikidata_References_Deactivator();
+$deactivator->deactivate();
 

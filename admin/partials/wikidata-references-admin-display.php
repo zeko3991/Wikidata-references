@@ -27,23 +27,13 @@
 	
 	settings_fields ( $this->plugin_name );
 	do_settings_sections ( $this->plugin_name );
-	
-	
-	//Utilities class instance 
-	require_once ('wikidata-references-admin-utilities.php');
-	$utilities = new Wikidata_References_Utilities ();
+
 	
 	// Grab all tags
 	$tags = get_tags ();
 	// Grab all setup options
 	$options = get_option ( $this->plugin_name );
 	
-	//metadata options
-	$author = isset($options['author_meta']) ? $options['author_meta'] : null;
-	$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
-	$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
-	$description = isset($options['description_meta']) ? $options['description_meta'] : null;
-	$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
 	
 	
 	$metadata_enable = isset($options['metadata_enable']) ? $options['metadata_enable'] : null;
@@ -56,22 +46,7 @@
 	$references_footnote = isset($options ['references_footnote']) ? $options ['references_footnote'] : null;
 	
 
-	
-	// array of tags-wiki ids values
-	$wikidata_ids_by_tags = array ();
-	$wikidata_descriptions_by_tags = array ();
-	
-	foreach ( $tags as $elem ) {
-		// $name = wkrf_sanitize_tag_name($elem->name);
-		$name = $utilities->wkrf_sanitize_tag_name ( $elem->name );
-		if (isset ( $options ['tag-' . $name] )) {
-			$wikidata_ids_by_tags ['tag-' . $name] = $options ['tag-' . $name];
-		}
-		
-		if (isset ( $options ['description-' . $name] )) {
-			$wikidata_descriptions_by_tags ['description-' . $name] = $options ['description-' . $name];
-		}
-	}
+
 	
 	
 	// format selection
@@ -95,52 +70,7 @@
 		
 		
 		<div class="wkrf-setup">
-			<h2 class="wkrf-setup-title"><?php echo _e("Metadata")?></h2> 	
-    		 	<!-- AUTHOR -->
-    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
-        				<label class="col-md-3 col-xs-12 " >Author</label>
-        				<input id="<?php echo $this->plugin_name.'_author_meta';?>" type="text" class="col-md-4 col-xs-12"
-        					   name="<?php echo $this->plugin_name; ?>[author_meta]" 
-        					   title="<?php echo _("metadata Author's name"); ?>"
-        					   placeholder="author"
-        					   value="<?php if(isset($author)){ echo $author; } ?>">				
-    			</div>
-    			<!-- COPYRIGHT -->
-    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
-        				<label class="col-md-3 col-xs-12 " >Copyright</label>
-        				<input id="<?php echo $this->plugin_name.'_copyright_meta';?>" type="text" class="col-md-4 col-xs-12"
-        					   name="<?php echo $this->plugin_name; ?>[copyright_meta]" 
-        					   title="<?php echo _("metadata copyright information"); ?>"
-        					   value="<?php if(isset($copyright)){ echo $copyright; } ?>"
-        					   placeholder="copyright information">				
-    			</div>
-    			<!-- SUBJECT -->
-    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm"  >
-        				<label class="col-md-3 col-xs-12 " >Subject</label>
-        				<input id="<?php echo $this->plugin_name.'_subject_meta';?>" type="text" class="col-md-4 col-xs-12"
-        					   name="<?php echo $this->plugin_name; ?>[subject_meta]" 
-        					   title="<?php echo _("metadata website's subject"); ?>"
-        					   placeholder="website's subject"
-        					   value="<?php if(isset($subject)){ echo $subject; } ?>">				
-    			</div>
-    			<!-- DESCRIPTION -->
-    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
-        				<label class="col-md-3 col-xs-12 " >Description</label>
-        				<input id="<?php echo $this->plugin_name.'_description_meta';?>" type="text" class="col-md-4 col-xs-12"
-        					   name="<?php echo $this->plugin_name; ?>[description_meta]" 
-        					   title="<?php echo _("metadata web description"); ?>"
-        					   placeholder="description"
-        					   value="<?php if(isset($description)){ echo $description; } ?>">
-    			</div>
-    			<!-- KEYWORDS -->
-    			<div class="wkrf-metadata-form col-xl-12  col-md-12  col-xs-12 left input-group input-group-sm" >
-        				<label class="col-md-3 col-xs-12 " >Keywords</label>
-        				<input id="<?php echo $this->plugin_name.'_keywords_meta';?>" type="text" class="col-md-4 col-xs-12"
-        					   name="<?php echo $this->plugin_name; ?>[keywords_meta]" 
-        					   title="<?php echo _("keywords of your web"); ?>"
-        					   placeholder="keywords, separated by commas"
-        					   value="<?php if(isset($keywords)){ echo $keywords; } ?>">
-    			</div>
+			
     			<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
     			<div class="wkrf-metadata-form margin-top col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-metadata_enable">
@@ -158,42 +88,7 @@
 		<hr>
 	
 		
-		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-    	<!-- ///////////////////////////////////REFERENCIAS///////////////////////////////////// -->
-    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-    	<?php /**
-    	
-		<div class="wkrf-setup">
-		<br>
-		<hr>
-		<h2 class="wkrf-setup-title"><?php echo __("Referencias")?></h2>
-		<!-- Activates/deactivates references by tag -->
-    	
-    	<fieldset>
-	        <legend class="screen-reader-text">
-	            <span><?php __("Activar referencias por etiquetas del post")?></span>
-	        </legend>
-	        <label for="<?php echo $this->plugin_name; ?>-references_by_tag">
-	            <input type="checkbox" id="<?php echo $this->plugin_name; ?>-references_by_tag" name="<?php echo $this->plugin_name; ?>[references_by_tag]" value="1" <?php checked($references_by_tag, 1); ?> />
-	            <span><?php esc_attr_e('Activar referencias por etiquetas del post', $this->plugin_name); ?></span>
-	        </label>
-    	</fieldset>
-    	
-    	<!--  Activates/deactivates footnotes -->
-    	<fieldset>
-	        <legend class="screen-reader-text">
-	            <span><?php __("Activar notas al pie")?></span>
-	        </legend>
-	        <label for="<?php echo $this->plugin_name; ?>-references_footnote">
-	            <input type="checkbox" id="<?php echo $this->plugin_name; ?>-references_footnote" name="<?php echo $this->plugin_name; ?>[references_footnote]" value="1" <?php checked($references_footnote, 1); ?> />
-	            <span><?php esc_attr_e('Activar notas al pie', $this->plugin_name); ?></span>
-	        </label>
-    	</fieldset>
-    	<br>
-    	<hr>
-    	</div>
-    	
-    	*/?>
+		
     	
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////FORMATOS//////////////////////////////////////// -->

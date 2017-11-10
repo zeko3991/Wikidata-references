@@ -165,12 +165,6 @@ class Wikidata_References {
 		//Save/update our plugin options
 		$this->loader->add_action('admin_init', $plugin_admin, 'wkrf_setup_options_update');
 		
-		//Adds metadata to tags pages headers depending on the wordrpess tags.
-		//$this->loader->add_action('wp_header', $plugin_admin, 'wkrf_add_header_tag_metadata');
-		//add_action('wp_header', array($this, 'wkrf_add_header_tag_metadata'));
-		
-		//adds ordinary metadata to head
-		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_header_metadata', 1, 1);
 		//adds wikidata tag metadata to head
 		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_head_wikidata_taxonomy_links', 1, 1);
 		//changes the tag archive title for a link to wikidata
@@ -191,7 +185,7 @@ class Wikidata_References {
 		$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_taxonomy_fields', 10, 2);
-		$this->loader->add_action('create_post_tag', $plugin_admin, 'wkrf_add_new_tag_wikidata_id', 10, 2);
+		$this->loader->add_action('create_post_tag', $plugin_admin, 'wkrf_add_new_term_wikidata_id', 10, 2);
 		////////////////////////////////////////////////////
 		
 			//Wikidata id category column
@@ -202,7 +196,7 @@ class Wikidata_References {
 		$this->loader->add_action('category_add_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10 , 1);
 		$this->loader->add_action('edit_category_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_taxonomy_fields', 10, 2);
-		$this->loader->add_action('create_category', $plugin_admin, 'wkrf_add_new_tag_wikidata_id', 10, 2);
+		$this->loader->add_action('create_category', $plugin_admin, 'wkrf_add_new_term_wikidata_id', 10, 2);
 		
 			//Taxonomy (post_tag and category) column sort 
 		$this->loader->add_filter('terms_clauses', $plugin_admin, 'wrkf_sort_taxonomy_by_wikidata_id', 10, 3);
