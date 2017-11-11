@@ -321,7 +321,7 @@ class Wikidata_References_Admin {
 	 * Wikidata References
 	 * Adds a link to wikidata to the tag archive title
 	 */
-	public function wkrf_add_wiki_link_archive_title($content){
+	public function wkrf_add_archive_title_wikidata_link($content){
 	    $options = get_option($this->plugin_name);
 	    $term_title = single_term_title('', false);
 	    $term_wikidata_id;
@@ -364,7 +364,7 @@ class Wikidata_References_Admin {
 	}
 	
 	//function wkrf_add_wiki_link_taxonomy_terms($link, $term, $taxonomy){
-	function wkrf_add_wiki_link_taxonomy_terms($links){
+	function wkrf_add_tag_terms_schema($links){
 	   $span_start = '<span itemscope itemtype="http://schema.org/Thing">';
 	   $span_end = '</span>';
 	   $schema_formatted_links = array();
