@@ -169,6 +169,9 @@ class Wikidata_References {
 		$this->loader->add_action('wp_head', $plugin_admin, 'wkrf_add_head_wikidata_taxonomy_links', 1, 1);
 		//changes the tag archive title for a link to wikidata
 		$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_add_wiki_link_archive_title', 10, 1);
+		
+		//$this->loader->add_filter('term_links', $plugin_admin, 'wkrf_add_wiki_link_taxonomy_terms', 10, 1);
+		$this->loader->add_filter('term_links-post_tag', $plugin_admin, 'wkrf_add_wiki_link_taxonomy_terms', 10, 1);
 		//adds metadata to a post when saved
 		$this->loader->add_action('save_post', $plugin_admin, 'wkrf_add_meta_to_posts', 1, 1);
 

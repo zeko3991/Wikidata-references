@@ -338,11 +338,15 @@ class Wikidata_References_Admin {
 	        $taxonomy = 'category';
 	        $the_archive_title_prefix = __('Category archives: ');
 	    }
+	    else if(is_tax()){
+	        //get taxonomy type and implement??
+	        return $content;
+	    }
 	    else{
 	        return $content;
 	    }
 	    
-	    $term = get_term_by('slug', $term_title, $taxonomy);
+	    $term = get_term_by('name', $term_title, $taxonomy);
 	    $term_wikidata_id = get_option("wikidata_id_".$taxonomy."_".$term->term_id);
 	    $term_wikidata_link = get_option("wikidata_link_".$taxonomy."_".$term->term_id);
 	    
@@ -357,6 +361,39 @@ class Wikidata_References_Admin {
     	  
 	    return $content;
 	    
+	}
+	
+	//function wkrf_add_wiki_link_taxonomy_terms($link, $term, $taxonomy){
+	function wkrf_add_wiki_link_taxonomy_terms($links){
+	   $span_start = '<span itemscope itemtype="http://schema.org/Thing">';
+	   $span_end = '</span>';
+	   $schema_formatted_links = array();
+	   
+	   // $meta = '<meta itemprop="url" content="'.$wikidata_link.'">';
+
+	  // return '<a href="'.$link.'" title="holi">'.$term->name.' </a>';  
+	//   if(is_single() || is_page() || is_tax()){
+    	    foreach($links as $link){
+    	        $term_slug = preg_replace('/<[\s\S]+?>/', '', $link);
+    	        $term = get_term_by('slug', $term_slug, 'post_tag');
+    	        $wikidata_link = get_option('wikidata_link_post_tag_'.$term->term_id);
+    	        if(empty($wikidata_link)){
+    	            $schema_formatted_links[] = $link;
+    	        }
+    	        else{
+    	            $schema_link = '<link itemprop="url" href="'.$wikidata_link.'" />';
+    	            $link = str_replace('<a', '<a itemprop="sameAs"', $link);
+    	            
+    	            $schema_formatted_links[] = $span_start.$schema_link.$link.$span_end;
+    	        }
+    	        
+    	    }
+	    return $schema_formatted_links;
+	    //we just want to add it in these terms
+	   // }
+	   // return '<a href="'.$link.'" title="holi" rel="tag" >'.$term->name.'</a>';
+	   //return 'https://www.google.es';
+	  // return $links;
 	}
 	
 	
