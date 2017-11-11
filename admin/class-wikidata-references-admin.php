@@ -371,8 +371,9 @@ class Wikidata_References_Admin {
 	   
 	   // $meta = '<meta itemprop="url" content="'.$wikidata_link.'">';
 
-	  // return '<a href="'.$link.'" title="holi">'.$term->name.' </a>';  
-	//   if(is_single() || is_page() || is_tax()){
+	  // return '<a href="'.$link.'" title="holi">'.$term->name.' </a>';
+	  //we just want to add it in these terms
+	   if(is_single() || is_page() || is_tax() || is_tag() || is_category() ){
     	    foreach($links as $link){
     	        $term_slug = preg_replace('/<[\s\S]+?>/', '', $link);
     	        $term = get_term_by('slug', $term_slug, 'post_tag');
@@ -389,8 +390,11 @@ class Wikidata_References_Admin {
     	        
     	    }
 	    return $schema_formatted_links;
-	    //we just want to add it in these terms
-	   // }
+	    
+	    }
+	    else{
+	        return $links;
+	    }
 	   // return '<a href="'.$link.'" title="holi" rel="tag" >'.$term->name.'</a>';
 	   //return 'https://www.google.es';
 	  // return $links;
