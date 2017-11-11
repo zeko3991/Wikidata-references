@@ -321,30 +321,39 @@ class Wikidata_References_Admin {
 	 * Wikidata References
 	 * Adds a link to wikidata to the tag archive title
 	 */
-	public function wkrf_change_tag_archive_title($content){
-	    global $wp;
+	public function wkrf_add_wiki_link_archive_title($content){
 	    $options = get_option($this->plugin_name);
-	    $tags = get_tags();
-	    $wikidata_url ='https://www.wikidata.org/wiki/';
-	    $the_archive_title = __('Tag archives: ');
-	    $tag_title_link_enable = isset($options['tag_title_link_enable']) ? $options['tag_title_link_enable'] : false;
-	    //if a tag page, adds link 
+	    $term_title = single_term_title('', false);
+	    $term_wikidata_id;
+	    $term_wikidata_link;
+	    $the_archive_title_prefix;
+	    $term_taxonomy;
+	    $term;
 	    
-	    if($tag_title_link_enable){
-    	    foreach($tags as $tag){
-    	        $tag_link = get_tag_link($tag->term_id);					// gets url for specific tag
-    	        $tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
-    	        $current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-    	   
-    	        // if current and tag url coincide, and tag associated to a wikidata id
-    	        if(($current_url == $tag_link) && isset($options['tag-'.$tag_name])){
-    	            $content = '<h1 class="page-title">'.$the_archive_title.'<a target="_blank" 
-                                    title="'.$wikidata_url.$options['tag-'.$tag_name].'" 
-                                    href='.$wikidata_url.$options['tag-'.$tag_name].' >'.$tag->name.'</a></h1>';
-    	            return $content;
-    	        }
-    	    }
+	    if(is_tag()){
+	        $taxonomy = 'post_tag';
+	        $the_archive_title_prefix = __('Tag archives: ');
 	    }
+	    else if(is_category()){
+	        $taxonomy = 'category';
+	        $the_archive_title_prefix = __('Category archives: ');
+	    }
+	    else{
+	        return $content;
+	    }
+	    
+	    $term = get_term_by('slug', $term_title, $taxonomy);
+	    $term_wikidata_id = get_option("wikidata_id_".$taxonomy."_".$term->term_id);
+	    $term_wikidata_link = get_option("wikidata_link_".$taxonomy."_".$term->term_id);
+	    
+	    if(!empty($term_wikidata_id) && !empty($term_wikidata_id)){
+	        $term_wikidata_id = '('.$term_wikidata_id.')';
+	        $content = '<h1 class="page-title">'.$the_archive_title_prefix.'<a target="_blank"
+                            title="'.$term_wikidata_link.'"
+                            href='.$term_wikidata_link.' >'.$term_title.' '.$term_wikidata_id.'</a></h1>';
+	        return $content;
+	    }
+
     	  
 	    return $content;
 	    
