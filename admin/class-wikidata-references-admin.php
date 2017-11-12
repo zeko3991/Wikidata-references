@@ -52,6 +52,7 @@ class Wikidata_References_Admin {
 	private $wikidata_url = 'https://www.wikidata.org/wiki/';
 	private $wikidata_id_key = 'wikidata_id';
 	private $wikidata_link_key = 'wikidata_link';
+	private $wikidata_description_key = 'wikidata_description';
 	private $taxonomy_post_tag = 'post_tag';
 	private $taxonomy_category = 'category';
 	
@@ -272,8 +273,10 @@ class Wikidata_References_Admin {
 			        $tag_id = $tag->term_id;
 			        //$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
 			        //$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-			        $wikidata_id = get_option("wikidata_id_".$this->taxonomy_post_tag."_".$tag_id);
-			        $wikidata_link = get_option("wikidata_link_".$this->taxonomy_post_tag."_".$tag_id);
+			      //  $wikidata_id = get_option("wikidata_id_".$this->taxonomy_post_tag."_".$tag_id);
+			        $wikidata_id = get_term_meta($tag->term_id, $this->wikidata_id_key, true);
+			       // $wikidata_link = get_option("wikidata_link_".$this->taxonomy_post_tag."_".$tag_id);
+			        $wikidata_link = get_term_meta($tag->term_id, $this->wikidata_link_key, true);
 			        // if current and tag url coincide, and tag associated to a wikidata id
 					if(!empty($wikidata_id) && !empty($wikidata_link)){
 			        	//add_term_meta($tag->term_id, "key", "mi_value", true);
@@ -286,8 +289,10 @@ class Wikidata_References_Admin {
 	    else if(is_category()){
 	    	foreach($categories as $category){
 	    		if(is_category($category->term_id, $category->term_id)){
-	    			$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->term_id);
-	    			$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->term_id);
+	    		    $wikidata_id = get_term_meta($tag->term_id, $this->wikidata_id_key, true);
+	    		    $wikidata_link = get_term_meta($tag->term_id, $this->wikidata_link_key, true);
+	    		//	$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->term_id);
+	    		//	$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->term_id);
 	    			//error_log("AAAA- "."wikidata_link_".$this->taxonomy_category."_".$category->slug);
 	    			//error_log("AAAA- id:".$wikidata_id."   link:".$wikidata_link);
 	    			if(!empty($wikidata_id) && !empty($wikidata_link)){
@@ -322,13 +327,8 @@ class Wikidata_References_Admin {
 	 * Adds a link to wikidata to the tag archive title
 	 */
 	public function wkrf_add_archive_title_wikidata_link($content){
-	    $options = get_option($this->plugin_name);
 	    $term_title = single_term_title('', false);
-	    $term_wikidata_id;
-	    $term_wikidata_link;
 	    $the_archive_title_prefix;
-	    $term_taxonomy;
-	    $term;
 	    
 	    if(is_tag()){
 	        $taxonomy = 'post_tag';
@@ -347,8 +347,10 @@ class Wikidata_References_Admin {
 	    }
 	    
 	    $term = get_term_by('name', $term_title, $taxonomy);
-	    $term_wikidata_id = get_option("wikidata_id_".$taxonomy."_".$term->term_id);
-	    $term_wikidata_link = get_option("wikidata_link_".$taxonomy."_".$term->term_id);
+	    $term_wikidata_id = get_term_meta($term->term_id, $this->wikidata_id_key, true);
+	    $term_wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
+	   // $term_wikidata_id = get_option("wikidata_id_".$taxonomy."_".$term->term_id);
+	   // $term_wikidata_link = get_option("wikidata_link_".$taxonomy."_".$term->term_id);
 	    
 	    if(!empty($term_wikidata_id) && !empty($term_wikidata_id)){
 	        $term_wikidata_id = '('.$term_wikidata_id.')';
@@ -363,28 +365,44 @@ class Wikidata_References_Admin {
 	    
 	}
 	
-	//function wkrf_add_wiki_link_taxonomy_terms($link, $term, $taxonomy){
-	function wkrf_add_tag_terms_schema($links){
+	
+	
+	function wkrf_add_post_tag_terms_schema($links){
+	    return $this->wkrf_add_terms_links_schema($links, 'post_tag');
+	}
+	
+	//function wkrf_add_category_terms_schema($links, $separator){
+	function wkrf_add_category_terms_schema($links){
+	   return $this->wkrf_add_terms_links_schema($links, 'category');
+	}
+	
+	/**
+	 * Function that takes the term_links-$taxonomy links and adds to them 
+	 * schema.org microformat.
+	 * 
+	 * @param unknown $links
+	 * @return string[]|unknown[]|unknown
+	 */
+	function wkrf_add_terms_links_schema($links, $taxonomy){
 	   $span_start = '<span itemscope itemtype="http://schema.org/Thing">';
 	   $span_end = '</span>';
 	   $schema_formatted_links = array();
 	   
-	   // $meta = '<meta itemprop="url" content="'.$wikidata_link.'">';
-
-	  // return '<a href="'.$link.'" title="holi">'.$term->name.' </a>';
 	  //we just want to add it in these terms
 	   if(is_single() || is_page() || is_tax() || is_tag() || is_category() ){
     	    foreach($links as $link){
     	        $term_slug = preg_replace('/<[\s\S]+?>/', '', $link);
-    	        $term = get_term_by('slug', $term_slug, 'post_tag');
-    	        $wikidata_link = get_option('wikidata_link_post_tag_'.$term->term_id);
+    	        $term = get_term_by('slug', $term_slug, $taxonomy);
+    	        $wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
+    	        if($taxonomy == 'category'){
+    	            error_log($term_slug.' id?: '.$term->term_id.' wikidata id: '.$wikidata_link);
+    	        }
     	        if(empty($wikidata_link)){
     	            $schema_formatted_links[] = $link;
     	        }
     	        else{
     	            $schema_link = '<link itemprop="url" href="'.$wikidata_link.'" />';
     	            $link = str_replace('<a', '<a itemprop="sameAs"', $link);
-    	            
     	            $schema_formatted_links[] = $span_start.$schema_link.$link.$span_end;
     	        }
     	        
@@ -395,9 +413,6 @@ class Wikidata_References_Admin {
 	    else{
 	        return $links;
 	    }
-	   // return '<a href="'.$link.'" title="holi" rel="tag" >'.$term->name.'</a>';
-	   //return 'https://www.google.es';
-	  // return $links;
 	}
 	
 	
@@ -498,7 +513,8 @@ class Wikidata_References_Admin {
 	function wkrf_add_taxonomy_wikidata_column_content($content, $column_name, $term_id){
 		$term = get_term($term_id);
 		$term_taxonomy = $term->taxonomy;
-		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term_id);
+		//$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term_id);
+		$wikidata_id = get_term_meta($term_id, $this->wikidata_id_key, true);
 		switch($column_name){
 			case 'wikidata_id':
 				$content = $wikidata_id;
@@ -537,8 +553,13 @@ class Wikidata_References_Admin {
 			$order = isset($_REQUEST['order'])   ? trim(wp_unslash($_REQUEST['order']))   : 'DESC';
 			
 			if($orderby == 'wikidata_id'){
-				$terms['join'] .= " LEFT JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.term_id)";
+				/*$terms['join'] .= " LEFT JOIN wp_options AS opt ON opt.option_name = concat('wikidata_id_".$taxonomies[0]."_',t.term_id)";
 				$terms['orderby'] = "ORDER BY opt.option_value";
+				$terms['order']   = $order;
+				*/
+				
+				$terms['join'] .= " LEFT JOIN wp_termmeta AS opt ON opt.term_id = t.term_id && opt.meta_key = 'wikidata_id'";
+				$terms['orderby'] = "ORDER BY opt.meta_value";
 				$terms['order']   = $order;
 			}
 		}
@@ -596,8 +617,8 @@ class Wikidata_References_Admin {
 	 */
 	function wkrf_edit_wikidata_id_taxonomy_field($term){
 		$term_taxonomy = $term->taxonomy;
-		$wikidata_id = get_option("wikidata_id_".$term_taxonomy."_".$term->term_id);
-		$wikidata_description = empty($wikidata_id) ? null : get_option("wikidata_description_".$term_taxonomy."_".$term->term_id);
+		$wikidata_id = get_term_meta($term->term_id, $this->wikidata_id_key, true);
+		$wikidata_description = empty($wikidata_id) ? null : get_term_meta($term->term_id, $this->wikidata_description_key, true);
 		
 		?>
 		<tr class ="form-field">
@@ -654,6 +675,7 @@ class Wikidata_References_Admin {
 				
 				delete_term_meta($term_id, $this->wikidata_id_key);
 				delete_term_meta($term_id, $this->wikidata_link_key);
+				delete_term_meta($term_id, $this->wikidata_description_key);
 				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - deleted metadata for term_id: ".$term_id);
 				
 			}
@@ -665,6 +687,7 @@ class Wikidata_References_Admin {
 				
 				update_term_meta($term_id, $this->wikidata_id_key, $term_meta['wikidata_id']);
 				update_term_meta($term_id, $this->wikidata_link_key, $this->wikidata_url.$term_meta['wikidata_id']);
+				update_term_meta($term_id, $this->wikidata_description_key, $term_meta['wikidata_description']);
 				error_log("INFO class:wkrf_save_wikidata_taxonomy_fields - saved metadata for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id']);
 			}
 		}

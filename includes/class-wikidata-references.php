@@ -170,8 +170,12 @@ class Wikidata_References {
 		//changes the tag archive title for a link to wikidata
 		$this->loader->add_filter('get_the_archive_title', $plugin_admin, 'wkrf_add_archive_title_wikidata_link', 10, 1);
 		
-		//$this->loader->add_filter('term_links', $plugin_admin, 'wkrf_add_wiki_link_taxonomy_terms', 10, 1);
-		$this->loader->add_filter('term_links-post_tag', $plugin_admin, 'wkrf_add_tag_terms_schema', 10, 1);
+	//	$this->loader->add_filter('term_link', $plugin_admin, 'wkrf_add_wiki_link_taxonomy_terms', 10, 3);
+	//	$this->loader->add_filter('the_category', $plugin_admin, 'wkrf_add_category_terms_schema', 10, 2);
+		$this->loader->add_filter('term_links-category', $plugin_admin, 'wkrf_add_category_terms_schema', 10, 1);
+		$this->loader->add_filter('term_links-post_tag', $plugin_admin, 'wkrf_add_post_tag_terms_schema', 10, 1);
+		
+		
 		//adds metadata to a post when saved
 		$this->loader->add_action('save_post', $plugin_admin, 'wkrf_add_meta_to_posts', 1, 1);
 
@@ -184,8 +188,7 @@ class Wikidata_References {
 		$this->loader->add_filter('manage_edit-post_tag_sortable_columns', $plugin_admin, 'wkrf_register_wikidata_sortable_column');
 			
 			
-			//add new/edit tag form
-		$this->loader->add_action('add_tag_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10, 1);
+		$this->loader->add_action('post_tag_add_form_fields', $plugin_admin, 'wkrf_add_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edit_tag_form_fields', $plugin_admin, 'wkrf_edit_wikidata_id_taxonomy_field', 10, 1);
 		$this->loader->add_action('edited_terms', $plugin_admin, 'wkrf_save_wikidata_taxonomy_fields', 10, 2);
 		$this->loader->add_action('create_post_tag', $plugin_admin, 'wkrf_add_new_term_wikidata_id', 10, 2);

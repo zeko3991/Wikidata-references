@@ -218,51 +218,6 @@ function wkrf_wikidata_search_by_term(term, input_id){
 
 //////Setup page javascript buttons admin///////
 
-/* 
- * Wikidata references
- * Gestiona la selección de formatos de referenciación
- */
-function updateIeeeFormat(ieeeFormat){
-	
-	if(ieeeFormat.checked == true){
-		document.getElementById("wikidata-references-ieee_format").value = 1;
-		document.getElementById("wikidata-references-harvard_format").checked = false;
-		document.getElementById("wikidata-references-harvard_format").value = 0;
-		document.getElementById("wikidata-references-simple_format").checked = false;
-		document.getElementById("wikidata-references-simple_format").value = 0;
-	}
-}
-
-/*
- * Wikidata references
- * Gestiona la selección de formatos de referenciación.
- */
-function updateHarvardFormat(harvardFormat){
-	
-	if(harvardFormat.checked == true){
-		document.getElementById("wikidata-references-harvard_format").value = 1;
-		document.getElementById("wikidata-references-ieee_format").checked = false;
-		document.getElementById("wikidata-references-ieee_format").value = 0;
-		document.getElementById("wikidata-references-simple_format").checked = false;
-		document.getElementById("wikidata-references-simple_format").value = 0;
-	}
-}
-
-/*
- * Wikidata references
- * Gestiona la selección de formatos de referenciación
- */
-function updateSimpleFormat(simpleFormat){
-	
-	if(simpleFormat.checked == true){
-		document.getElementById("wikidata-references-simple_format").value = 1;
-		document.getElementById("wikidata-references-ieee_format").checked = false;
-		document.getElementById("wikidata-references-ieee_format").value = 0;
-		document.getElementById("wikidata-references-harvard_format").checked = false;
-		document.getElementById("wikidata-references-harvard_format").value = 0;
-	}
-}
-
 
 function hello(text){
 	if(text == null){
