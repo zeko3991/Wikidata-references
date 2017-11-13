@@ -185,6 +185,7 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */ 
 	public function wkrf_display_plugin_setup_page(){
+		
 		include_once( 'partials/wikidata-references-admin-display.php' );
 	}
 	
@@ -289,8 +290,8 @@ class Wikidata_References_Admin {
 	    else if(is_category()){
 	    	foreach($categories as $category){
 	    		if(is_category($category->term_id, $category->term_id)){
-	    		    $wikidata_id = get_term_meta($tag->term_id, $this->wikidata_id_key, true);
-	    		    $wikidata_link = get_term_meta($tag->term_id, $this->wikidata_link_key, true);
+	    		    $wikidata_id = get_term_meta($category->term_id, $this->wikidata_id_key, true);
+	    		    $wikidata_link = get_term_meta($category->term_id, $this->wikidata_link_key, true);
 	    		//	$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->term_id);
 	    		//	$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->term_id);
 	    			//error_log("AAAA- "."wikidata_link_".$this->taxonomy_category."_".$category->slug);
@@ -318,10 +319,9 @@ class Wikidata_References_Admin {
 	public function wkrf_echo_head_meta_link($alternate, $link, $type){
 		echo '<link rel="'.$alternate.'" href="'.$link.'" type="'.$type.'" />';
 	}
+
 	
 	
-	
-    
 	/**
 	 * Wikidata References
 	 * Adds a link to wikidata to the tag archive title
@@ -329,6 +329,9 @@ class Wikidata_References_Admin {
 	public function wkrf_add_archive_title_wikidata_link($content){
 	    $term_title = single_term_title('', false);
 	    $the_archive_title_prefix;
+	    //error_log(debug_print_backtrace());
+	    //debug_backtrace()
+	    error_log($term_title);
 	    
 	    if(is_tag()){
 	        $taxonomy = 'post_tag';
@@ -337,10 +340,6 @@ class Wikidata_References_Admin {
 	    else if(is_category()){
 	        $taxonomy = 'category';
 	        $the_archive_title_prefix = __('Category archives: ');
-	    }
-	    else if(is_tax()){
-	        //get taxonomy type and implement??
-	        return $content;
 	    }
 	    else{
 	        return $content;
@@ -360,7 +359,7 @@ class Wikidata_References_Admin {
 	        return $content;
 	    }
 
-    	  
+		error_log("title: ");
 	    return $content;
 	    
 	}
@@ -393,10 +392,13 @@ class Wikidata_References_Admin {
     	    foreach($links as $link){
     	        $term_slug = preg_replace('/<[\s\S]+?>/', '', $link);
     	        $term = get_term_by('slug', $term_slug, $taxonomy);
-    	        $wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
-    	        if($taxonomy == 'category'){
-    	            error_log($term_slug.' id?: '.$term->term_id.' wikidata id: '.$wikidata_link);
+    	        if(empty($term)){
+    	        	continue;
     	        }
+    	        else{
+    	        	$wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
+    	        }
+
     	        if(empty($wikidata_link)){
     	            $schema_formatted_links[] = $link;
     	        }
