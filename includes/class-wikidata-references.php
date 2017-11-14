@@ -207,6 +207,16 @@ class Wikidata_References {
 		
 			//Taxonomy (post_tag and category) column sort 
 		$this->loader->add_filter('terms_clauses', $plugin_admin, 'wrkf_sort_taxonomy_by_wikidata_id', 10, 3);
+		
+	/*	add_filter("get_the_archive_title", function($val) {
+			$backtrace = debug_backtrace();
+			foreach($backtrace as $level){
+				if(array_key_exists("file", $level) && preg_match("!wp-blog-header\.php$!", $level["file"]) && array_key_exists("function", $level) && $level["function"] == "get_the_archive_title" ) {
+					return "works: $val";		
+				}
+			}
+			return "test: $val";
+		}, 10 , 1);*/
 	}
 
 

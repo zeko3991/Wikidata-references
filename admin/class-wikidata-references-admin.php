@@ -344,7 +344,7 @@ class Wikidata_References_Admin {
 	    else{
 	        return $content;
 	    }
-	    
+	    error_log($content);
 	    $term = get_term_by('name', $term_title, $taxonomy);
 	    $term_wikidata_id = get_term_meta($term->term_id, $this->wikidata_id_key, true);
 	    $term_wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
@@ -353,9 +353,12 @@ class Wikidata_References_Admin {
 	    
 	    if(!empty($term_wikidata_id) && !empty($term_wikidata_id)){
 	        $term_wikidata_id = '('.$term_wikidata_id.')';
-	        $content = '<h1 class="page-title">'.$the_archive_title_prefix.'<a target="_blank"
-                            title="'.$term_wikidata_link.'"
-                            href='.$term_wikidata_link.' >'.$term_title.' '.$term_wikidata_id.'</a></h1>';
+	        $content = '<h1 class="page-title">'.$the_archive_title_prefix.
+	        				'<a target="_blank"
+                           		 title="'.$term_wikidata_link.'"
+                           		 href='.$term_wikidata_link.' >'.$term_title.' '.$term_wikidata_id.
+                           	'</a>
+						</h1>';
 	        return $content;
 	    }
 
