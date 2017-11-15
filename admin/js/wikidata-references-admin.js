@@ -229,4 +229,9 @@ function hello(text){
 	
 }
 
+function toggleDiv(divId) {
+	jQuery("#"+divId).toggle();
+	 //  document.getElementById(divId).toggle();
+	}
+
 ////////////////////////////////////////////////

@@ -49,13 +49,14 @@ class Wikidata_References_Admin {
 	 */
 	private $utilities;
 	
-	private $wikidata_url = 'https://www.wikidata.org/wiki/';
+	private $wikidata_url = 'https://www.wikidata.org/entity/';
 	private $wikidata_id_key = 'wikidata_id';
 	private $wikidata_link_key = 'wikidata_link';
 	private $wikidata_description_key = 'wikidata_description';
 	private $taxonomy_post_tag = 'post_tag';
 	private $taxonomy_category = 'category';
 	
+	private $type_html = 'text/html';
 	private $extension_json = '.json';
 	private $type_json = 'application/json';
 	private $extension_php = '.php';
@@ -196,7 +197,7 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */
 	public function wkrf_setup_options_update(){
-		register_setting('wkrf_settings_group', $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
+		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
 	}
 	
 	
@@ -220,6 +221,19 @@ class Wikidata_References_Admin {
 		$valid ['tag_title_link_enable'] = (isset($input['tag_title_link_enable']) && ! empty ($input['tag_title_link_enable'])) ? 1 : 0;
 		$valid ['metadata_posts_enable'] = (isset($input['metadata_posts_enable']) && ! empty ($input['metadata_posts_enable'])) ? 1 : 0;
 		$valid ['metadata_tags_enable'] = (isset($input['metadata_tags_enable']) && ! empty ($input['metadata_tags_enable'])) ? 1 : 0;
+		$valid ['metadata_enable'] = (isset($input['metadata_enable']) && ! empty ($input['metadata_enable'])) ? 1 : 0;
+		
+		$valid ['wkrf_wikidata_link_enable'] = (isset($input['wkrf_wikidata_link_enable']) && ! empty ($input['wkrf_wikidata_link_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_json_enable'] = (isset($input['wkrf_wikidata_json_enable']) && ! empty ($input['wkrf_wikidata_json_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_n3_enable'] = (isset($input['wkrf_wikidata_n3_enable']) && ! empty ($input['wkrf_wikidata_n3_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_nt_enable'] = (isset($input['wkrf_wikidata_nt_enable']) && ! empty ($input['wkrf_wikidata_nt_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_php_enable'] = (isset($input['wkrf_wikidata_php_enable']) && ! empty ($input['wkrf_wikidata_php_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_rdf_enable'] = (isset($input['wkrf_wikidata_rdf_enable']) && ! empty ($input['wkrf_wikidata_rdf_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_ttl_enable'] = (isset($input['wkrf_wikidata_ttl_enable']) && ! empty ($input['wkrf_wikidata_ttl_enable'])) ? 1 : 0;
+		
+		
+		
+		error_log($valid['wkrf_wikidata_link_enable']);
 		
 
 		
@@ -245,26 +259,8 @@ class Wikidata_References_Admin {
 	    $wikidata_id;
 	    $wikidata_link;
 	    $echo_enable = false;
+	    $options = get_option($this->plugin_name);
 	    
-	  /*  //if current url is a post, adds metadata depending of its tags
-	    if(is_single(get_the_title())){									// if is a post
-	        $post_tags = get_the_tags();								// gets the post tags list
-	        if($post_tags){												// if list is not empty
-	            foreach($post_tags as $post_tag){
-	                //$tag_name = str_replace(" ", "_", $post_tag->name);
-	                $tag_name = $this->utilities->wkrf_sanitize_tag_name($post_tag->name);
-	                
-	                // checks if the tag has an associated wikidata id
-	                if(isset($options['tag-'.$tag_name])){
-	                    echo '<meta property="test_meta_tag" content="'.$post_tag->name.'" />';  // debug info metadata
-	                    echo '<meta property="dc.sameAs" content="'.$wikidata_url.$options['tag-'.$tag_name].'" />';
-	                }
-	                
-	            }
-	        }
-	        return; //if current page is a post, will not check if its url coincides with a tag page url
-	    }
-	    */
 	    //if a tag page, adds metadata
 	    if(is_tag()){
 		    foreach($tags as $tag){
@@ -304,19 +300,34 @@ class Wikidata_References_Admin {
 	    }
 	    
 	    if($echo_enable){
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_json, $this->type_json);
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_n3, $this->type_n3);
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_nt, $this->type_nt);
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_php, $this->type_php);
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_rdf, $this->type_rdf);
-	    	$this->wkrf_echo_head_meta_link('alternate', $wikidata_link.$this->extension_ttl, $this->type_ttl);
+	    	if(isset($options['wkrf_wikidata_link_enable']) && $options['wkrf_wikidata_link_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link, $this->type_html);
+	    	}
+	    	if(isset($options['wkrf_wikidata_json_enable']) && $options['wkrf_wikidata_json_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_json, $this->type_json);
+	    	}
+	    	if(isset($options['wkrf_wikidata_n3_enable']) && $options['wkrf_wikidata_n3_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_n3, $this->type_n3);
+	    	}
+	    	if(isset($options['wkrf_wikidata_nt_enable']) && $options['wkrf_wikidata_nt_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_nt, $this->type_nt);
+	    	}
+	    	if(isset($options['wkrf_wikidata_php_enable']) && $options['wkrf_wikidata_php_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_php, $this->type_php);
+	    	}
+	    	if(isset($options['wkrf_wikidata_rdf_enable']) && $options['wkrf_wikidata_rdf_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_rdf, $this->type_rdf);
+	    	}
+	    	if(isset($options['wkrf_wikidata_ttl_enable']) && $options['wkrf_wikidata_ttl_enable']){
+	    		$this->wkrf_echo_head_meta_link('describedby', $wikidata_link.$this->extension_ttl, $this->type_ttl);
+	    	}
 	    }
 	    
 	}
 	
 	
-	public function wkrf_echo_head_meta_link($alternate, $link, $type){
-		echo '<link rel="'.$alternate.'" href="'.$link.'" type="'.$type.'" />';
+	public function wkrf_echo_head_meta_link($rel, $link, $type){
+		echo '<link rel="'.$rel.'" href="'.$link.'" type="'.$type.'" />';
 	}
 
 	
