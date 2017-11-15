@@ -3,6 +3,9 @@
  * included in this file.
  */
  
+ img .logo{
+ 	
+ }
  
  .right {
  	float: right;
@@ -15,10 +18,29 @@
 
 .wkrf-setup {
 	clear:both;
-	border-top: 5%;
+	margin-top: 5%;
 	margin-top: 2em;
 	padding-bottom: 1em;
 	overflow: auto;
+	
+}
+
+.wkrf-setup .title{
+	margin-left: 1em;
+}
+
+.wkrf-setup p{
+	padding-right: 1em;
+	margin-left: 2em;
+	font-size: 100%;
+	text-align: justify;
+    text-justify: inter-word;
+}
+
+.box{
+	border: 1px solid;
+	border-color: #DCDCDC;
+	box-shadow: 5px 5px 5px #888888;
 }
 
 .wkrf-assoc-textfield{

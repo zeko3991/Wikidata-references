@@ -196,8 +196,7 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */
 	public function wkrf_setup_options_update(){
-		register_setting($this->plugin_name, $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
-		$this->wkrf_add_meta_to_posts(null);
+		register_setting('wkrf_settings_group', $this->plugin_name, array($this, 'wkrf_validate_wiki_references_setup'));
 	}
 	
 	
@@ -348,8 +347,6 @@ class Wikidata_References_Admin {
 	    $term = get_term_by('name', $term_title, $taxonomy);
 	    $term_wikidata_id = get_term_meta($term->term_id, $this->wikidata_id_key, true);
 	    $term_wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);
-	   // $term_wikidata_id = get_option("wikidata_id_".$taxonomy."_".$term->term_id);
-	   // $term_wikidata_link = get_option("wikidata_link_".$taxonomy."_".$term->term_id);
 	    
 	    if(!empty($term_wikidata_id) && !empty($term_wikidata_id)){
 	        $term_wikidata_id = '('.$term_wikidata_id.')';
@@ -420,83 +417,6 @@ class Wikidata_References_Admin {
 	    }
 	}
 	
-	
-	/**
-	 * Adds generic metadata to posts
-	 * If $post_id is null will update/delete all posts metadata, updating or 
-	 * adding values if option "metadata_post_enable" is activated or deleting
-	 * them from all posts if disabled.
-	 * If $post_id is not null and refers to an existing post, will update / delete
-	 * metadata from that post.
-	 * @param int $post_id
-	 */
-	public function wkrf_add_meta_to_posts($post_id){
-		//if called when saving a new post
-		
-		$options = get_option($this->plugin_name);
-		$posts_list = get_posts(-1); //gets all posts
-		
-		//gets metadata values
-		$metadata_posts_enable = isset($options['metadata_posts_enable']) ? $options['metadata_posts_enable'] : 0;
-		$author = isset($options['author_meta']) ? $options['author_meta'] : null;
-		$copyright = isset($options['copyright_meta']) ? $options['copyright_meta'] : null;
-		$subject = isset($options['subject_meta']) ? $options['subject_meta'] : null;
-		$description = isset($options['description_meta']) ? $options['description_meta'] : null;
-		$keywords = isset($options['keywords_meta']) ? $options['keywords_meta'] : null;
-		
-		if($post_id == null){
-			if($metadata_posts_enable){
-				
-				foreach($posts_list as $post){
-					if($author != null){
-						update_post_meta($post->ID, "author", $author);
-					}
-					if($copyright != null){
-						update_post_meta($post->ID, "copyright", $copyright);
-					}
-					if($subject != null){
-						update_post_meta($post->ID, "subject", $subject);
-					}
-					if($description != null){
-						update_post_meta($post->ID, "description", $description);
-					}
-					if($keywords != null){
-						update_post_meta($post->ID, "keywords", $keywords);
-					}
-				}			
-			}
-			else{
-				foreach($posts_list as $post){
-					delete_post_meta($post->ID, "author");
-					delete_post_meta($post->ID, "copyright");
-					delete_post_meta($post->ID, "subject");
-					delete_post_meta($post->ID, "description");
-					delete_post_meta($post->ID, "keywords");
-				}
-			}
-		}
-		else if($post_id != null){
-			if($metadata_posts_enable){
-				
-				foreach($posts_list as $post){
-					update_post_meta($post->ID, "author", $author);
-					update_post_meta($post->ID, "copyright", $copyright);
-					update_post_meta($post->ID, "subject", $subject);
-					update_post_meta($post->ID, "description", $description);
-					update_post_meta($post->ID, "keywords", $keywords);
-				}
-			}
-			else{
-				foreach($posts_list as $post){
-					delete_post_meta($post->ID, "author");
-					delete_post_meta($post->ID, "copyright");
-					delete_post_meta($post->ID, "subject");
-					delete_post_meta($post->ID, "description");
-					delete_post_meta($post->ID, "keywords");
-				}
-			}
-		}
-	}
 	
 
 	
@@ -663,7 +583,13 @@ class Wikidata_References_Admin {
 			$this->wkrf_save_wikidata_taxonomy_fields($term_id, $taxonomy);
 	}
 	
-	
+	/**
+	 * Wikidata References
+	 * Saves Wikidata ID into term meta when creating or updating a taxonomy
+	 * term. 
+	 * @param int $term_id
+	 * @param string $taxonomy
+	 */
 	function wkrf_save_wikidata_taxonomy_fields($term_id, $taxonomy){
 		$term = get_term($term_id);
 		

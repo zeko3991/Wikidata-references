@@ -25,6 +25,9 @@
 	<form method="post" name="wiki_references_options" action="options.php">
 	<?php
 	
+	$plugin_url = plugin_dir_url(__FILE__);
+	
+	
 	settings_fields ( $this->plugin_name );
 	do_settings_sections ( $this->plugin_name );
 
@@ -67,12 +70,32 @@
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	<!-- ///////////////////////////////////ORDINARY METADATA/////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	
+    	<div class="wkrf-setup box col-md-12 col-xs-12">
+    		<h1 class="title"><?php echo _e("Wikidata References"); ?></h1>
+    		<p></p>
+    		<div class="row">
+	    		<p class="col-md-8 col-xs-10">Wikidata references is a plugin developed with the purpose of helping you to add associations among 
+	    		your WordPress Tags or Categories and Wikidata Items to add some metadata and microdata into your Website.
+	    		It also lets you add a link to the associated Wikidata item at your Tags and Categories' archive pages.
+	    		</p>
+	    		<div class="col-md-3 col-xs-12 col-xs-offset-6">
+	    			<img src="<?php echo $plugin_url; ?>images/Wikidata-logo-en.svg" height="90" width="128" style="display:inline">
+	    		</div>
+	    	</div>
+    		<div class="row">
+    			<p class="col-md-8 col-xs-10"> Here, you can decide which metadata or links you add to your website, to associate your Tags and 
+	    			Categories with Wikidata Items, simply go to the <a href="edit-tags.php">WordPress Term editor.</a>
+	    		</p>
+    		</div>
+    		
+    	</div>
+
 		
-		
-		<div class="wkrf-setup">
-			
+		<div class="wkrf-setup box col-xs-12">
+				<h1 class="title"><?php echo _e('Meta added to head'); ?></h1>
     			<!-- CHECKBOX TO ACTIVATE METADATA OPTION -->
-    			<div class="wkrf-metadata-form margin-top col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
+    			<div class="wkrf-metadata-form margin-top  col-xl-10 col-xl-offset-2  col-md-10 col-md-offset-2  col-xs-12 left input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-metadata_enable">
     	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-metadata_enable" name="<?php echo $this->plugin_name; ?>[metadata_enable]" value="1" <?php checked($metadata_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add this metadata to my website\'s head', $this->plugin_name); ?></span>
@@ -85,83 +108,12 @@
     	        </label>
     			</div>
 		</div>
-		<hr>
-	
+		
+		
 		
 		
     	
-    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-    	<!-- ///////////////////////////////////FORMATOS//////////////////////////////////////// -->
-    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
-    	
-    	
-    	<?php /**
-    	<h2><?php echo __("Formatos")?></h2>
-    	
-    	
-    	<div class="wkrf-setup">
-	    	<fieldset>
-	    		<h3><?php echo __("IEEE Referencing System")?></h3>
-	    		<legend class="screen-reader-text">
-	    			<span><?php echo __('Seleccionar formato de referencias IEEE')?></span>
-	    		</legend>
-	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-ieee_format" 
-	    					name="<?php echo $this->plugin_name; ?>[ieee_format]"
-	    					<?php checked($ieee_format, 1)?> 
-	    					onclick="updateIeeeFormat(this);" 
-	    		/>
-	    		<label for="<?php echo $this->plugin_name; ?>-ieee_format">
-	    			<?php echo __(' [1] "Term", <i>Wikidata</i>, 2015. [Online]. 
-										Available: <a href="https://www.wikidata.org/wiki/Q2013">
-										https://www.wikidata.org/wiki/Q2013</a>.
-										Accessed: 24-jul-2017', $this->plugin_name); ?>
-				</label>
-	    		
-	    	</fieldset>
-	    	
-	    	<fieldset>
-	    		<h3><?php echo __("Harvard Referencing System")?></h3>
-	    		<legend class="screen-reader-text">
-	    			<span><?php echo __('Seleccionar formato de referencias Harvard')?></span>
-	    		</legend>
-	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-harvard_format"
-	    					name="<?php echo $this->plugin_name; ?>[harvard_format]" 
-	    					<?php checked($harvard_format, 1)?> 
-	    					onclick="updateHarvardFormat(this);"
-	    		/>
-	    		<label for="<?php echo $this->plugin_name; ?>-harvard_format">
-	    			<?php echo __('  "Term", <i>Wikidata</i>, Wikimedia Foundation. 19 September 2017.
-										Viewed 21 September 2017, 
-										from <a href="https://www.wikidata.org/wiki/Q2013">
-										https://www.wikidata.org/wiki/Q2013</a>.'
-										, $this->plugin_name); ?>
-				</label>
-	    		
-	    	</fieldset>
-	    	
-	
-	    	<fieldset>
-	    		<h3><?php echo __("Simple")?></h3>
-	    		<legend class="screen-reader-text">
-	    			<span><?php echo __('Seleccionar formato de referencias simple')?></span>
-	    		</legend>
-	    		<input type="radio" id="<?php echo $this->plugin_name; ?>-simple_format" 
-	    					name="<?php echo $this->plugin_name; ?>[simple_format]"
-	    					<?php checked($simple_format, 1)?> 
-	    					onclick="updateSimpleFormat(this);" 
-	    		/>
-	    		<label for="<?php echo $this->plugin_name; ?>-simple_format">
-	    			<?php echo __(' "Term", 
-									<a href="https://www.wikidata.org/wiki/Q2013">
-									https://www.wikidata.org/wiki/Q2013</a>.
-									Accessed: 24-jul-2017', $this->plugin_name); ?>
-				</label>
-	    		
-	    	</fieldset>
-	    	<br>
-	    	<hr>
-    	</div>
-    	*/?>
+
 
 		<div class="wkrf-setup">
 			<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
