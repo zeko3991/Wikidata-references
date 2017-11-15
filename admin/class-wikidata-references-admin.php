@@ -208,34 +208,21 @@ class Wikidata_References_Admin {
 	 */
 	public function wkrf_validate_wiki_references_setup($input){
 		$valid = array();
+
+		$valid ['wkrf_wikidata_tag_title_link_enable']      = (isset($input['wkrf_wikidata_tag_title_link_enable']) && ! empty ($input['wkrf_wikidata_tag_title_link_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_category_title_link_enable'] = (isset($input['wkrf_wikidata_category_title_link_enable']) && ! empty ($input['wkrf_wikidata_category_title_link_enable'])) ? 1 : 0;
 		
-		//deprecated?
-		$valid ['references_by_tag'] = (isset ( $input ['references_by_tag'] ) && ! empty ( $input ['references_by_tag'] )) ? 1 : 0;
-		$valid ['references_footnote'] = (isset ( $input ['references_footnote'] ) && ! empty ( $input ['references_footnote'] )) ? 1 : 0;
-		$valid ['ieee_format'] = (isset ( $input ['ieee_format'] ) && ! empty ( $input ['ieee_format'] )) ? 1 : 0;
-		$valid ['harvard_format'] = (isset ( $input ['harvard_format'] ) && ! empty ( $input ['harvard_format'] )) ? 1 : 0;
-		$valid ['simple_format'] = (isset ( $input ['simple_format'] ) && ! empty ( $input ['simple_format'] )) ? 1 : 0;
-		
-		//$valid['prueba'] = (isset($input['prueba']) && ! empty($input['prueba'])) ? $input['prueba'] : null;
-		//metadata values
-		$valid ['tag_title_link_enable'] = (isset($input['tag_title_link_enable']) && ! empty ($input['tag_title_link_enable'])) ? 1 : 0;
-		$valid ['metadata_posts_enable'] = (isset($input['metadata_posts_enable']) && ! empty ($input['metadata_posts_enable'])) ? 1 : 0;
-		$valid ['metadata_tags_enable'] = (isset($input['metadata_tags_enable']) && ! empty ($input['metadata_tags_enable'])) ? 1 : 0;
-		$valid ['metadata_enable'] = (isset($input['metadata_enable']) && ! empty ($input['metadata_enable'])) ? 1 : 0;
+		$valid ['wkrf_term_microformat_links_enable']      = (isset($input['wkrf_term_microformat_links_enable']) && ! empty($input['wkrf_term_microformat_links_enable'])) ? 1 : 0;
 		
 		$valid ['wkrf_wikidata_link_enable'] = (isset($input['wkrf_wikidata_link_enable']) && ! empty ($input['wkrf_wikidata_link_enable'])) ? 1 : 0;
 		$valid ['wkrf_wikidata_json_enable'] = (isset($input['wkrf_wikidata_json_enable']) && ! empty ($input['wkrf_wikidata_json_enable'])) ? 1 : 0;
-		$valid ['wkrf_wikidata_n3_enable'] = (isset($input['wkrf_wikidata_n3_enable']) && ! empty ($input['wkrf_wikidata_n3_enable'])) ? 1 : 0;
-		$valid ['wkrf_wikidata_nt_enable'] = (isset($input['wkrf_wikidata_nt_enable']) && ! empty ($input['wkrf_wikidata_nt_enable'])) ? 1 : 0;
-		$valid ['wkrf_wikidata_php_enable'] = (isset($input['wkrf_wikidata_php_enable']) && ! empty ($input['wkrf_wikidata_php_enable'])) ? 1 : 0;
-		$valid ['wkrf_wikidata_rdf_enable'] = (isset($input['wkrf_wikidata_rdf_enable']) && ! empty ($input['wkrf_wikidata_rdf_enable'])) ? 1 : 0;
-		$valid ['wkrf_wikidata_ttl_enable'] = (isset($input['wkrf_wikidata_ttl_enable']) && ! empty ($input['wkrf_wikidata_ttl_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_n3_enable']   = (isset($input['wkrf_wikidata_n3_enable']) && ! empty ($input['wkrf_wikidata_n3_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_nt_enable']   = (isset($input['wkrf_wikidata_nt_enable']) && ! empty ($input['wkrf_wikidata_nt_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_php_enable']  = (isset($input['wkrf_wikidata_php_enable']) && ! empty ($input['wkrf_wikidata_php_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_rdf_enable']  = (isset($input['wkrf_wikidata_rdf_enable']) && ! empty ($input['wkrf_wikidata_rdf_enable'])) ? 1 : 0;
+		$valid ['wkrf_wikidata_ttl_enable']  = (isset($input['wkrf_wikidata_ttl_enable']) && ! empty ($input['wkrf_wikidata_ttl_enable'])) ? 1 : 0;
 		
 		
-		
-		error_log($valid['wkrf_wikidata_link_enable']);
-		
-
 		
 		return $valid;
 	}
@@ -254,7 +241,7 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */
 	public function wkrf_add_head_wikidata_taxonomy_links(){
-	    $tags = get_tags();
+	    $tags       = get_tags();
 	    $categories = get_categories();
 	    $wikidata_id;
 	    $wikidata_link;
@@ -264,18 +251,13 @@ class Wikidata_References_Admin {
 	    //if a tag page, adds metadata
 	    if(is_tag()){
 		    foreach($tags as $tag){
+		        //checks what tag archive page is
 		    	if(is_tag($tag->term_id, $tag->slug)){
 			        $tag_slug = $tag->slug;
 			        $tag_id = $tag->term_id;
-			        //$tag_name = $this->utilities->wkrf_sanitize_tag_name($tag->name);
-			        //$current_url = home_url (add_query_arg(array(), $wp->request)) . '/'; // gets current url
-			      //  $wikidata_id = get_option("wikidata_id_".$this->taxonomy_post_tag."_".$tag_id);
 			        $wikidata_id = get_term_meta($tag->term_id, $this->wikidata_id_key, true);
-			       // $wikidata_link = get_option("wikidata_link_".$this->taxonomy_post_tag."_".$tag_id);
 			        $wikidata_link = get_term_meta($tag->term_id, $this->wikidata_link_key, true);
-			        // if current and tag url coincide, and tag associated to a wikidata id
 					if(!empty($wikidata_id) && !empty($wikidata_link)){
-			        	//add_term_meta($tag->term_id, "key", "mi_value", true);
 			        	$echo_enable = true;
 			        }
 			        break;
@@ -284,13 +266,10 @@ class Wikidata_References_Admin {
 	    }
 	    else if(is_category()){
 	    	foreach($categories as $category){
+	    	    //checks what category archive page is
 	    		if(is_category($category->term_id, $category->term_id)){
 	    		    $wikidata_id = get_term_meta($category->term_id, $this->wikidata_id_key, true);
 	    		    $wikidata_link = get_term_meta($category->term_id, $this->wikidata_link_key, true);
-	    		//	$wikidata_id = get_option("wikidata_id_".$this->taxonomy_category."_".$category->term_id);
-	    		//	$wikidata_link = get_option("wikidata_link_".$this->taxonomy_category."_".$category->term_id);
-	    			//error_log("AAAA- "."wikidata_link_".$this->taxonomy_category."_".$category->slug);
-	    			//error_log("AAAA- id:".$wikidata_id."   link:".$wikidata_link);
 	    			if(!empty($wikidata_id) && !empty($wikidata_link)){
 	    				$echo_enable = true;
 	    			}
@@ -339,22 +318,21 @@ class Wikidata_References_Admin {
 	public function wkrf_add_archive_title_wikidata_link($content){
 	    $term_title = single_term_title('', false);
 	    $the_archive_title_prefix;
-	    //error_log(debug_print_backtrace());
-	    //debug_backtrace()
-	    error_log($term_title);
+	    $options = get_option($this->plugin_name);
+	    $wkrf_wikidata_tag_title_link_enable      = isset($options['wkrf_wikidata_tag_title_link_enable']) ? $options['wkrf_wikidata_tag_title_link_enable'] : null;
+	    $wkrf_wikidata_category_title_link_enable = isset($options['wkrf_wikidata_category_title_link_enable']) ? $options['wkrf_wikidata_category_title_link_enable'] : null;
 	    
-	    if(is_tag()){
+	    if(is_tag() && $wkrf_wikidata_tag_title_link_enable){
 	        $taxonomy = 'post_tag';
 	        $the_archive_title_prefix = __('Tag archives: ');
 	    }
-	    else if(is_category()){
+	    else if(is_category() && $wkrf_wikidata_category_title_link_enable){
 	        $taxonomy = 'category';
 	        $the_archive_title_prefix = __('Category archives: ');
 	    }
 	    else{
 	        return $content;
 	    }
-	    error_log($content);
 	    $term = get_term_by('name', $term_title, $taxonomy);
 	    $term_wikidata_id = get_term_meta($term->term_id, $this->wikidata_id_key, true);
 	    $term_wikidata_link = get_term_meta($term->term_id, $this->wikidata_link_key, true);

@@ -14,7 +14,6 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<!-- https://www.sitepoint.com/create-a-wordpress-theme-settings-page-with-the-settings-api/ -->
 
 
 
@@ -31,13 +30,17 @@
 	settings_fields ( $this->plugin_name );
 	do_settings_sections ( $this->plugin_name );
 
-	
-	// Grab all tags
-	$tags = get_tags ();
 	// Grab all setup options
 	$options = get_option ( $this->plugin_name );
 	
+    //microformats enable
+	$wkrf_term_microformat_links_enable = isset($options['wkrf_term_microformat_links_enable']) ? $options['wkrf_term_microformat_links_enable'] : null;
 	
+	//term archive title links enable
+	$wkrf_wikidata_tag_title_link_enable = isset($options['wkrf_wikidata_tag_title_link_enable']) ? $options['wkrf_wikidata_tag_title_link_enable'] : null;
+	$wkrf_wikidata_category_title_link_enable = isset($options['wkrf_wikidata_category_title_link_enable']) ? $options['wkrf_wikidata_category_title_link_enable'] : null;
+	
+	//head meta links enable and examples for description
 	$wkrf_wikidata_link_enable = isset($options['wkrf_wikidata_link_enable']) ? $options['wkrf_wikidata_link_enable'] : null;
 	$wkrf_wikidata_json_enable = isset($options['wkrf_wikidata_json_enable']) ? $options['wkrf_wikidata_json_enable'] : null;
 	$wkrf_wikidata_n3_enable = isset($options['wkrf_wikidata_n3_enable']) ? $options['wkrf_wikidata_n3_enable'] : null;
@@ -57,30 +60,8 @@
 	
 	
 	
-	$metadata_enable = isset($options['metadata_enable']) ? $options['metadata_enable'] : null;
-	$tag_title_link_enable = isset($options['tag_title_link_enable']) ? $options['tag_title_link_enable'] : null;
-	$metadata_posts_enable = isset($options['metadata_posts_enable']) ? $options['metadata_posts_enable'] : null;
-	$metadata_tags_enable = isset($options['metadata_tags_enable']) ? $options['metadata_tags_enable'] : null;
-	
-	// Wiki references options
-	$references_by_tag = isset($options ['references_by_tag']) ? $options ['references_by_tag']: null;
-	$references_footnote = isset($options ['references_footnote']) ? $options ['references_footnote'] : null;
-	
 
 
-	
-	
-	// format selection
-	$ieee_format = isset($options['ieee_format']) ? $options ['ieee_format'] : 0;
-	$harvard_format = isset($options ['harvard_format']) ? $options ['harvard_format'] : 0;
-	$simple_format = isset($options ['simple_format']) ? $options ['simple_format'] : 0;
-
-	if (! isset ( $options ['ieee_format'] ) && ! isset ( $options ['harvard_format'] ) && ! isset ( $options ['simple_format'] )) {
-		$ieee_format = 1;
-		$options ['ieee_format'] = 1;
-		$options ['harvard_format'] = 0;
-		$options ['simple_format'] = 0;
-	}
 		
 		
 	?>
@@ -118,7 +99,7 @@
 		<div class="wkrf-setup box col-md-12 col-xs-12" >
 					<h1 class="title" onClick="toggleDiv('wkrf_meta_added_to_head');"><?php echo _e('Meta added to head'); ?></h1>
 			<div id="wkrf_meta_added_to_head">	
-				<p class="col-md-8 col-xs-10"> This metadata will be added to your tags and categories archive pages. </p>
+				<p class="col-md-8 col-xs-10"><?php echo __('This metadata will be added to your tags and categories archive pages head.'); ?> </p>
     			<!-- LINK -->
     			<div class="wkrf-metadata-form margin-top  col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_link_enable">
@@ -179,14 +160,96 @@
 		</div>
 		
 		
-		
-		
+		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- /////////////////////////////LINKS ADDED TO TERM ARCHIVE TITLE//////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+
+		<div class="wkrf-setup box col-md-12 col-xs-12">
+			<h1 class="title" onClick="toggleDiv('wkrf_plugin_title_link_section');"><?php echo _e("Link to Wikidata"); ?></h1>
+    		<div id="wkrf_plugin_title_link_section">
+    			<p class="col-md-8 col-xs-10"><?php echo __('This will add a link to the associated Wikidata item at your tag and categories archives\'s titles'); ?> </p>
+	    		<!-- tag archive title link enable -->
+    			<div class="wkrf-metadata-form margin-top col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
+        				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_tag_title_link_enable">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-wkrf_wikidata_tag_title_link_enable" name="<?php echo $this->plugin_name; ?>[wkrf_wikidata_tag_title_link_enable]" value="1" <?php checked($wkrf_wikidata_tag_title_link_enable, 1); ?> />
+    	            	<span><?php esc_attr_e('Add link to Wikidata Item at tag archive titles', $this->plugin_name); ?></span>
+    	            	<p class="description"><?php echo __('Add link to archive title at ').get_site_url().'/tag/[tag-name]';?></p>
+    	        </label>
+    			</div>
+    			<!-- category archive title link enable -->
+    			<div class="wkrf-metadata-form col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
+        				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_category_title_link_enable">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-wkrf_wikidata_category_title_link_enable" name="<?php echo $this->plugin_name; ?>[wkrf_wikidata_category_title_link_enable]" value="1" <?php checked($wkrf_wikidata_category_title_link_enable, 1); ?> />
+    	            	<span><?php esc_attr_e('Add link to Wikidata Item at category archive titles', $this->plugin_name); ?></span>
+    	            	<p class="description"><?php echo __('Add link to archive title at ').get_site_url().'/category/[category-name]';?></p>
+    	        </label>
+    			</div>
+    		</div>
+    	</div>
     	
+    	
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- /////////////////////////////LINKS ADDED TO TERM ARCHIVE TITLE//////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+
+		<div class="wkrf-setup box col-md-12 col-xs-12">
+			<h1 class="title" onClick="toggleDiv('wkrf_microformats_section');"><?php echo _e("Schema.org frame"); ?></h1>
+    		<div id="wkrf_microformats_section">
+    			<p class="col-md-8 col-xs-10"><?php echo __('This will frame your tag and categories links into a microformat schema,
+                                                                following Schema.org, adding info about the associated Wikidata Item'); ?> </p>
+    			<!-- schema.org microformat enable -->
+    			<div class="wkrf-metadata-form col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
+        				<label for="<?php echo $this->plugin_name; ?>-wkrf_term_microformat_links_enable">
+    	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-wkrf_term_microformat_links_enable" name="<?php echo $this->plugin_name; ?>[wkrf_term_microformat_links_enable]" value="1" <?php checked($wkrf_term_microformat_links_enable, 1); ?> />
+    	            	<span><?php esc_attr_e('Frame tags and categories links into a Schema.org schema', $this->plugin_name); ?></span>
+    	            	<p class="description"><?php echo __('&ltspan itemscope itemtype="http://schema.org/Thing"&gt <br>
+                                                                 &emsp; &lta itemprop="sameAs" href="'.get_site_url().'/tag/[tag-name]" rel="tag"&gt[tag-name]&lt/a&gt <br>
+                                                                &lt/span&gt');?> </p>
+    	        </label>
+    			</div>
+    		</div>
+    	</div>
+		
+		
+		
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- //////////////////////////////SAVE SETTINGS//////////////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
 
-		<div class="wkrf-setup">
-			<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
+		<div class="wkrf-setup box">
+			<h1 class="title"> <?php echo _e("Save settings"); ?></h1>
+			<div class="margin-top">
+				<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
+			</div>
 		</div>
+		
+		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+    	<!-- ////////////////////////////////////LICENSE//////////////////////////////////////// -->
+    	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
+
+		<div class="wkrf-setup box col-md-12 col-xs-12">
+			<h1 class="title" ><?php echo _e("License"); ?></h1>
+    		<div class="margin-top col-md-6 col-xs-10">
+    			<p class="row">
+        			This program is free software: you can redistribute it and/or modify
+                    it under the terms of the GNU General Public License as published by
+                    the Free Software Foundation, either version 3 of the License, or
+                    (at your option) any later version.
+                </p>
+                <p>
+                    This program is distributed in the hope that it will be useful,
+                    but WITHOUT ANY WARRANTY; without even the implied warranty of
+                    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                    GNU General Public License for more details.
+                </p>
+                <p>
+                    You should have received a copy of the GNU General Public License
+                    along with this program.  If not, see 
+                    <a target="_blank" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+    			</p>
+    		</div>
+    	</div>
 		
 	</form>
 

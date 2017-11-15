@@ -224,14 +224,13 @@ function hello(text){
 		alert("hello");
 	}
 	else{
-		alert("This will open a dialog to select an accurate wiki item for the tag: "+text);
+		alert(text);
 	}
 	
 }
 
 function toggleDiv(divId) {
-	jQuery("#"+divId).toggle();
-	 //  document.getElementById(divId).toggle();
+	jQuery("#"+divId).toggle("fast");
 	}
 
 ////////////////////////////////////////////////
