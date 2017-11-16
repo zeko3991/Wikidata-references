@@ -86,12 +86,14 @@ function wkrf_display_modal_selection(){
 function wkrf_modal_create_list(term, wikidata_search, input_id) {
 	var data = wikidata_search;
 	var wiki_id;
+	var term_name;
 	var description;
 
 	var search_array = data.search;
 	// console.log(search_array);
 	// for each result in json, will add a list elem.
 	for ( var found_item in search_array) {
+		term_name = search_array[found_item].label;
 		wiki_id = search_array[found_item].id;
 		description = search_array[found_item].description;
 		/*
@@ -101,7 +103,7 @@ function wkrf_modal_create_list(term, wikidata_search, input_id) {
 
 		description = String(description).replace(/"/g, '´');
 		description = description.replace(/'/g, "\´");
-		wkrf_modal_add_list_elem(term, wiki_id, description, input_id);
+		wkrf_modal_add_list_elem(term_name, wiki_id, description, input_id);
 	}
 
 	// if first elem of array is null, its empty, so We will show a message of
