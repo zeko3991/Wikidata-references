@@ -16,17 +16,17 @@ id to create an association among your term and Wikidata elements, also, it will
 proper Wikidata element to be associated to each tag and category.
 
 At plugin settings page, user will be able to decide if he wants to:
-	
-	- Add a link to the associated Wikidata element at tag or category archive pages. This is at 
+
+* Add a link to the associated Wikidata element at tag or category archive pages. This is at 
 	  your_WordPress_site_url/tag/[tag-name] or your_WordPress_site_url/category/[category-name].
-	- Change the tag and category archive titles by a link to the associated Wikidata element.
-	- Frame all tags or categories links in your WordPress site. (like those that appear under 
+* Change the tag and category archive titles by a link to the associated Wikidata element.
+* Frame all tags or categories links in your WordPress site. (like those that appear under 
 	  your posts) into a Schema.org microformat structure.
 	  
 ## More information
 
-	- [Wikidata ](https://www.wikidata.org)
-	- [Schema.org](http://schema.org)
+* [Wikidata](https://www.wikidata.org)
+* [Schema.org](http://schema.org)
 	
 ## License
 	[GNU General Public License v3](https://github.com/zeko3991/Wikidata-references/blob/master/LICENSE.txt)
