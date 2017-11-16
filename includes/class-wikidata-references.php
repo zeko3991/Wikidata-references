@@ -177,8 +177,6 @@ class Wikidata_References {
 		$this->loader->add_filter('term_links-post_tag', $plugin_admin, 'wkrf_add_post_tag_terms_schema', 10, 1);
 		
 		
-		//adds metadata to a post when saved
-		$this->loader->add_action('save_post', $plugin_admin, 'wkrf_add_meta_to_posts', 1, 1);
 
 		
 		//TAG WIKIDATA ASSOCIATION IN TAG EDIT SCREEN
