@@ -1,3 +1,5 @@
+Copyright 2017 Ezequiel Barbudo Revuelto. All righs reserved. 
+                 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
