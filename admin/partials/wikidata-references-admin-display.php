@@ -70,8 +70,8 @@
     	<!-- //////////////////////////////WIKIDATA REFERENCES DESCRIPTION////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	
-    	<div class="wkrf-setup box col-md-12 col-xs-12">
-    		<h1 class="title" onClick="toggleDiv('wkrf_plugin_description');"><?php echo _e("Wikidata References"); ?></h1>
+    	<div class="wkrf-setup  col-md-12 col-xs-12">
+    		<!-- <h1 class="title" onClick="toggleDiv('wkrf_plugin_description');"><?php echo _e("Wikidata References"); ?></h1> -->
     		
     		<div id="wkrf_plugin_description">
 	    		<div class="row">
@@ -228,9 +228,11 @@
     	<!-- ////////////////////////////////////LICENSE//////////////////////////////////////// -->
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
-		<div class="wkrf-setup box col-md-12 col-xs-12">
+		<div class="wkrf-setup col-md-12 col-xs-12">
+			<div class="offset-md-5 offset-sm-5">
 			<h1 class="title" ><?php echo _e("License"); ?></h1>
-    		<div class="margin-top col-md-6 col-xs-10">
+			</div>
+    		<div class="offset-md-2 col-md-8 offset-xs-1 col-xs-10">
     			<p class="row">
         			This program is free software: you can redistribute it and/or modify
                     it under the terms of the GNU General Public License as published by

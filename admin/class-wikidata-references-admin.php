@@ -186,7 +186,6 @@ class Wikidata_References_Admin {
 	 * @since 1.0.0
 	 */ 
 	public function wkrf_display_plugin_setup_page(){
-		
 		include_once( 'partials/wikidata-references-admin-display.php' );
 	}
 	
@@ -375,9 +374,13 @@ class Wikidata_References_Admin {
 	   $span_start = '<span itemscope itemtype="http://schema.org/Thing">';
 	   $span_end = '</span>';
 	   $schema_formatted_links = array();
-	   
+	   $options = get_option($this->plugin_name);
+	   $schema_enable = isset($options['wkrf_term_microformat_links_enable']) ? $options['wkrf_term_microformat_links_enable'] : null;
 	  //we just want to add it in these terms
-	   if(is_single() || is_page() || is_tax() || is_tag() || is_category() ){
+	   if(!$schema_enable){
+	   		return $links;
+	   }
+	   else if(is_single() || is_page() || is_tax() || is_tag() || is_category() ){
     	    foreach($links as $link){
     	        $term_slug = preg_replace('/<[\s\S]+?>/', '', $link);
     	        $term = get_term_by('slug', $term_slug, $taxonomy);

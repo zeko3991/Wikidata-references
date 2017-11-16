@@ -1,14 +1,16 @@
 === Plugin Name ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: zeko3991@gmail.com
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
+Tags: Wikidata, Wordpress, metadata, Schema.org, microdata, microformats, links
+Requires at least: 4.3
+Tested up to: 4.8
 Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Wikidata References is a plugin developed to help WordPress users to add associations among the tags
+and categories they use in this WordPress websites and to add some specific metadata and structured 
+microdata using Schema.org frame.
 
 == Description ==
 
@@ -41,11 +43,13 @@ you put the stable version, in order to eliminate any doubt.
 
 This section describes how to install the plugin and get it working.
 
-e.g.
 
 1. Upload `wikidata-references.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Set up your settings at Wikidata References settings page
+4. Go to edit and categories term edit screen, and start associating your terms with 
+   Wikidata items.
+   
 
 == Frequently Asked Questions ==
 
