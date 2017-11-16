@@ -29,6 +29,6 @@ At plugin settings page, user will be able to decide if he wants to:
 * [Schema.org](http://schema.org)
 	
 ## License
-	[GNU General Public License v3](https://github.com/zeko3991/Wikidata-references/blob/master/LICENSE.txt)
+[GNU General Public License v3](https://github.com/zeko3991/Wikidata-references/blob/master/LICENSE.txt)
 
 
