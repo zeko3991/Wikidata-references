@@ -3,19 +3,8 @@
  * included in this file.
  */
 
- 
- .right {
- 	float: right;
- }
- 
- .left {
- 	float: left;
- }
-
-
 .wkrf-setup {
 	clear:both;
-	margin-top: 5%;
 	margin-top: 2em;
 	padding-bottom: 1em;
 	height: auto;
@@ -46,27 +35,9 @@
 	box-shadow: 1px 1px 1px #888888;
 }
 
-.wkrf-assoc-textfield{
-	display: inline-block;
-	float: right;
-	clear: left;
-}
 
-.wkrf-assoc-icon {
-	float: right;
-	display:inline-block;
-    vertical-align: center;
-    border-top: 50px;
-}
 
-.wkrf-setup .wkrf-metadata-form {
-	border: 3px solid;	
-	border-color: transparent;
-}
-.wkrf-setup .wkrf-tag-form {
-	border: 3px solid;	
-	border-color: transparent;
-}
+
 
 .margin-top {
 	margin-top: 3em;

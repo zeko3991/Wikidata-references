@@ -29,8 +29,33 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+    
 
-//require_once('includes/class-wikidata-references-activator.php');
-$deactivator = new Wikidata_References_Deactivator();
-$deactivator->deactivate();
+    $wikidata_id_key          = 'wikidata_id';
+    $wikidata_link_key        = 'wikidata_link';
+    $wikidata_description_key = 'wikidata_description';
+
+    $taxonomies = get_taxonomies();
+    
+    foreach($taxonomies as $taxonomy){
+        $terms = get_terms([
+            'taxonomy' => $taxonomy,
+            'hide_empty' => false,
+        ]);
+        
+        $this->wkrf_delete_post_tag_wiki_data($taxonomy, $terms);
+    }
+    
+    
+    function wkrf_delete_post_tag_wiki_data($taxonomy, $taxonomy_terms){
+        foreach($taxonomy_terms as $term){        
+            delete_term_meta($term->term_id, $this->wikidata_id_key);
+            delete_term_meta($term->term_id, $this->wikidata_link_key);
+            delete_term_meta($term->term_id, $this->wikidata_description_key);
+        }
+    }
+    
+    delete_option('wikidata-references');
+
+
 

@@ -2,39 +2,41 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
- 
- 
- .right {
- 	float: right;
- }
- 
- .left {
- 	float: left;
- }
-
 
 .wkrf-setup {
 	clear:both;
-	border-top: 5%;
+	margin-top: 2em;
+	padding-bottom: 1em;
+	height: auto;
+	overflow: auto;
 }
 
-.wkrf-assoc-textfield{
-	display: inline-block;
-	float: right;
-	clear: left;
+.wkrf-setup h1{
+	cursor: pointer;
 }
 
-.wkrf-assoc-icon {
-	float: right;
-	display:inline-block;
-    vertical-align: center;
-    border-top: 50px;
+.wkrf-setup .title{
+	margin-left: 1em;
 }
 
-.wkrf-setup .wkrf-tag-form {
-	border: 3px solid;	
-	border-color: transparent;
+.wkrf-setup p{
+	padding-right: 1em;
+	margin-left: 2em;
+	font-size: 100%;
+	text-align: justify;
+    text-justify: inter-word;
 }
+
+.box{
+	border: 1px solid;
+	border-color: #DCDCDC;
+	box-shadow: 1px 1px 1px #888888;
+}
+
+.margin-top {
+	margin-top: 3em;
+}
+
 
 
 /* MODAL BOX TO SELECT WIKI ITEM */
@@ -122,27 +124,6 @@
 	float: right;
 	margin-left: 15em;
 }
-.wkrf-setup {
-	margin-top: 2em;
-	padding-bottom: 1em;
-	
-}
-
-.wkrf-setup {
-	margin-top: 1em;
-	overflow: auto;
-}
-
-
-.wkrf-setup .wkrf-setup-button {
-	clear:both;
-}
-
-.wkrf-setup .wkrf-setup-button .btn {
-	margin-top: 3em;
-}
-
-
 
 
 
