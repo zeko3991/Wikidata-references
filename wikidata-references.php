@@ -14,11 +14,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WikiData References for WordPress
- * Plugin URI:        zeko3991@gmail.com
- * Description:       Incluye referencias a artículos de wikidata de forma rápida y sencilla mientras editas tus entradas.
+ * Plugin URI:        
+ * Description:       Associate your tags and categories with Wikidata Items and add some metadata to your website.
  * Version:           1.0.0
  * Author:            Ezequiel Barbudo Revuelto
- * Author URI:        zeko3991@gmail.com
+ * Author URI:        https://profiles.wordpress.org/zeko3991
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wikidata-references
