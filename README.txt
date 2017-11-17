@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: zeko3991
 Donate link: zeko3991@gmail.com
 Tags: Wikidata, Wordpress, metadata, Schema.org, microdata, microformats, links
 Requires at least: 4.3
