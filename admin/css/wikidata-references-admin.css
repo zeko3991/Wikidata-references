@@ -8,9 +8,6 @@
 	margin-top: 2em;
 	padding-bottom: 1em;
 	height: auto;
-	overflow: auto;
-	
-	
 }
 
 .wkrf-setup h1{
@@ -107,7 +104,6 @@
 	padding-left: 5em;
 	padding-bottom: 1em;
 	display:block;
-	overflow:auto;
 	border-bottom: 1px solid;
 	border-color: #DCDCDC;
 }

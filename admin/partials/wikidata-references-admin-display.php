@@ -71,7 +71,7 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	
     	<div class="wkrf-setup  col-md-12 col-xs-12">
-    		<!-- <h1 class="title" onClick="toggleDiv('wkrf_plugin_description');"><?php echo _e("Wikidata References"); ?></h1> -->
+    		<!-- <h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_description');"><?php echo _e("Wikidata References"); ?></h1> -->
     		
     		<div id="wkrf_plugin_description">
 	    		<div class="row">
@@ -97,7 +97,7 @@
 
 		<!-- META ADDED TO HEAD, LINKS -->
 		<div class="wkrf-setup box col-md-12 col-xs-12" >
-					<h1 class="title" onClick="toggleDiv('wkrf_meta_added_to_head');"><?php echo _e('Meta added to head'); ?></h1>
+					<h1 class="title" onClick="wkrf_toggleDiv('wkrf_meta_added_to_head');"><?php echo _e('Meta added to head'); ?></h1>
 			<div id="wkrf_meta_added_to_head">	
 				<p class="col-md-8 col-xs-10"><?php echo __('This metadata will be added to your tags and categories archive pages head.'); ?> </p>
     			<!-- LINK -->
@@ -165,7 +165,7 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
 		<div class="wkrf-setup box col-md-12 col-xs-12">
-			<h1 class="title" onClick="toggleDiv('wkrf_plugin_title_link_section');"><?php echo _e("Link to Wikidata"); ?></h1>
+			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_title_link_section');"><?php echo _e("Link to Wikidata"); ?></h1>
     		<div id="wkrf_plugin_title_link_section">
     			<p class="col-md-8 col-xs-10"><?php echo __('This will add a link to the associated Wikidata item at your tag and categories archives\'s titles'); ?> </p>
 	    		<!-- tag archive title link enable -->
@@ -193,7 +193,7 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
 		<div class="wkrf-setup box col-md-12 col-xs-12">
-			<h1 class="title" onClick="toggleDiv('wkrf_microformats_section');"><?php echo _e("Schema.org frame"); ?></h1>
+			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_microformats_section');"><?php echo _e("Schema.org frame"); ?></h1>
     		<div id="wkrf_microformats_section">
     			<p class="col-md-8 col-xs-10"><?php echo __('This will frame your tag and categories links into a microformat schema,
                                                                 following Schema.org, adding info about the associated Wikidata Item'); ?> </p>

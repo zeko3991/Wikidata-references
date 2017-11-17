@@ -40,15 +40,6 @@ class Wikidata_References_Admin {
 	 */
 	private $version;
 	
-	
-	/**
-	 * Utilities class instance
-	 * 
-	 * @since 1.0.0
-	 * @access private
-	 */
-	private $utilities;
-	
 	private $wikidata_url             = 'https://www.wikidata.org/entity/';
 	private $wikidata_id_key          = 'wikidata_id';
 	private $wikidata_link_key        = 'wikidata_link';
@@ -86,7 +77,6 @@ class Wikidata_References_Admin {
 
 	/**
 	 * Register the stylesheets for the admin area.
-	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
@@ -110,7 +100,6 @@ class Wikidata_References_Admin {
 
 	/**
 	 * Register the JavaScript for the admin area.
-	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
@@ -197,13 +186,10 @@ class Wikidata_References_Admin {
 	
 	/**
 	 * Wikidata References
-	 * Adds meta value for each tag with an associated wikidata id value.
+	 * Adds link value for each tag with an associated wikidata id value.
 	 * Action hooked to wp_head hook, when a page header is loaded.
-	 * Checks if the page that is being loaded is a post or a tag page.
-	 * 		-if a post: will add wiki metadata for every tag in the post, as
-	 * 		 they are associated with a wikidata id at plugin setup page.
-	 * 		-if a tag page: will add wiki metadata for that specific tag as
-	 * 		 it is associated with a wikidata id.
+	 * Example of link added to head:
+	 * <link rel="describedby" href="https://www.wikidata.org/entity/Q80228" type="text/html">
 	 * @since 1.0.0
 	 */
 	public function wkrf_add_head_wikidata_taxonomy_links() {
@@ -320,12 +306,18 @@ class Wikidata_References_Admin {
 	}
 	
 	
-	
+	/**
+	 * Hooked to term_links-post_tag, will call wkrf_add_terms_links_schema 
+	 * passing 'post_tag' as taxonomy
+	 */
 	function wkrf_add_post_tag_terms_schema( $links ) {
 	    return $this->wkrf_add_terms_links_schema( $links, 'post_tag' );
 	}
 	
-	//function wkrf_add_category_terms_schema($links, $separator){
+	/**
+	 * Hooked to term_links-category, will call wkrf_add_terms_links_schema 
+	 * passing 'category' as taxonomy
+	 */
 	function wkrf_add_category_terms_schema( $links ) {
 	   return $this->wkrf_add_terms_links_schema( $links, 'category' );
 	}
@@ -391,6 +383,9 @@ class Wikidata_References_Admin {
 	 * @return $columns
 	 */
 	function wkrf_add_taxonomy_wikidata_column( $columns ) {
+		if( ! current_user_can( 'manage_categories' ) ){
+			return $content;
+		}
 		$columns ['wikidata_id'] = 'Wikidata ID';
 		return $columns;
 	}
@@ -401,6 +396,9 @@ class Wikidata_References_Admin {
 	 * @return unknown
 	 */
 	function wkrf_add_taxonomy_wikidata_column_content( $content, $column_name, $term_id ){
+		if( ! current_user_can( 'manage_categories' ) ){
+			return $content;
+		}
 		$term          = get_term( $term_id );
 		$term_taxonomy = $term->taxonomy;
 		$wikidata_id = get_term_meta( $term_id, $this->wikidata_id_key, true );
@@ -422,6 +420,9 @@ class Wikidata_References_Admin {
 	 * @return unknown
 	 */
 	function wkrf_register_wikidata_sortable_column( $columns ) {
+		if( ! current_user_can( 'manage_categories' ) ){
+			return $content;
+		}
 		$columns ['wikidata_id'] = "wikidata_id";
 		return $columns;
 	}
@@ -435,7 +436,7 @@ class Wikidata_References_Admin {
 	 */
 	function wrkf_sort_taxonomy_by_wikidata_id( $terms, $taxonomies, $args ) {
 		global $pagenow;
-		if ( ! is_admin() ) {
+		if ( ! is_admin() || ! current_user_can( 'manage_categories' ) ) {
 			return $terms;
 		} elseif ( is_admin() && $pagenow == 'edit-tags.php' && ( ( $taxonomies [0] == 'post_tag' ) || ( $taxonomies [0] == 'category' ) ) ){
 			$orderby = isset( $_REQUEST ['orderby'] ) ? trim( wp_unslash( $_REQUEST ['orderby'] ) ) : 'wikidata_id';
@@ -541,6 +542,11 @@ class Wikidata_References_Admin {
 		<?php 
 	}
 	
+	/**
+	 * function that will save a new term created at edit-tags.php
+	 * @param unknown $term_id
+	 * @param unknown $taxonomy_id
+	 */
 	function wkrf_add_new_term_wikidata_id( $term_id, $taxonomy_id ) {	
 			$taxonomy = get_term( $taxonomy_id )->taxonomy;
 			$this->wkrf_save_wikidata_taxonomy_fields( $term_id, $taxonomy );
@@ -556,7 +562,7 @@ class Wikidata_References_Admin {
 	function wkrf_save_wikidata_taxonomy_fields( $term_id, $taxonomy ) {
 		$term = get_term( $term_id );
 		
-		if (isset( $_POST ['term_meta'] ) ) {
+		if (isset( $_POST ['term_meta'] ) && current_user_can( 'manage_categories' ) ) {
 			$term_meta = array();
 			$term_meta['wikidata_id']          = isset( $_POST ['term_meta']['wikidata_id'] ) ? $_POST ['term_meta']['wikidata_id'] : '';
 			$term_meta['wikidata_description'] = isset( $_POST ['term_meta']['wikidata_description'] ) ? $_POST ['term_meta']['wikidata_description'] : '';

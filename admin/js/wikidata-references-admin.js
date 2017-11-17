@@ -231,7 +231,7 @@ function hello(text){
 	
 }
 
-function toggleDiv(divId) {
+function wkrf_toggleDiv(divId) {
 	jQuery("#"+divId).toggle("fast");
 	}
 
