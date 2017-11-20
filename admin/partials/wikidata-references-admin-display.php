@@ -37,33 +37,42 @@
 	$wkrf_term_microformat_links_enable = isset($options['wkrf_term_microformat_links_enable']) ? $options['wkrf_term_microformat_links_enable'] : null;
 	
 	//term archive title links enable
-	$wkrf_wikidata_tag_title_link_enable = isset($options['wkrf_wikidata_tag_title_link_enable']) ? $options['wkrf_wikidata_tag_title_link_enable'] : null;
+	$wkrf_wikidata_tag_title_link_enable      = isset($options['wkrf_wikidata_tag_title_link_enable']) ? $options['wkrf_wikidata_tag_title_link_enable'] : null;
 	$wkrf_wikidata_category_title_link_enable = isset($options['wkrf_wikidata_category_title_link_enable']) ? $options['wkrf_wikidata_category_title_link_enable'] : null;
 	
 	//head meta links enable and examples for description
 	$wkrf_wikidata_link_enable = isset($options['wkrf_wikidata_link_enable']) ? $options['wkrf_wikidata_link_enable'] : null;
 	$wkrf_wikidata_json_enable = isset($options['wkrf_wikidata_json_enable']) ? $options['wkrf_wikidata_json_enable'] : null;
-	$wkrf_wikidata_n3_enable = isset($options['wkrf_wikidata_n3_enable']) ? $options['wkrf_wikidata_n3_enable'] : null;
-	$wkrf_wikidata_nt_enable = isset($options['wkrf_wikidata_nt_enable']) ? $options['wkrf_wikidata_nt_enable'] : null;
-	$wkrf_wikidata_php_enable = isset($options['wkrf_wikidata_php_enable']) ? $options['wkrf_wikidata_php_enable'] : null;
-	$wkrf_wikidata_rdf_enable = isset($options['wkrf_wikidata_rdf_enable']) ? $options['wkrf_wikidata_rdf_enable'] : null;
-	$wkrf_wikidata_ttl_enable = isset($options['wkrf_wikidata_ttl_enable']) ? $options['wkrf_wikidata_ttl_enable'] : null;
+	$wkrf_wikidata_n3_enable   = isset($options['wkrf_wikidata_n3_enable']) ? $options['wkrf_wikidata_n3_enable'] : null;
+	$wkrf_wikidata_nt_enable   = isset($options['wkrf_wikidata_nt_enable']) ? $options['wkrf_wikidata_nt_enable'] : null;
+	$wkrf_wikidata_php_enable  = isset($options['wkrf_wikidata_php_enable']) ? $options['wkrf_wikidata_php_enable'] : null;
+	$wkrf_wikidata_rdf_enable  = isset($options['wkrf_wikidata_rdf_enable']) ? $options['wkrf_wikidata_rdf_enable'] : null;
+	$wkrf_wikidata_ttl_enable  = isset($options['wkrf_wikidata_ttl_enable']) ? $options['wkrf_wikidata_ttl_enable'] : null;
 	
-	$wkrf_wikidata_link_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166" type="text/html" &gt';
-	$wkrf_wikidata_json_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.json" type="application/json" &gt';
-	$wkrf_wikidata_n3_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.n3" type="text/n3" &gt';
-	$wkrf_wikidata_nt_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.nt" type="application/n-triples" &gt';
-	$wkrf_wikidata_php_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.php" type="application/vnd.php.serialized" &gt';
-	$wkrf_wikidata_rdf_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.rdf" type="application/rdf+xml" &gt';
-	$wkrf_wikidata_ttl_example = '&ltlink rel="describedby" href="https://wikidata.org/entity/Q13166.ttl" type="text/turtle" &gt';
+	$wkrf_wikidata_link_example = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166" type="text/html" >');
+	$wkrf_wikidata_json_example = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.json" type="application/json" >');
+	$wkrf_wikidata_n3_example   = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.n3" type="text/n3" >');
+	$wkrf_wikidata_nt_example   = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.nt" type="application/n-triples" >');
+	$wkrf_wikidata_php_example  = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.php" type="application/vnd.php.serialized" >');
+	$wkrf_wikidata_rdf_example  = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.rdf" type="application/rdf+xml" >');
+	$wkrf_wikidata_ttl_example  = esc_html__('< link rel="describedby" href="https://wikidata.org/entity/Q13166.ttl" type="text/turtle" >');
 	
+	$wkrf_license_paragraph_1   = esc_html__('This program is free software: you can redistribute it and/or modify
+                                              it under the terms of the GNU General Public License as published by
+                    						  the Free Software Foundation, either version 3 of the License, or
+                     						  (at your option) any later version.');
 	
+	$wkrf_license_paragraph_2	= esc_html__('This program is distributed in the hope that it will be useful,
+                    						 but WITHOUT ANY WARRANTY; without even the implied warranty of
+                    						 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                    						 GNU General Public License for more details.');
 	
-	
+	$wkrf_license_paragraph_3	= esc_html__('You should have received a copy of the GNU General Public License
+                    along with this program.  If not, see ');
 
-
+	$wkrf_license_url			= '<a target="_blank" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.';
 		
-		
+	
 	?>
 	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
@@ -71,21 +80,21 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
     	
     	<div class="wkrf-setup  col-md-12 col-xs-12">
-    		<!-- <h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_description');"><?php echo _e("Wikidata References"); ?></h1> -->
+    		<!-- <h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_description');"><?php //echo _e("Wikidata References"); ?></h1> -->
     		
     		<div id="wkrf_plugin_description">
 	    		<div class="row">
-		    		<p class="col-md-8 col-xs-10">Wikidata references is a plugin developed with the purpose of helping you to add associations among 
+		    		<p class="col-md-8 col-xs-10"> <?php esc_html_e('Wikidata references is a plugin developed with the purpose of helping you to add associations among 
 		    		your WordPress Tags or Categories and Wikidata Items to add some metadata and microdata into your Website.
-		    		It also lets you add a link to the associated Wikidata item at your Tags and Categories' archive pages.
+		    		It also lets you add a link to the associated Wikidata item at your Tags and Categories\' archive pages.'); ?>
 		    		</p>
 		    		<div class="col-md-3 col-xs-12 col-xs-offset-6">
 		    			<img src="<?php echo $plugin_url; ?>images/Wikidata-logo-en.svg" height="90" width="128" style="display:inline">
 		    		</div>
 		    	</div>
 	    		<div class="row">
-	    			<p class="col-md-8 col-xs-10"> Here, you can decide which metadata or links you add to your website, to associate your Tags and 
-		    			Categories with Wikidata Items, simply go to the <a href="edit-tags.php">WordPress Term editor.</a>
+	    			<p class="col-md-8 col-xs-10"><?php _e('Here, you can decide which metadata or links you add to your website, to associate your Tags and 
+		    			Categories with Wikidata Items, simply go to the <a href="edit-tags.php">WordPress Term editor.</a>'); ?>
 		    		</p>
 	    		</div>
     		</div>
@@ -97,9 +106,9 @@
 
 		<!-- META ADDED TO HEAD, LINKS -->
 		<div class="wkrf-setup box col-md-12 col-xs-12" >
-					<h1 class="title" onClick="wkrf_toggleDiv('wkrf_meta_added_to_head');"><?php echo _e('Meta added to head'); ?></h1>
+					<h1 class="title" onClick="wkrf_toggleDiv('wkrf_meta_added_to_head');"><?php _e('Meta added to head'); ?></h1>
 			<div id="wkrf_meta_added_to_head">	
-				<p class="col-md-8 col-xs-10"><?php echo __('This metadata will be added to your tags and categories archive pages head.'); ?> </p>
+				<p class="col-md-8 col-xs-10"><?php _e('This metadata will be added to your tags and categories archive pages head.'); ?> </p>
     			<!-- LINK -->
     			<div class="wkrf-metadata-form margin-top  col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_link_enable">
@@ -234,21 +243,13 @@
 			</div>
     		<div class="offset-md-2 col-md-8 offset-xs-1 col-xs-10">
     			<p class="row">
-        			This program is free software: you can redistribute it and/or modify
-                    it under the terms of the GNU General Public License as published by
-                    the Free Software Foundation, either version 3 of the License, or
-                    (at your option) any later version.
+        			<?php echo $wkrf_license_paragraph_1; ?>
                 </p>
                 <p>
-                    This program is distributed in the hope that it will be useful,
-                    but WITHOUT ANY WARRANTY; without even the implied warranty of
-                    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                    GNU General Public License for more details.
+                    <?php echo $wkrf_license_paragraph_2; ?>
                 </p>
                 <p>
-                    You should have received a copy of the GNU General Public License
-                    along with this program.  If not, see 
-                    <a target="_blank" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+                    <?php echo $wkrf_license_paragraph_3.$wkrf_license_url; ?>
     			</p>
     		</div>
     	</div>
