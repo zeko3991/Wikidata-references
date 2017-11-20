@@ -23,7 +23,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wikidata-references
  * Domain Path:       /languages
- */
+ * 
+ */ 
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
