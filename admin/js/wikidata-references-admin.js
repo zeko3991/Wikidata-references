@@ -203,7 +203,7 @@ function wkrf_fill_wiki_id(input_id, wikidata_id, description){
 function wkrf_wikidata_search_by_term(term, input_id){
 	// change:  &uselang=es (i.e) to change language results
 //	https:www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search=term&format=json&language=en
-	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+term+'&format=json&language='+language;
+	var request = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&origin=*&search='+term+'&format=json&limit=10&language='+language;
 	console.log(request);
 	jQuery.getJSON(request, function(data){
 		console.log(data);

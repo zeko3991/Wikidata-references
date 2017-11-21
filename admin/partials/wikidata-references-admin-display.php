@@ -72,7 +72,7 @@
 
 	$wkrf_license_url			= '<a target="_blank" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.';
 		
-	
+	$wkrf_save_all_changes		= esc_html__('Save all changes', $this->plugin_name);
 	?>
 	
 		<!-- /////////////////////////////////////////////////////////////////////////////////// -->
@@ -86,7 +86,7 @@
 	    		<div class="row">
 		    		<p class="col-md-8 col-xs-10"> <?php esc_html_e('Wikidata references is a plugin developed with the purpose of helping you to add associations among 
 		    		your WordPress Tags or Categories and Wikidata Items to add some metadata and microdata into your Website.
-		    		It also lets you add a link to the associated Wikidata item at your Tags and Categories\' archive pages.'); ?>
+		    		It also lets you add a link to the associated Wikidata item at your Tags and Categories\' archive pages.', $this->plugin_name); ?>
 		    		</p>
 		    		<div class="col-md-3 col-xs-12 col-xs-offset-6">
 		    			<img src="<?php echo $plugin_url; ?>images/Wikidata-logo-en.svg" height="90" width="128" style="display:inline">
@@ -94,7 +94,7 @@
 		    	</div>
 	    		<div class="row">
 	    			<p class="col-md-8 col-xs-10"><?php _e('Here, you can decide which metadata or links you add to your website, to associate your Tags and 
-		    			Categories with Wikidata Items, simply go to the <a href="edit-tags.php">WordPress Term editor.</a>'); ?>
+		    			Categories with Wikidata Items, simply go to the <a href="edit-tags.php">WordPress Term editor.</a>', $this->plugin_name); ?>
 		    		</p>
 	    		</div>
     		</div>
@@ -106,9 +106,9 @@
 
 		<!-- META ADDED TO HEAD, LINKS -->
 		<div class="wkrf-setup box col-md-12 col-xs-12" >
-					<h1 class="title" onClick="wkrf_toggleDiv('wkrf_meta_added_to_head');"><?php _e('Meta added to head'); ?></h1>
+					<h1 class="title" onClick="wkrf_toggleDiv('wkrf_meta_added_to_head');"><?php _e('Meta added to head', 'wikidata-references'); ?></h1>
 			<div id="wkrf_meta_added_to_head">	
-				<p class="col-md-8 col-xs-10"><?php _e('This metadata will be added to your tags and categories archive pages head.'); ?> </p>
+				<p class="col-md-8 col-xs-10"><?php _e('This metadata will be added to your tags and categories archive pages head.', $this->plugin_name); ?> </p>
     			<!-- LINK -->
     			<div class="wkrf-metadata-form margin-top  col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_link_enable">
@@ -174,15 +174,15 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
 		<div class="wkrf-setup box col-md-12 col-xs-12">
-			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_title_link_section');"><?php echo _e("Link to Wikidata"); ?></h1>
+			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_plugin_title_link_section');"><?php echo _e("Link to Wikidata", $this->plugin_name); ?></h1>
     		<div id="wkrf_plugin_title_link_section">
-    			<p class="col-md-8 col-xs-10"><?php echo __('This will add a link to the associated Wikidata item at your tag and categories archives\'s titles'); ?> </p>
+    			<p class="col-md-8 col-xs-10"><?php echo __('This will add a link to the associated Wikidata item at your tag and categories archives\'s titles', $this->plugin_name); ?> </p>
 	    		<!-- tag archive title link enable -->
     			<div class="wkrf-metadata-form margin-top col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_tag_title_link_enable">
     	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-wkrf_wikidata_tag_title_link_enable" name="<?php echo $this->plugin_name; ?>[wkrf_wikidata_tag_title_link_enable]" value="1" <?php checked($wkrf_wikidata_tag_title_link_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add link to Wikidata Item at tag archive titles', $this->plugin_name); ?></span>
-    	            	<p class="description"><?php echo __('Add link to archive title at ').get_site_url().'/tag/[tag-name]';?></p>
+    	            	<p class="description"><?php echo _e('Add link to archive title at ', $this->plugin_name).get_site_url().'/tag/[tag-name]';?></p>
     	        </label>
     			</div>
     			<!-- category archive title link enable -->
@@ -190,7 +190,7 @@
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_wikidata_category_title_link_enable">
     	           			 <input type="checkbox" id="<?php echo $this->plugin_name; ?>-wkrf_wikidata_category_title_link_enable" name="<?php echo $this->plugin_name; ?>[wkrf_wikidata_category_title_link_enable]" value="1" <?php checked($wkrf_wikidata_category_title_link_enable, 1); ?> />
     	            	<span><?php esc_attr_e('Add link to Wikidata Item at category archive titles', $this->plugin_name); ?></span>
-    	            	<p class="description"><?php echo __('Add link to archive title at ').get_site_url().'/category/[category-name]';?></p>
+    	            	<p class="description"><?php echo _e('Add link to archive title at ', $this->plugin_name).get_site_url().'/category/[category-name]';?></p>
     	        </label>
     			</div>
     		</div>
@@ -202,10 +202,10 @@
     	<!-- /////////////////////////////////////////////////////////////////////////////////// -->
 
 		<div class="wkrf-setup box col-md-12 col-xs-12">
-			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_microformats_section');"><?php echo _e("Schema.org frame"); ?></h1>
+			<h1 class="title" onClick="wkrf_toggleDiv('wkrf_microformats_section');"><?php echo _e("Schema.org frame", $this->plugin_name); ?></h1>
     		<div id="wkrf_microformats_section">
     			<p class="col-md-8 col-xs-10"><?php echo __('This will frame your tag and categories links into a microformat schema,
-                                                                following Schema.org, adding info about the associated Wikidata Item'); ?> </p>
+                                                                following Schema.org, adding info about the associated Wikidata Item', $this->plugin_name); ?> </p>
     			<!-- schema.org microformat enable -->
     			<div class="wkrf-metadata-form col-xl-10 col-md-10 col-xs-12 input-group input-group-sm" >
         				<label for="<?php echo $this->plugin_name; ?>-wkrf_term_microformat_links_enable">
@@ -213,7 +213,7 @@
     	            	<span><?php esc_attr_e('Frame tags and categories links into a Schema.org schema', $this->plugin_name); ?></span>
     	            	<p class="description"><?php echo __('&ltspan itemscope itemtype="http://schema.org/Thing"&gt <br>
                                                                  &emsp; &lta itemprop="sameAs" href="'.get_site_url().'/tag/[tag-name]" rel="tag"&gt[tag-name]&lt/a&gt <br>
-                                                                &lt/span&gt');?> </p>
+                                                                &lt/span&gt', $this->plugin_name);?> </p>
     	        </label>
     			</div>
     		</div>
@@ -227,9 +227,9 @@
 
 
 		<div class="wkrf-setup box">
-			<h1 class="title"> <?php echo _e("Save settings"); ?></h1>
+			<h1 class="title"> <?php _e("Save settings", $this->plugin_name); ?></h1>
 			<div class="margin-top">
-				<?php submit_button('Save all changes', 'primary', 'submit', TRUE); ?>
+				<?php submit_button($wkrf_save_all_changes, 'primary', 'submit', TRUE); ?>
 			</div>
 		</div>
 		

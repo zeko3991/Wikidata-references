@@ -277,10 +277,10 @@ class Wikidata_References_Admin {
 	    
 	    if ( is_tag() && $wkrf_wikidata_tag_title_link_enable ) {
 	        $taxonomy = 'post_tag';
-	        $the_archive_title_prefix = __( 'Tag archives: ' );
+	        $the_archive_title_prefix = __( 'Tag archives: ', $this->plugin_name );
 	    } elseif ( is_category() && $wkrf_wikidata_category_title_link_enable ) {
 	        $taxonomy = 'category';
-	        $the_archive_title_prefix = __( 'Category archives: ' );
+	        $the_archive_title_prefix = __( 'Category archives: ', $this->plugin_name );
 	    } else {
 	        return $content;
 	    }
