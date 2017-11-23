@@ -402,10 +402,13 @@ class Wikidata_References_Admin {
 		$term          = get_term( $term_id );
 		$term_taxonomy = $term->taxonomy;
 		$wikidata_id = get_term_meta( $term_id, $this->wikidata_id_key, true );
+		$wikidata_description = get_term_meta( $term_id, $this->wikidata_description_key, true );
+		$wikidata_link = get_term_meta( $term_id, $this->wikidata_link_key, true ); 
+		$wikidata_link = esc_html__('<a target="_blank" href="'.$wikidata_link.'">'.$wikidata_link.'</a>');
 		
 		switch ( $column_name ) {
 			case 'wikidata_id':
-				$content = $wikidata_id;
+				$content = '<p>'.$wikidata_id.'</p><p>'.$wikidata_description.'</p>';
 				break;
 			default:
 				break;
@@ -562,8 +565,10 @@ class Wikidata_References_Admin {
 	function wkrf_save_wikidata_taxonomy_fields( $term_id, $taxonomy ) {
 		$term = get_term( $term_id );
 		
+		
 		if (isset( $_POST ['term_meta'] ) && current_user_can( 'manage_categories' ) ) {
 			$term_meta = array();
+			
 			$term_meta['wikidata_id']          = isset( $_POST ['term_meta']['wikidata_id'] ) ? $_POST ['term_meta']['wikidata_id'] : '';
 			$term_meta['wikidata_description'] = isset( $_POST ['term_meta']['wikidata_description'] ) ? $_POST ['term_meta']['wikidata_description'] : '';
 			
@@ -574,10 +579,15 @@ class Wikidata_References_Admin {
 				error_log( "INFO class:wkrf_save_wikidata_taxonomy_fields - deleted metadata for term_id: ".$term_id );
 				
 			} else {
-				update_term_meta( $term_id, $this->wikidata_id_key, $term_meta['wikidata_id'] );
-				update_term_meta( $term_id, $this->wikidata_link_key, $this->wikidata_url.$term_meta['wikidata_id'] );
-				update_term_meta( $term_id, $this->wikidata_description_key, $term_meta['wikidata_description'] );
-				error_log( "INFO class:wkrf_save_wikidata_taxonomy_fields - saved metadata for term_id: ".$term_id." wikidata_ID: ".$term_meta['wikidata_id'] );
+				$wikidata_id = $this->wkrf_validate_wikidata_id( $term_meta['wikidata_id'] );
+				if($wikidata_id != false){
+					$wikidata_description = $this->wkrf_get_wikidata_description($wikidata_id, 'en');
+					update_term_meta( $term_id, $this->wikidata_id_key, $wikidata_id );
+					update_term_meta( $term_id, $this->wikidata_link_key, $this->wikidata_url.$wikidata_id );
+					update_term_meta( $term_id, $this->wikidata_description_key, $wikidata_description );
+					error_log( "INFO class:wkrf_save_wikidata_taxonomy_fields - saved metadata for term_id: ".$term_id." wikidata_ID: ".$wikidata_id." description: ".$wikidata_description );
+				}
+				
 			}
 			
 		} else {
@@ -585,5 +595,49 @@ class Wikidata_References_Admin {
 			when saving term id:".$term_id );
 		}
 	}
+	
+	/**
+	 * Wikidata references
+	 * checks if text introduced in wikidata id field is a valid wikidata ID
+	 * returns wikidata id if valid, false if not.
+	 * @param wikidata id ([Q][0-9]+ $wikidata_id
+	 * @return valid wikidata id |boolean
+	 */
+	function wkrf_validate_wikidata_id( $wikidata_id ){
+		$wikidata_id_pattern = '/[Q][0-9]+/';
+		
+		if ( preg_match( $wikidata_id_pattern, $wikidata_id, $matches) ){
+			return $matches[0];
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Wikidata references.
+	 * Gets wikidata item description by wikidata id, gets item with wbgetentities wikidata api
+	 * function 
+	 * @param unknown $wikidata_id
+	 * @param unknown $language
+	 * @return mixed|NULL
+	 */
+	function wkrf_get_wikidata_description($wikidata_id, $language){
+		$api_request = 'https://www.wikidata.org/w/api.php?action=wbgetentities&props=descriptions&ids='.$wikidata_id.'&languages='.$language.'&format=json';
+		
+		$api_response = file_get_contents($api_request);
+		error_log('json: '.$api_response);
+		$api_response = json_decode( file_get_contents( $api_request ), true);
+		
+		if ( $api_response != null ){
+			$response = $api_response['entities'][$wikidata_id]['descriptions'][$language]['value'];
+			if ( $response != null){
+				return $response;
+			}
+			return null;
+		}
+		return null;
+			
+	}
+	
 	
 }
