@@ -215,8 +215,11 @@ class Wikidata_References {
 			}
 			return "test: $val";
 		}, 10 , 1);*/
+		
+		
 	}
 
+	
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
@@ -237,6 +240,8 @@ class Wikidata_References {
 	public function get_plugin_name() {
 		return $this->plugin_name;
 	}
+	
+	
 
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.

@@ -30,7 +30,7 @@ class Wikidata_References_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
+		error_log('errores activacion: '.ob_get_contents());
 	}
 
 }

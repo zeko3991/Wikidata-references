@@ -62,7 +62,6 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wikidata-references.php';
 
 
 
-
 /**
  * Begins execution of the plugin.
  *

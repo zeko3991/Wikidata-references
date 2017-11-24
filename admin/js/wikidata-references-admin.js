@@ -33,8 +33,8 @@
 var language;
 
 jQuery(document).ready(function(){
-	language = "en";
-	//language = navigator.language || navigator.userLanguage;
+	language = navigator.language || navigator.userLanguage;
+	language = language.substring(0,2);
 });
 
 //alert(navigator.language || navigator.userLanguage);
@@ -51,6 +51,7 @@ jQuery(document).ready(function(){
 		if (event.target == modal){
 			modal.style.display = "none";
 			wkrf_modal_clear();
+			wkrf_modal_add_spinner();
 		}
 	}
 });
@@ -63,6 +64,7 @@ function wkrf_modal_selection_close(){
 	modal = document.getElementById("wkrf-modal-window"); //modal window
 	modal.style.display = "none";
 	wkrf_modal_clear();
+	wkrf_modal_add_spinner();
 }
 
 /*
@@ -85,17 +87,36 @@ function wkrf_display_modal_selection(){
  */
 function wkrf_modal_create_list(term, wikidata_search, input_id) {
 	var data = wikidata_search;
+	
 	var wiki_id;
 	var term_name;
 	var description;
+	
+
 
 	var search_array = data.search;
 	// console.log(search_array);
+	wkrf_modal_clear();
 	// for each result in json, will add a list elem.
 	for ( var found_item in search_array) {
 		term_name = search_array[found_item].label;
-		wiki_id = search_array[found_item].id;
-		description = search_array[found_item].description;
+		wikidata_id = search_array[found_item].id;
+		
+		try{
+			var description_request = 'https://www.wikidata.org/w/api.php?action=wbgetentities&origin=*&props=descriptions&ids='+wikidata_id+'&languages='+language+'&format=json';
+			description = jQuery.ajax({
+				url: description_request,
+				dataType: 'json',
+				async: false,
+			}).responseText;
+			description = JSON.parse(description);			
+			description = description['entities'][wikidata_id]['descriptions'][language]['value'];
+		}
+		catch(error){
+			//console.log('Wikidata Item '+wikidata_id+' language: '+language+' description NOT found');
+			description = search_array[found_item].description;
+		}
+		
 		/*
 		 * description = String(description).replace("'", "\\'"); description =
 		 * description.replace('"', '\\"');
@@ -103,7 +124,7 @@ function wkrf_modal_create_list(term, wikidata_search, input_id) {
 
 		description = String(description).replace(/"/g, '´');
 		description = description.replace(/'/g, "\´");
-		wkrf_modal_add_list_elem(term_name, wiki_id, description, input_id);
+		wkrf_modal_add_list_elem(term_name, wikidata_id, description, input_id);
 	}
 
 	// if first elem of array is null, its empty, so We will show a message of
@@ -153,6 +174,14 @@ function wkrf_modal_add_message(message){
 		'</div>';
 }
 
+function wkrf_modal_add_spinner(){
+	var wkrf_modal_window_content = document.getElementById("wkrf-modal-window-content");
+	wkrf_modal_window_content.innerHTML +=
+		'<div id="wkrf_modal_window_message" class="wkrf_modal_window_message col-md-12">'+
+			'<div class="loader"></div>'+
+		'</div>';
+}
+
 
 /*
  * Adds a single list elem to the modal box, those elements are suppossed to be wikidata items 
@@ -177,7 +206,7 @@ function wkrf_modal_clear(){
 	wkrf_modal_window_content.innerHTML = 
 		'<span id="wkrf-close" class="close col-md-offset-10" onclick="wkrf_modal_selection_close()">&times;</span>'+
 		'<div class="wkrf-modal-list-header col-md-12 row">'+
-    		'<div class="col-md-3 col-xs-3"><h6>Tag name</h6></div>'+	
+    		'<div class="col-md-3 col-xs-3"><h6>Name</h6></div>'+	
     		'<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>'+	 
     		'<div class="col-md-7 col-xs-7"><h6>Description </h6></div>'+   
     	'</div>'
@@ -212,6 +241,24 @@ function wkrf_wikidata_search_by_term(term, input_id){
 	
 }
 
+
+function wkrf_wikidata_get_wikidata_description(wikidata_id){
+	var request = 'https://www.wikidata.org/w/api.php?action=wbgetentities&origin=*&props=descriptions&ids='+wikidata_id+'&languages='+language+'&format=json';
+	var search_array;
+	var desc;
+	var json;
+	//console.log(request);
+	jQuery.getJSON(request, function(data){
+		alert(" "+data['entities'][wikidata_id]['descriptions'][language]['value']);
+		description = data['entities'][wikidata_id]['descriptions'][language]['value'];
+		if(description != null){
+			callback(data['return'])
+		}
+	}).done(function(description){
+		desc = description;
+	});
+		return desc;
+}
 
 ////////////////////////////////////////////////
 

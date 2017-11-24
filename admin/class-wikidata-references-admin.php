@@ -40,6 +40,8 @@ class Wikidata_References_Admin {
 	 */
 	private $version;
 	
+	private $language;
+	
 	private $wikidata_url             = 'https://www.wikidata.org/entity/';
 	private $wikidata_id_key          = 'wikidata_id';
 	private $wikidata_link_key        = 'wikidata_link';
@@ -72,7 +74,7 @@ class Wikidata_References_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		
+		$this->language  = substr( get_locale(), 0, 2);
 	}
 
 	/**
@@ -404,11 +406,11 @@ class Wikidata_References_Admin {
 		$wikidata_id = get_term_meta( $term_id, $this->wikidata_id_key, true );
 		$wikidata_description = get_term_meta( $term_id, $this->wikidata_description_key, true );
 		$wikidata_link = get_term_meta( $term_id, $this->wikidata_link_key, true ); 
-		$wikidata_link = esc_html__('<a target="_blank" href="'.$wikidata_link.'">'.$wikidata_link.'</a>');
+		$wikidata_link = '<a target="_blank" href="'.esc_html__($wikidata_link).'">'.esc_html__($wikidata_id).'</a>';
 		
 		switch ( $column_name ) {
 			case 'wikidata_id':
-				$content = '<p>'.$wikidata_id.'</p><p>'.$wikidata_description.'</p>';
+				$content = '<p>'.$wikidata_link.'</p><p>'.$wikidata_description.'</p>';
 				break;
 			default:
 				break;
@@ -473,7 +475,7 @@ class Wikidata_References_Admin {
 		?>
 		<tr class ="form-field">
 			<th scope="row">
-				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID') ?></label>
+				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID'); ?></label>
 				<td>
 					<input type="text" name="term_meta[wikidata_id]" id="term_meta[wikidata_id]" >
 					<span class="dashicons dashicons-search" style="cursor:pointer" 
@@ -490,9 +492,12 @@ class Wikidata_References_Admin {
 				    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
 				    <!-- <p>Some text in the Modal..</p> -->
 					    <div class="wkrf-modal-list-header col-md-12 row">
-					    	<div class="col-md-3 col-xs-3"><h6><?php _e($taxonomy);?> name</h6></div>	
+					    	<div class="col-md-3 col-xs-3"><h6><?php _e('Name') ;?></h6></div>	
 					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
-					    	<div class="col-md-7 col-xs-7"><h6><?php _e('Description')?></h6></div>   
+					    	<div class="col-md-7 col-xs-7"><h6><?php _e('Description'); ?></h6></div>   
+					    </div>
+					    <div id="wkrf_modal_window_message" class="wkrf_modal_window_message col-md-12">
+					    	<div class="loader"></div>
 					    </div>
 				  </div>
 			</div>
@@ -515,15 +520,15 @@ class Wikidata_References_Admin {
 		?>
 		<tr class ="form-field">
 			<th scope="row">
-				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID') ?></label>
+				<label for="term_meta[wikidata_id]"><?php echo _e('Wikidata ID'); ?></label>
 				<td>
 					<input type="text" name="term_meta[wikidata_id]" id="term_meta[wikidata_id]"
 						   value="<?php if(isset($wikidata_id)){ echo $wikidata_id; } ?>" >
 					<span class="dashicons dashicons-search" style="cursor:pointer" 
 						  onclick="wkrf_modal_selection(getElementById('slug').value,'term_meta[wikidata_id]')"></span>
 					<input type="text" style="display:none" name="term_meta[wikidata_description]" id="term_meta[wikidata_description]"
-						   value="<?php if(isset($wikidata_description)){ echo $wikidata_description; } else{ echo "nada"; } ?> " >
-					<p class="description"><?php echo $wikidata_description; ?> </p>
+						   value="<?php if(isset($wikidata_description)){ echo $wikidata_description; } else{ echo "nada"; } ?>" >
+					<p class="description"><?php echo $wikidata_description; ?></p>
 				</td>	
 			</th>
 		</tr>
@@ -534,9 +539,12 @@ class Wikidata_References_Admin {
 				    <span id="wkrf-close" class="close col-md-12" onclick="wkrf_modal_selection_close()">&times;</span>
 				    <!-- <p>Some text in the Modal..</p> -->
 					    <div class="wkrf-modal-list-header col-md-12 row">
-					    	<div class="col-md-3 col-xs-3"><h6><?php _e($term_taxonomy); ?> name</h6></div>	
-					    	<div class="col-md-2 col-xs-2"><h6>Wikidata ID#</h6></div>	 
-					    	<div class="col-md-7 col-xs-7"><h6>Description </h6></div>   
+					    	<div class="col-md-3 col-xs-3"><h6><?php _e('Name'); ?></h6></div>	
+					    	<div class="col-md-2 col-xs-2"><h6><?php _e('Wikidata ID#'); ?></h6></div>	 
+					    	<div class="col-md-7 col-xs-7"><h6><?php _e('Description'); ?></h6></div>   
+					    </div>
+					    <div id="wkrf_modal_window_message" class="wkrf_modal_window_message col-md-12">
+					    	<div class="loader"></div>
 					    </div>
 				  </div>
 			</div>
@@ -581,7 +589,7 @@ class Wikidata_References_Admin {
 			} else {
 				$wikidata_id = $this->wkrf_validate_wikidata_id( $term_meta['wikidata_id'] );
 				if($wikidata_id != false){
-					$wikidata_description = $this->wkrf_get_wikidata_description($wikidata_id, 'en');
+					$wikidata_description = $this->wkrf_get_wikidata_description($wikidata_id, $this->language);
 					update_term_meta( $term_id, $this->wikidata_id_key, $wikidata_id );
 					update_term_meta( $term_id, $this->wikidata_link_key, $this->wikidata_url.$wikidata_id );
 					update_term_meta( $term_id, $this->wikidata_description_key, $wikidata_description );
@@ -616,22 +624,32 @@ class Wikidata_References_Admin {
 	/**
 	 * Wikidata references.
 	 * Gets wikidata item description by wikidata id, gets item with wbgetentities wikidata api
-	 * function 
+	 * function in the locale language, if not found, tries to return it in English, if not found, 
+	 * return null
 	 * @param unknown $wikidata_id
 	 * @param unknown $language
 	 * @return mixed|NULL
 	 */
 	function wkrf_get_wikidata_description($wikidata_id, $language){
 		$api_request = 'https://www.wikidata.org/w/api.php?action=wbgetentities&props=descriptions&ids='.$wikidata_id.'&languages='.$language.'&format=json';
+		$en_api_request = 'https://www.wikidata.org/w/api.php?action=wbgetentities&props=descriptions&ids='.$wikidata_id.'&languages=en&format=json';
 		
-		$api_response = file_get_contents($api_request);
-		error_log('json: '.$api_response);
+		//$api_response = file_get_contents($api_request);
+		//error_log('json: '.$api_response);
 		$api_response = json_decode( file_get_contents( $api_request ), true);
 		
 		if ( $api_response != null ){
 			$response = $api_response['entities'][$wikidata_id]['descriptions'][$language]['value'];
 			if ( $response != null){
 				return $response;
+			}
+			elseif( $response == null ){
+				
+				$en_api_response = json_decode( file_get_contents( $en_api_request ), true);
+				$response = $en_api_response['entities'][$wikidata_id]['descriptions']['en']['value'];
+				if ( $response != null ){
+					return $response;
+				}
 			}
 			return null;
 		}
