@@ -45,3 +45,4 @@ class Wikidata_References_i18n {
 
 
 }
+?>
