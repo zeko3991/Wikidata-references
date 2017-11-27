@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * The plugin bootstrap file
@@ -26,7 +26,8 @@
  * 
  */
 
-// If this file is called directly, abort.
+//  If this file is called directly, abort.
+
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
