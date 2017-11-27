@@ -24,7 +24,7 @@
  * Text Domain:       wikidata-references
  * Domain Path:       /languages
  * 
- */
+ */ 
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -33,10 +33,13 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'PLUGIN_VERSION', '1.0.0' );
 
-add_action('activated_plugin', 'save_error');
-function save_error(){
-	update_option('_1_plugin_error', '-'.ob_get_contents().'-');
+function wkrf_display_error(){
+	file_put_contents('C:/xampp/htdocs/wordpress/wp-content/plugins/wkrflog.txt', ob_get_contents());
 }
+
+add_action('activated_plugin', 'wkrf_display_error');
+
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wikidata-references-activator.php
@@ -62,8 +65,10 @@ register_deactivation_hook( __FILE__, 'deactivate_wikidata_references' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-
 require plugin_dir_path( __FILE__ ) . 'includes/class-wikidata-references.php';
+
+
+
 /**
  * Begins execution of the plugin.
  *
@@ -74,9 +79,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wikidata-references.php';
  * @since    1.0.0
  */
 function run_wikidata_references() {
+
 	$plugin = new Wikidata_References();
 	$plugin->run();
-}
 
+}
 run_wikidata_references();
-?>
+

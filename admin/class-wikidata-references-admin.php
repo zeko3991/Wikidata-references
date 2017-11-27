@@ -659,4 +659,5 @@ class Wikidata_References_Admin {
 	
 	
 }
+
 ?>

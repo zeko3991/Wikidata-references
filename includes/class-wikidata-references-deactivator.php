@@ -38,4 +38,3 @@ class Wikidata_References_Deactivator {
 
 
 }
-?>
