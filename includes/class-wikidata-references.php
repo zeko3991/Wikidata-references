@@ -83,6 +83,10 @@ class Wikidata_References {
 		
 		
 	}
+	
+
+	
+	
 
 	/**
 	 * Load the required dependencies for this plugin.
@@ -100,7 +104,7 @@ class Wikidata_References {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-
+	
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -176,9 +180,7 @@ class Wikidata_References {
 		$this->loader->add_filter('term_links-category', $plugin_admin, 'wkrf_add_category_terms_schema', 10, 1);
 		$this->loader->add_filter('term_links-post_tag', $plugin_admin, 'wkrf_add_post_tag_terms_schema', 10, 1);
 		
-		
-
-		
+				
 		//TAG WIKIDATA ASSOCIATION IN TAG EDIT SCREEN
 		
 			//Wikidata id post tag column
@@ -205,17 +207,6 @@ class Wikidata_References {
 		
 			//Taxonomy (post_tag and category) column sort 
 		$this->loader->add_filter('terms_clauses', $plugin_admin, 'wrkf_sort_taxonomy_by_wikidata_id', 10, 3);
-		
-	/*	add_filter("get_the_archive_title", function($val) {
-			$backtrace = debug_backtrace();
-			foreach($backtrace as $level){
-				if(array_key_exists("file", $level) && preg_match("!wp-blog-header\.php$!", $level["file"]) && array_key_exists("function", $level) && $level["function"] == "get_the_archive_title" ) {
-					return "works: $val";		
-				}
-			}
-			return "test: $val";
-		}, 10 , 1);*/
-		
 		
 	}
 
@@ -263,8 +254,6 @@ class Wikidata_References {
 		return $this->version;
 	}
 	
-	
-	
-
-
 }
+
+?>

@@ -127,3 +127,5 @@ class Wikidata_References_Loader {
 	}
 
 }
+
+?>

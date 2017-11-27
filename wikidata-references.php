@@ -33,6 +33,13 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'PLUGIN_VERSION', '1.0.0' );
 
+function wkrf_display_error(){
+	file_put_contents('C:/xampp/htdocs/wordpress/wp-content/plugins/wkrflog.txt', ob_get_contents());
+}
+
+add_action('activated_plugin', 'wkrf_display_error');
+
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wikidata-references-activator.php
