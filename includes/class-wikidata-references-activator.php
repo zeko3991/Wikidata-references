@@ -34,3 +34,4 @@ class Wikidata_References_Activator {
 	}
 
 }
+?>
