@@ -16,7 +16,7 @@
  * Plugin Name:       WikiData References for WordPress
  * Plugin URI:        
  * Description:       Associate your tags and categories with Wikidata Items and add some metadata to your website.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Ezequiel Barbudo Revuelto
  * Author URI:        https://profiles.wordpress.org/zeko3991
  * License:           GPL-2.0+
@@ -32,12 +32,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'PLUGIN_VERSION', '1.0.0' );
+define( 'PLUGIN_VERSION', '1.0.1' );
 
-add_action('activated_plugin', 'save_error');
-function save_error(){
-	update_option('_1_plugin_error', '-'.ob_get_contents().'-');
-}
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wikidata-references-activator.php

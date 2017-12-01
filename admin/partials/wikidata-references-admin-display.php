@@ -89,7 +89,7 @@
 		    		It also lets you add a link to the associated Wikidata item at your Tags and Categories\' archive pages.', $this->plugin_name); ?>
 		    		</p>
 		    		<div class="col-md-3 col-xs-12 col-xs-offset-6">
-		    			<img src="<?php echo $plugin_url; ?>images/Wikidata-logo-en.svg" height="90" width="128" style="display:inline">
+		    		 	<img src="<?php echo $plugin_url; ?>images/Wikidata-logo-en.svg" height="90" width="128" style="display:inline"> 
 		    		</div>
 		    	</div>
 	    		<div class="row">
